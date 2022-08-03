@@ -6,8 +6,8 @@ part 'loop.freezed.dart';
 
 @freezed
 class Loop with _$Loop {
-  factory Loop(
-    IList<Task> tasks,
-    int sets,
-  ) = _Loop;
+  factory Loop({
+    required IList<Task> tasks,
+    required int sets,
+  }) = _Loop;
 }

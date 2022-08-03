@@ -5,7 +5,7 @@ import 'package:interval/app/interval/cubit/timer_cubit.dart';
 import 'package:interval/app/interval/interval_route.dart';
 
 import 'home/home_route.dart';
-import '/app/home/cubit/home_cubit.dart';
+import 'home/cubit/quick_start_cubit.dart';
 import 'interval/cubit/interval_cubit.dart';
 
 final routeObserver = RouteObserver<ModalRoute<void>>();
@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => HomeCubit()),
+        BlocProvider(create: (context) => QuickStartCubit()),
         BlocProvider(create: (context) => IntervalCubit()),
         BlocProvider(create: (context) => TimerCubit()),
       ],

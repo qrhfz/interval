@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:interval/app/home/cubit/home_cubit.dart';
+import 'package:interval/app/home/cubit/quick_start_cubit.dart';
 import 'package:interval/app/interval/cubit/interval_cubit.dart';
 import 'package:interval/app/interval/cubit/timer_cubit.dart';
 import 'package:just_audio/just_audio.dart';
@@ -22,7 +22,7 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
   @override
   void initState() {
     super.initState();
-    final homeState = context.read<HomeCubit>().state;
+    final homeState = context.read<QuickStartCubit>().state;
     context.read<IntervalCubit>().start(homeState.toLoops());
 
     final intervalState = context.read<IntervalCubit>().state;

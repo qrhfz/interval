@@ -79,11 +79,11 @@ class __$$_LoopCopyWithImpl<$Res> extends _$LoopCopyWithImpl<$Res>
     Object? sets = freezed,
   }) {
     return _then(_$_Loop(
-      tasks == freezed
+      tasks: tasks == freezed
           ? _value.tasks
           : tasks // ignore: cast_nullable_to_non_nullable
               as IList<Task>,
-      sets == freezed
+      sets: sets == freezed
           ? _value.sets
           : sets // ignore: cast_nullable_to_non_nullable
               as int,
@@ -94,7 +94,7 @@ class __$$_LoopCopyWithImpl<$Res> extends _$LoopCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_Loop implements _Loop {
-  _$_Loop(this.tasks, this.sets);
+  _$_Loop({required this.tasks, required this.sets});
 
   @override
   final IList<Task> tasks;
@@ -128,7 +128,8 @@ class _$_Loop implements _Loop {
 }
 
 abstract class _Loop implements Loop {
-  factory _Loop(final IList<Task> tasks, final int sets) = _$_Loop;
+  factory _Loop({required final IList<Task> tasks, required final int sets}) =
+      _$_Loop;
 
   @override
   IList<Task> get tasks;

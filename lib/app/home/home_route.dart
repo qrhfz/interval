@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinbox/flutter_spinbox.dart';
 import 'package:go_router/go_router.dart';
+import 'package:interval/app/home/cubit/quick_start_state.dart';
 import 'package:interval/app/interval/interval_route.dart';
-import '../../domain/entitites/length.dart';
-import '/app/home/cubit/home_cubit.dart';
+import 'cubit/quick_start_cubit.dart';
 
 class HomeRoute extends StatelessWidget {
   const HomeRoute({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeCubit, HomeState>(
+    return BlocBuilder<QuickStartCubit, QuickStartState>(
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(),
@@ -20,26 +20,28 @@ class HomeRoute extends StatelessWidget {
             children: [
               TimeInput(
                 "WORK",
-                timespan: state.work,
+                minutes: state.workMins,
+                seconds: state.workSecs,
                 setMinutes: (val) {
-                  context.read<HomeCubit>().setWorkMinutes(val.toInt());
+                  context.read<QuickStartCubit>().setWorkMinutes(val.toInt());
                 },
                 setSeconds: (val) {
-                  context.read<HomeCubit>().setWorkSeconds(val.toInt());
+                  context.read<QuickStartCubit>().setWorkSeconds(val.toInt());
                 },
               ),
               TimeInput(
                 "REST",
-                timespan: state.rest,
+                minutes: state.restMins,
+                seconds: state.restSecs,
                 setMinutes: (val) {
-                  context.read<HomeCubit>().setRestMinutes(val.toInt());
+                  context.read<QuickStartCubit>().setRestMinutes(val.toInt());
                 },
                 setSeconds: (val) {
-                  context.read<HomeCubit>().setRestSeconds(val.toInt());
+                  context.read<QuickStartCubit>().setRestSeconds(val.toInt());
                 },
               ),
-              LapInput(state.lap, onChanged: (value) {
-                context.read<HomeCubit>().setLap(value.toInt());
+              SetsInput(state.sets, onChanged: (value) {
+                context.read<QuickStartCubit>().setLap(value.toInt());
               }),
             ],
           ),
@@ -55,8 +57,8 @@ class HomeRoute extends StatelessWidget {
   }
 }
 
-class LapInput extends StatelessWidget {
-  const LapInput(
+class SetsInput extends StatelessWidget {
+  const SetsInput(
     this.value, {
     required this.onChanged,
     Key? key,
@@ -91,13 +93,15 @@ class LapInput extends StatelessWidget {
 
 class TimeInput extends StatelessWidget {
   final String name;
-  final Length timespan;
+  final int minutes;
+  final int seconds;
   final Function(double) setSeconds;
   final Function(double) setMinutes;
 
   const TimeInput(
     this.name, {
-    required this.timespan,
+    required this.minutes,
+    required this.seconds,
     required this.setMinutes,
     required this.setSeconds,
     super.key,
@@ -110,7 +114,8 @@ class TimeInput extends StatelessWidget {
           context: context,
           builder: (context) {
             return UpdateTimeDialog(
-              timespan: timespan,
+              minutes: minutes,
+              seconds: seconds,
               setMinutes: setMinutes,
               setSeconds: setSeconds,
             );
@@ -132,7 +137,7 @@ class TimeInput extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              timespan.toString(),
+              "$minutes:$seconds",
               style: const TextStyle(fontSize: 24),
             ),
           ),
@@ -145,12 +150,14 @@ class TimeInput extends StatelessWidget {
 class UpdateTimeDialog extends StatelessWidget {
   final Function(double) setSeconds;
   final Function(double) setMinutes;
-  final Length timespan;
+  final int minutes;
+  final int seconds;
 
   const UpdateTimeDialog({
     required this.setMinutes,
     required this.setSeconds,
-    required this.timespan,
+    required this.minutes,
+    required this.seconds,
     super.key,
   });
 
@@ -169,7 +176,7 @@ class UpdateTimeDialog extends StatelessWidget {
               direction: Axis.vertical,
               digits: 2,
               onChanged: setMinutes,
-              value: timespan.minutes.toDouble(),
+              value: minutes.toDouble(),
               min: 0,
             ),
           ),
@@ -187,7 +194,7 @@ class UpdateTimeDialog extends StatelessWidget {
               direction: Axis.vertical,
               digits: 2,
               onChanged: setSeconds,
-              value: timespan.seconds.toDouble(),
+              value: seconds.toDouble(),
               min: 0,
               max: 59,
             ),
