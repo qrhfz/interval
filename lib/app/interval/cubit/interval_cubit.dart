@@ -11,7 +11,7 @@ class IntervalCubit extends Cubit<IntervalState> {
   IntervalCubit() : super(const IntervalState.initial());
 
   void start(IList<Loop> loops) {
-    emit(IntervalState.running(loops, 0, 1, 0));
+    emit(IntervalState.running(loops, 0, 0, 0));
   }
 
   void next() {

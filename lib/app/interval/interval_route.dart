@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interval/app/home/cubit/quick_start_cubit.dart';
 import 'package:interval/app/interval/cubit/interval_cubit.dart';
 import 'package:interval/app/interval/cubit/timer_cubit.dart';
+import 'package:interval/domain/entitites/length.dart';
 import 'package:just_audio/just_audio.dart';
 
 import '../app.dart';
@@ -115,9 +116,18 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
                 finished: () => "finish",
               );
 
+              final currentTask = state.maybeWhen(
+                  running: (loops, loopIndex, set, taskIndex) {
+                    return loops[loopIndex].tasks[taskIndex];
+                  },
+                  paused: (loops, loopIndex, set, taskIndex) {
+                    return loops[loopIndex].tasks[taskIndex];
+                  },
+                  orElse: () => null);
+
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     name,
@@ -125,15 +135,35 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
                   ),
                   BlocBuilder<TimerCubit, TimerState>(
                     builder: (context, state) {
-                      final String time = state.when(
-                        initial: () => "00:00",
-                        running: (length) => length.toString(),
-                        paused: (length) => length.toString(),
-                        finished: () => "00:00",
+                      final time = state.maybeWhen(
+                        running: (length) => length,
+                        paused: (length) => length,
+                        orElse: () => Length.zero,
                       );
-                      return Text(
-                        time,
-                        style: const TextStyle(fontSize: 128),
+                      return SizedBox(
+                        width: 256,
+                        height: 256,
+                        child: Stack(
+                          alignment: AlignmentDirectional.center,
+                          clipBehavior: Clip.none,
+                          children: [
+                            Positioned(
+                              top: 0,
+                              left: 0,
+                              right: 0,
+                              bottom: 0,
+                              child: CircularProgressIndicator(
+                                value: time.inSeconds /
+                                    (currentTask?.length.inSeconds ??
+                                        double.infinity),
+                              ),
+                            ),
+                            Text(
+                              time.toString(),
+                              style: const TextStyle(fontSize: 64),
+                            ),
+                          ],
+                        ),
                       );
                     },
                   ),
