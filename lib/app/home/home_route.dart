@@ -19,7 +19,7 @@ class HomeRoute extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               TimeInput(
-                "WORK",
+                "Work",
                 minutes: state.workMins,
                 seconds: state.workSecs,
                 setMinutes: (val) {
@@ -30,7 +30,7 @@ class HomeRoute extends StatelessWidget {
                 },
               ),
               TimeInput(
-                "REST",
+                "Rest",
                 minutes: state.restMins,
                 seconds: state.restSecs,
                 setMinutes: (val) {
@@ -74,7 +74,7 @@ class SetsInput extends StatelessWidget {
         const Padding(
           padding: EdgeInsets.all(8.0),
           child: Text(
-            "LAP",
+            "Sets",
             style: TextStyle(fontSize: 24),
           ),
         ),
@@ -137,7 +137,7 @@ class TimeInput extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              "$minutes:$seconds",
+              "${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}",
               style: const TextStyle(fontSize: 24),
             ),
           ),
