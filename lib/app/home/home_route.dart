@@ -4,6 +4,7 @@ import 'package:flutter_spinbox/flutter_spinbox.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interval/app/home/cubit/quick_start_state.dart';
 import 'package:interval/app/interval/interval_route.dart';
+import 'package:interval/utils/duration_extension.dart';
 import 'cubit/quick_start_cubit.dart';
 
 class HomeRoute extends StatelessWidget {
@@ -68,25 +69,34 @@ class SetsInput extends StatelessWidget {
   final Function(double) onChanged;
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Text(
-            "Sets",
-            style: TextStyle(fontSize: 24),
-          ),
+    return Card(
+      child: ListTile(
+        onTap: () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return Dialog(
+                child: SizedBox(
+                  width: 128,
+                  child: SpinBox(
+                    value: value.toDouble(),
+                    min: 1,
+                    onChanged: onChanged,
+                  ),
+                ),
+              );
+            },
+          );
+        },
+        title: const Text(
+          "Sets",
+          style: const TextStyle(fontSize: 24),
         ),
-        SizedBox(
-          width: 128,
-          child: SpinBox(
-            value: value.toDouble(),
-            min: 1,
-            onChanged: onChanged,
-          ),
-        )
-      ],
+        trailing: Text(
+          value.toString(),
+          style: const TextStyle(fontSize: 24),
+        ),
+      ),
     );
   }
 }
@@ -108,40 +118,34 @@ class TimeInput extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return UpdateTimeDialog(
-              minutes: minutes,
-              seconds: seconds,
-              setMinutes: setMinutes,
-              setSeconds: setSeconds,
-            );
-          },
-        );
-      },
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.baseline,
-        textBaseline: TextBaseline.alphabetic,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              name,
-              style: const TextStyle(fontSize: 24),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              "${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}",
-              style: const TextStyle(fontSize: 24),
-            ),
-          ),
-        ],
+    void showInputDialog() {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return UpdateTimeDialog(
+            minutes: minutes,
+            seconds: seconds,
+            setMinutes: setMinutes,
+            setSeconds: setSeconds,
+          );
+        },
+      );
+    }
+
+    return Card(
+      child: ListTile(
+        onTap: showInputDialog,
+        title: Text(
+          name,
+          style: const TextStyle(fontSize: 24),
+        ),
+        trailing: Text(
+          Duration(
+            minutes: minutes,
+            seconds: seconds,
+          ).toFormattedString(),
+          style: const TextStyle(fontSize: 24),
+        ),
       ),
     );
   }
