@@ -17,7 +17,8 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$Task {
   String get name => throw _privateConstructorUsedError;
-  Length get length => throw _privateConstructorUsedError;
+  Duration get duration => throw _privateConstructorUsedError;
+  Color get color => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $TaskCopyWith<Task> get copyWith => throw _privateConstructorUsedError;
@@ -27,7 +28,7 @@ mixin _$Task {
 abstract class $TaskCopyWith<$Res> {
   factory $TaskCopyWith(Task value, $Res Function(Task) then) =
       _$TaskCopyWithImpl<$Res>;
-  $Res call({String name, Length length});
+  $Res call({String name, Duration duration, Color color});
 }
 
 /// @nodoc
@@ -41,17 +42,22 @@ class _$TaskCopyWithImpl<$Res> implements $TaskCopyWith<$Res> {
   @override
   $Res call({
     Object? name = freezed,
-    Object? length = freezed,
+    Object? duration = freezed,
+    Object? color = freezed,
   }) {
     return _then(_value.copyWith(
       name: name == freezed
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      length: length == freezed
-          ? _value.length
-          : length // ignore: cast_nullable_to_non_nullable
-              as Length,
+      duration: duration == freezed
+          ? _value.duration
+          : duration // ignore: cast_nullable_to_non_nullable
+              as Duration,
+      color: color == freezed
+          ? _value.color
+          : color // ignore: cast_nullable_to_non_nullable
+              as Color,
     ));
   }
 }
@@ -61,7 +67,7 @@ abstract class _$$_TaskCopyWith<$Res> implements $TaskCopyWith<$Res> {
   factory _$$_TaskCopyWith(_$_Task value, $Res Function(_$_Task) then) =
       __$$_TaskCopyWithImpl<$Res>;
   @override
-  $Res call({String name, Length length});
+  $Res call({String name, Duration duration, Color color});
 }
 
 /// @nodoc
@@ -76,17 +82,22 @@ class __$$_TaskCopyWithImpl<$Res> extends _$TaskCopyWithImpl<$Res>
   @override
   $Res call({
     Object? name = freezed,
-    Object? length = freezed,
+    Object? duration = freezed,
+    Object? color = freezed,
   }) {
     return _then(_$_Task(
-      name == freezed
+      name: name == freezed
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      length == freezed
-          ? _value.length
-          : length // ignore: cast_nullable_to_non_nullable
-              as Length,
+      duration: duration == freezed
+          ? _value.duration
+          : duration // ignore: cast_nullable_to_non_nullable
+              as Duration,
+      color: color == freezed
+          ? _value.color
+          : color // ignore: cast_nullable_to_non_nullable
+              as Color,
     ));
   }
 }
@@ -94,16 +105,20 @@ class __$$_TaskCopyWithImpl<$Res> extends _$TaskCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_Task implements _Task {
-  _$_Task(this.name, this.length);
+  _$_Task(
+      {required this.name, required this.duration, this.color = Colors.red});
 
   @override
   final String name;
   @override
-  final Length length;
+  final Duration duration;
+  @override
+  @JsonKey()
+  final Color color;
 
   @override
   String toString() {
-    return 'Task(name: $name, length: $length)';
+    return 'Task(name: $name, duration: $duration, color: $color)';
   }
 
   @override
@@ -112,14 +127,16 @@ class _$_Task implements _Task {
         (other.runtimeType == runtimeType &&
             other is _$_Task &&
             const DeepCollectionEquality().equals(other.name, name) &&
-            const DeepCollectionEquality().equals(other.length, length));
+            const DeepCollectionEquality().equals(other.duration, duration) &&
+            const DeepCollectionEquality().equals(other.color, color));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(name),
-      const DeepCollectionEquality().hash(length));
+      const DeepCollectionEquality().hash(duration),
+      const DeepCollectionEquality().hash(color));
 
   @JsonKey(ignore: true)
   @override
@@ -128,12 +145,17 @@ class _$_Task implements _Task {
 }
 
 abstract class _Task implements Task {
-  factory _Task(final String name, final Length length) = _$_Task;
+  factory _Task(
+      {required final String name,
+      required final Duration duration,
+      final Color color}) = _$_Task;
 
   @override
   String get name;
   @override
-  Length get length;
+  Duration get duration;
+  @override
+  Color get color;
   @override
   @JsonKey(ignore: true)
   _$$_TaskCopyWith<_$_Task> get copyWith => throw _privateConstructorUsedError;

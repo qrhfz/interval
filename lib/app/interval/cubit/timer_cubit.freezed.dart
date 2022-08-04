@@ -19,24 +19,24 @@ mixin _$TimerState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
-    required TResult Function(Length timeleft) running,
-    required TResult Function(Length timeleft) paused,
+    required TResult Function(Duration timeleft) running,
+    required TResult Function(Duration timeleft) paused,
     required TResult Function() finished,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(Length timeleft)? running,
-    TResult Function(Length timeleft)? paused,
+    TResult Function(Duration timeleft)? running,
+    TResult Function(Duration timeleft)? paused,
     TResult Function()? finished,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(Length timeleft)? running,
-    TResult Function(Length timeleft)? paused,
+    TResult Function(Duration timeleft)? running,
+    TResult Function(Duration timeleft)? paused,
     TResult Function()? finished,
     required TResult orElse(),
   }) =>
@@ -124,8 +124,8 @@ class _$_Initial implements _Initial {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
-    required TResult Function(Length timeleft) running,
-    required TResult Function(Length timeleft) paused,
+    required TResult Function(Duration timeleft) running,
+    required TResult Function(Duration timeleft) paused,
     required TResult Function() finished,
   }) {
     return initial();
@@ -135,8 +135,8 @@ class _$_Initial implements _Initial {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(Length timeleft)? running,
-    TResult Function(Length timeleft)? paused,
+    TResult Function(Duration timeleft)? running,
+    TResult Function(Duration timeleft)? paused,
     TResult Function()? finished,
   }) {
     return initial?.call();
@@ -146,8 +146,8 @@ class _$_Initial implements _Initial {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(Length timeleft)? running,
-    TResult Function(Length timeleft)? paused,
+    TResult Function(Duration timeleft)? running,
+    TResult Function(Duration timeleft)? paused,
     TResult Function()? finished,
     required TResult orElse(),
   }) {
@@ -204,7 +204,7 @@ abstract class _$$_RunningCopyWith<$Res> {
   factory _$$_RunningCopyWith(
           _$_Running value, $Res Function(_$_Running) then) =
       __$$_RunningCopyWithImpl<$Res>;
-  $Res call({Length timeleft});
+  $Res call({Duration timeleft});
 }
 
 /// @nodoc
@@ -224,7 +224,7 @@ class __$$_RunningCopyWithImpl<$Res> extends _$TimerStateCopyWithImpl<$Res>
       timeleft == freezed
           ? _value.timeleft
           : timeleft // ignore: cast_nullable_to_non_nullable
-              as Length,
+              as Duration,
     ));
   }
 }
@@ -235,7 +235,7 @@ class _$_Running implements _Running {
   const _$_Running(this.timeleft);
 
   @override
-  final Length timeleft;
+  final Duration timeleft;
 
   @override
   String toString() {
@@ -263,8 +263,8 @@ class _$_Running implements _Running {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
-    required TResult Function(Length timeleft) running,
-    required TResult Function(Length timeleft) paused,
+    required TResult Function(Duration timeleft) running,
+    required TResult Function(Duration timeleft) paused,
     required TResult Function() finished,
   }) {
     return running(timeleft);
@@ -274,8 +274,8 @@ class _$_Running implements _Running {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(Length timeleft)? running,
-    TResult Function(Length timeleft)? paused,
+    TResult Function(Duration timeleft)? running,
+    TResult Function(Duration timeleft)? paused,
     TResult Function()? finished,
   }) {
     return running?.call(timeleft);
@@ -285,8 +285,8 @@ class _$_Running implements _Running {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(Length timeleft)? running,
-    TResult Function(Length timeleft)? paused,
+    TResult Function(Duration timeleft)? running,
+    TResult Function(Duration timeleft)? paused,
     TResult Function()? finished,
     required TResult orElse(),
   }) {
@@ -335,9 +335,9 @@ class _$_Running implements _Running {
 }
 
 abstract class _Running implements TimerState {
-  const factory _Running(final Length timeleft) = _$_Running;
+  const factory _Running(final Duration timeleft) = _$_Running;
 
-  Length get timeleft;
+  Duration get timeleft;
   @JsonKey(ignore: true)
   _$$_RunningCopyWith<_$_Running> get copyWith =>
       throw _privateConstructorUsedError;
@@ -347,7 +347,7 @@ abstract class _Running implements TimerState {
 abstract class _$$_PausedCopyWith<$Res> {
   factory _$$_PausedCopyWith(_$_Paused value, $Res Function(_$_Paused) then) =
       __$$_PausedCopyWithImpl<$Res>;
-  $Res call({Length timeleft});
+  $Res call({Duration timeleft});
 }
 
 /// @nodoc
@@ -367,7 +367,7 @@ class __$$_PausedCopyWithImpl<$Res> extends _$TimerStateCopyWithImpl<$Res>
       timeleft == freezed
           ? _value.timeleft
           : timeleft // ignore: cast_nullable_to_non_nullable
-              as Length,
+              as Duration,
     ));
   }
 }
@@ -378,7 +378,7 @@ class _$_Paused implements _Paused {
   const _$_Paused(this.timeleft);
 
   @override
-  final Length timeleft;
+  final Duration timeleft;
 
   @override
   String toString() {
@@ -406,8 +406,8 @@ class _$_Paused implements _Paused {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
-    required TResult Function(Length timeleft) running,
-    required TResult Function(Length timeleft) paused,
+    required TResult Function(Duration timeleft) running,
+    required TResult Function(Duration timeleft) paused,
     required TResult Function() finished,
   }) {
     return paused(timeleft);
@@ -417,8 +417,8 @@ class _$_Paused implements _Paused {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(Length timeleft)? running,
-    TResult Function(Length timeleft)? paused,
+    TResult Function(Duration timeleft)? running,
+    TResult Function(Duration timeleft)? paused,
     TResult Function()? finished,
   }) {
     return paused?.call(timeleft);
@@ -428,8 +428,8 @@ class _$_Paused implements _Paused {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(Length timeleft)? running,
-    TResult Function(Length timeleft)? paused,
+    TResult Function(Duration timeleft)? running,
+    TResult Function(Duration timeleft)? paused,
     TResult Function()? finished,
     required TResult orElse(),
   }) {
@@ -478,9 +478,9 @@ class _$_Paused implements _Paused {
 }
 
 abstract class _Paused implements TimerState {
-  const factory _Paused(final Length timeleft) = _$_Paused;
+  const factory _Paused(final Duration timeleft) = _$_Paused;
 
-  Length get timeleft;
+  Duration get timeleft;
   @JsonKey(ignore: true)
   _$$_PausedCopyWith<_$_Paused> get copyWith =>
       throw _privateConstructorUsedError;
@@ -527,8 +527,8 @@ class _$_Finished implements _Finished {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
-    required TResult Function(Length timeleft) running,
-    required TResult Function(Length timeleft) paused,
+    required TResult Function(Duration timeleft) running,
+    required TResult Function(Duration timeleft) paused,
     required TResult Function() finished,
   }) {
     return finished();
@@ -538,8 +538,8 @@ class _$_Finished implements _Finished {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(Length timeleft)? running,
-    TResult Function(Length timeleft)? paused,
+    TResult Function(Duration timeleft)? running,
+    TResult Function(Duration timeleft)? paused,
     TResult Function()? finished,
   }) {
     return finished?.call();
@@ -549,8 +549,8 @@ class _$_Finished implements _Finished {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(Length timeleft)? running,
-    TResult Function(Length timeleft)? paused,
+    TResult Function(Duration timeleft)? running,
+    TResult Function(Duration timeleft)? paused,
     TResult Function()? finished,
     required TResult orElse(),
   }) {

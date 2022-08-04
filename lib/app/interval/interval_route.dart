@@ -1,12 +1,15 @@
+import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interval/app/home/cubit/quick_start_cubit.dart';
 import 'package:interval/app/interval/cubit/interval_cubit.dart';
 import 'package:interval/app/interval/cubit/timer_cubit.dart';
-import 'package:interval/domain/entitites/length.dart';
+import 'package:interval/domain/entitites/task.dart';
+import 'package:interval/utils/duration_extension.dart';
 import 'package:just_audio/just_audio.dart';
 
+import '../../domain/entitites/loop.dart';
 import '../app.dart';
 
 class IntervalRoute extends StatefulWidget {
@@ -19,7 +22,7 @@ class IntervalRoute extends StatefulWidget {
 }
 
 class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
-  final player = AudioPlayer()..setAsset("assets/sounds/beep.ogg");
+  final player = AudioPlayer()..setAsset("assets/sounds/tick.ogg");
   @override
   void initState() {
     super.initState();
@@ -29,7 +32,7 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
     final intervalState = context.read<IntervalCubit>().state;
     intervalState.maybeWhen(
       running: (loops, loopIndex, set, taskIndex) {
-        final currentTaskLength = loops[loopIndex].tasks[taskIndex].length;
+        final currentTaskLength = loops[loopIndex].tasks[taskIndex].duration;
         context.read<TimerCubit>().start(currentTaskLength);
       },
       orElse: () {},
@@ -55,6 +58,11 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
     super.didPop();
   }
 
+  Task getCurrentTask(
+      IList<Loop> loops, int loopIndex, int set, int taskIndex) {
+    return loops[loopIndex].tasks[taskIndex];
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocListener(
@@ -65,7 +73,7 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
               running: (loops, loopIndex, set, taskIndex) {
                 context
                     .read<TimerCubit>()
-                    .start(loops[loopIndex].tasks[taskIndex].length);
+                    .start(loops[loopIndex].tasks[taskIndex].duration);
               },
               orElse: () {},
             );
@@ -86,92 +94,110 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
           },
         ),
       ],
-      child: Scaffold(
-        appBar: AppBar(),
-        floatingActionButton: FloatingActionButton(
-          child: BlocBuilder<TimerCubit, TimerState>(
-            builder: (context, state) {
-              return state.maybeWhen(
-                running: (_) => const Icon(Icons.pause),
-                orElse: () => const Icon(Icons.play_arrow),
-              );
-            },
-          ),
-          onPressed: () {
-            context.read<TimerCubit>().pause();
-          },
-        ),
-        body: SizedBox(
-          width: double.infinity,
-          child: BlocBuilder<IntervalCubit, IntervalState>(
-            builder: (context, state) {
-              final String name = state.when(
-                running: (loops, loopIndex, set, taskIndex) {
-                  return loops[loopIndex].tasks[taskIndex].name;
+      child: BlocBuilder<IntervalCubit, IntervalState>(
+        builder: (context, state) {
+          final currentTask = state.maybeWhen(
+            running: getCurrentTask,
+            paused: getCurrentTask,
+            orElse: () => Task(
+              name: "",
+              duration: Duration.zero,
+            ),
+          );
+          return Scaffold(
+            backgroundColor: currentTask.color,
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+            ),
+            floatingActionButton: FloatingActionButton(
+              child: BlocBuilder<TimerCubit, TimerState>(
+                builder: (context, state) {
+                  return state.maybeWhen(
+                    running: (_) => const Icon(Icons.pause),
+                    orElse: () => const Icon(Icons.play_arrow),
+                  );
                 },
-                paused: (loops, loopIndex, set, taskIndex) {
-                  return loops[loopIndex].tasks[taskIndex].name;
-                },
-                initial: () => "-",
-                finished: () => "finish",
-              );
-
-              final currentTask = state.maybeWhen(
-                  running: (loops, loopIndex, set, taskIndex) {
-                    return loops[loopIndex].tasks[taskIndex];
-                  },
-                  paused: (loops, loopIndex, set, taskIndex) {
-                    return loops[loopIndex].tasks[taskIndex];
-                  },
-                  orElse: () => null);
-
-              return Column(
+              ),
+              onPressed: () {
+                context.read<TimerCubit>().pause();
+              },
+            ),
+            body: SizedBox(
+              width: double.infinity,
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Text(
-                    name,
-                    style: const TextStyle(fontSize: 64),
+                    currentTask.name,
+                    style: const TextStyle(
+                        fontSize: 64,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold),
                   ),
                   BlocBuilder<TimerCubit, TimerState>(
                     builder: (context, state) {
                       final time = state.maybeWhen(
                         running: (length) => length,
                         paused: (length) => length,
-                        orElse: () => Length.zero,
+                        orElse: () => Duration.zero,
                       );
-                      return SizedBox(
-                        width: 256,
-                        height: 256,
-                        child: Stack(
-                          alignment: AlignmentDirectional.center,
-                          clipBehavior: Clip.none,
-                          children: [
-                            Positioned(
-                              top: 0,
-                              left: 0,
-                              right: 0,
-                              bottom: 0,
-                              child: CircularProgressIndicator(
-                                value: time.inSeconds /
-                                    (currentTask?.length.inSeconds ??
-                                        double.infinity),
-                              ),
-                            ),
-                            Text(
-                              time.toString(),
-                              style: const TextStyle(fontSize: 64),
-                            ),
-                          ],
-                        ),
+                      return TimerProgress(
+                        time: time,
+                        total: currentTask.duration,
                       );
                     },
                   ),
                 ],
-              );
-            },
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class TimerProgress extends StatelessWidget {
+  const TimerProgress({
+    Key? key,
+    required this.time,
+    required this.total,
+  }) : super(key: key);
+
+  final Duration time;
+  final Duration total;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 256,
+      height: 256,
+      child: Stack(
+        alignment: AlignmentDirectional.center,
+        clipBehavior: Clip.none,
+        children: [
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: CircularProgressIndicator(
+              color: Colors.white,
+              // to not divide by zero add really small number
+              value: time.inSeconds / (total.inSeconds + 1e-5),
+              strokeWidth: 16,
+            ),
           ),
-        ),
+          Text(
+            time.toFormattedString(),
+            style: const TextStyle(
+              fontSize: 64,
+              color: Colors.white,
+            ),
+          ),
+        ],
       ),
     );
   }

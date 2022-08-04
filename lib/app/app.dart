@@ -43,7 +43,10 @@ class MyApp extends StatelessWidget {
         routeInformationProvider: _router.routeInformationProvider,
         title: 'Flutter Demo',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.red,
+          floatingActionButtonTheme: const FloatingActionButtonThemeData(
+            backgroundColor: Colors.green,
+          ),
         ),
       ),
     );

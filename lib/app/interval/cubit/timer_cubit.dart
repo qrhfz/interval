@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:interval/domain/entitites/length.dart';
 
 part 'timer_state.dart';
 part 'timer_cubit.freezed.dart';
@@ -12,20 +11,20 @@ class TimerCubit extends Cubit<TimerState> {
 
   Timer? timer;
 
-  void start(Length length) {
+  void start(Duration duration) {
     timer?.cancel();
-    emit(TimerState.running(length));
-    if (length.inSeconds <= Length.zero.inSeconds) {
+    emit(TimerState.running(duration));
+    if (duration.inSeconds <= 0) {
       Future.microtask(() {
         emit(const TimerState.finished());
       });
       return;
     }
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      length = length.decrementSecond();
-      emit(TimerState.running(length));
+      duration = duration - const Duration(seconds: 1);
+      emit(TimerState.running(duration));
 
-      if (length.inSeconds <= Length.zero.inSeconds) {
+      if (duration.inSeconds <= 0) {
         timer.cancel();
         this.timer = null;
         emit(const TimerState.finished());

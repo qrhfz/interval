@@ -1,12 +1,15 @@
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:interval/domain/entitites/length.dart';
 
 part 'task.freezed.dart';
 
 @freezed
 class Task with _$Task {
-  factory Task(
-    String name,
-    Length length,
-  ) = _Task;
+  factory Task({
+    required String name,
+    required Duration duration,
+    @Default(Colors.red) Color color,
+  }) = _Task;
 }

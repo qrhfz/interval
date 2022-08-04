@@ -1,6 +1,6 @@
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:interval/domain/entitites/length.dart';
 import 'package:interval/domain/entitites/loop.dart';
 
 import '../../../domain/entitites/task.dart';
@@ -23,9 +23,18 @@ class QuickStartState with _$QuickStartState {
     return IList([
       Loop(
         tasks: IList([
-          Task("Prepare", const Length(seconds: 3)),
-          Task("Work", Length(minutes: workMins, seconds: workSecs)),
-          Task("Rest", Length(minutes: restMins, seconds: restSecs)),
+          Task(
+              name: "Prepare",
+              duration: const Duration(seconds: 3),
+              color: Colors.blue),
+          Task(
+              name: "Work",
+              duration: Duration(minutes: workMins, seconds: workSecs)),
+          Task(
+            name: "Rest",
+            duration: Duration(minutes: restMins, seconds: restSecs),
+            color: Colors.green,
+          ),
         ]),
         sets: sets,
       )
