@@ -44,35 +44,58 @@ class _HomeRouteState extends State<HomeRoute> {
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(),
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              TimeInput(
-                "Work",
-                minutes: state.workMins,
-                seconds: state.workSecs,
-                setMinutes: (val) {
-                  context.read<QuickStartCubit>().setWorkMinutes(val.toInt());
-                },
-                setSeconds: (val) {
-                  context.read<QuickStartCubit>().setWorkSeconds(val.toInt());
-                },
+          body: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Card(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Quick Start",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  TimeInput(
+                    "Work",
+                    minutes: state.workMins,
+                    seconds: state.workSecs,
+                    setMinutes: (val) {
+                      context
+                          .read<QuickStartCubit>()
+                          .setWorkMinutes(val.toInt());
+                    },
+                    setSeconds: (val) {
+                      context
+                          .read<QuickStartCubit>()
+                          .setWorkSeconds(val.toInt());
+                    },
+                  ),
+                  const Divider(),
+                  TimeInput(
+                    "Rest",
+                    minutes: state.restMins,
+                    seconds: state.restSecs,
+                    setMinutes: (val) {
+                      context
+                          .read<QuickStartCubit>()
+                          .setRestMinutes(val.toInt());
+                    },
+                    setSeconds: (val) {
+                      context
+                          .read<QuickStartCubit>()
+                          .setRestSeconds(val.toInt());
+                    },
+                  ),
+                  const Divider(),
+                  SetsInput(state.sets, onChanged: (value) {
+                    context.read<QuickStartCubit>().setLap(value.toInt());
+                  }),
+                ],
               ),
-              TimeInput(
-                "Rest",
-                minutes: state.restMins,
-                seconds: state.restSecs,
-                setMinutes: (val) {
-                  context.read<QuickStartCubit>().setRestMinutes(val.toInt());
-                },
-                setSeconds: (val) {
-                  context.read<QuickStartCubit>().setRestSeconds(val.toInt());
-                },
-              ),
-              SetsInput(state.sets, onChanged: (value) {
-                context.read<QuickStartCubit>().setLap(value.toInt());
-              }),
-            ],
+            ),
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
@@ -97,33 +120,31 @@ class SetsInput extends StatelessWidget {
   final Function(double) onChanged;
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: ListTile(
-        onTap: () {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return Dialog(
-                child: SizedBox(
-                  width: 128,
-                  child: SpinBox(
-                    value: value.toDouble(),
-                    min: 1,
-                    onChanged: onChanged,
-                  ),
+    return ListTile(
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return Dialog(
+              child: SizedBox(
+                width: 128,
+                child: SpinBox(
+                  value: value.toDouble(),
+                  min: 1,
+                  onChanged: onChanged,
                 ),
-              );
-            },
-          );
-        },
-        title: const Text(
-          "Sets",
-          style: TextStyle(fontSize: 24),
-        ),
-        trailing: Text(
-          value.toString(),
-          style: const TextStyle(fontSize: 24),
-        ),
+              ),
+            );
+          },
+        );
+      },
+      title: const Text(
+        "Sets",
+        style: TextStyle(fontSize: 24),
+      ),
+      trailing: Text(
+        value.toString(),
+        style: const TextStyle(fontSize: 24),
       ),
     );
   }
@@ -160,20 +181,18 @@ class TimeInput extends StatelessWidget {
       );
     }
 
-    return Card(
-      child: ListTile(
-        onTap: showInputDialog,
-        title: Text(
-          name,
-          style: const TextStyle(fontSize: 24),
-        ),
-        trailing: Text(
-          Duration(
-            minutes: minutes,
-            seconds: seconds,
-          ).toFormattedString(),
-          style: const TextStyle(fontSize: 24),
-        ),
+    return ListTile(
+      onTap: showInputDialog,
+      title: Text(
+        name,
+        style: const TextStyle(fontSize: 24),
+      ),
+      trailing: Text(
+        Duration(
+          minutes: minutes,
+          seconds: seconds,
+        ).toFormattedString(),
+        style: const TextStyle(fontSize: 24),
       ),
     );
   }
