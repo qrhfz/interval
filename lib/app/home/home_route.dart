@@ -1,14 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_spinbox/flutter_spinbox.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interval/app/home/cubit/quick_start_state.dart';
 import 'package:interval/app/interval/interval_route.dart';
 import 'package:interval/utils/duration_extension.dart';
+import '../app.dart';
 import 'cubit/quick_start_cubit.dart';
 
-class HomeRoute extends StatelessWidget {
+class HomeRoute extends StatefulWidget {
   const HomeRoute({Key? key}) : super(key: key);
+
+  @override
+  State<HomeRoute> createState() => _HomeRouteState();
+}
+
+class _HomeRouteState extends State<HomeRoute> {
+  @override
+  void initState() {
+    super.initState();
+
+    const initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    const initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: selectNotification);
+  }
+
+  void selectNotification(String? payload) async {
+    if (payload != null) {
+      debugPrint('notification payload: $payload');
+    }
+    GoRouter.of(context).goNamed("interval");
+  }
 
   @override
   Widget build(BuildContext context) {

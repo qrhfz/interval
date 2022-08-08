@@ -22,11 +22,15 @@ class QuickStartState with _$QuickStartState {
   IList<Loop> toLoops() {
     return IList([
       Loop(
+          tasks: IList([
+            Task(
+                name: "Prepare",
+                duration: const Duration(seconds: 3),
+                color: Colors.blue),
+          ]),
+          sets: 1),
+      Loop(
         tasks: IList([
-          Task(
-              name: "Prepare",
-              duration: const Duration(seconds: 3),
-              color: Colors.blue),
           Task(
               name: "Work",
               duration: Duration(minutes: workMins, seconds: workSecs)),

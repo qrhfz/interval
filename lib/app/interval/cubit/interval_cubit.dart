@@ -18,31 +18,19 @@ class IntervalCubit extends Cubit<IntervalState> {
     emit(state.maybeWhen(
       running: (loops, loopIndex, set, taskIndex) {
         final currentLoop = loops[loopIndex];
-        if (taskIndex < currentLoop.tasks.length - 1) {
-          taskIndex++;
+        final isLastTask = taskIndex == currentLoop.tasks.length - 1;
+        final isLastSet = set == currentLoop.sets - 1;
+        final isLastLoop = loopIndex == loops.length - 1;
 
-          if (set < currentLoop.sets) {
-            set++;
-            if (loopIndex < loops.length - 1) {
-              loopIndex++;
-            }
-          } else {
-            set = 0;
-          }
+        if (isLastTask && isLastSet && isLastLoop) {
+          return const IntervalState.finished();
+        } else if (isLastTask && isLastSet) {
+          return IntervalState.running(loops, loopIndex + 1, 0, 0);
+        } else if (isLastTask) {
+          return IntervalState.running(loops, loopIndex, set + 1, 0);
         } else {
-          taskIndex = 0;
-          if (set < currentLoop.sets) {
-            set++;
-            if (loopIndex < loops.length - 1) {
-              loopIndex++;
-            } else {
-              return const IntervalState.finished();
-            }
-          } else {
-            set = 0;
-          }
+          return IntervalState.running(loops, loopIndex, set, taskIndex + 1);
         }
-        return IntervalState.running(loops, loopIndex, set, taskIndex);
       },
       orElse: () => state,
     ));

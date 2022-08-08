@@ -6,7 +6,7 @@ class QuickStartCubit extends Cubit<QuickStartState> {
       : super(QuickStartState(
           workMins: 1,
           restSecs: 30,
-          sets: 1,
+          sets: 3,
         ));
 
   void setLap(int value) {

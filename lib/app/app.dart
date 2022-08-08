@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interval/app/interval/cubit/timer_cubit.dart';
 import 'package:interval/app/interval/interval_route.dart';
@@ -9,9 +10,10 @@ import 'home/cubit/quick_start_cubit.dart';
 import 'interval/cubit/interval_cubit.dart';
 
 final routeObserver = RouteObserver<ModalRoute<void>>();
+final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 class MyApp extends StatelessWidget {
-  MyApp({Key? key}) : super(key: key);
+  MyApp({super.key});
 
   final _router = GoRouter(routes: [
     GoRoute(
