@@ -10,6 +10,7 @@ import 'package:interval/app/interval/cubit/timer_cubit.dart';
 import 'package:interval/domain/entitites/task.dart';
 import 'package:interval/utils/duration_extension.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
 import '../../domain/entitites/loop.dart';
 import '../app.dart';
@@ -142,10 +143,11 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
             ),
           );
           return Scaffold(
-            backgroundColor: currentTask.color,
+            // backgroundColor: currentTask.color,
             appBar: AppBar(
               backgroundColor: Colors.transparent,
               elevation: 0,
+              foregroundColor: Colors.red,
             ),
             floatingActionButton: FloatingActionButton(
               child: BlocBuilder<TimerCubit, TimerState>(
@@ -164,15 +166,15 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
               width: double.infinity,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Text(
                     currentTask.name,
                     style: const TextStyle(
-                        fontSize: 64,
-                        color: Colors.white,
+                        fontSize: 48,
+                        // color: Colors.white,
                         fontWeight: FontWeight.bold),
                   ),
+                  const Spacer(),
                   BlocBuilder<TimerCubit, TimerState>(
                     builder: (context, state) {
                       final time = state.maybeWhen(
@@ -183,9 +185,11 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
                       return TimerProgress(
                         time: time,
                         total: currentTask.duration,
+                        color: currentTask.color,
                       );
                     },
                   ),
+                  const Spacer(),
                 ],
               ),
             ),
@@ -201,40 +205,30 @@ class TimerProgress extends StatelessWidget {
     Key? key,
     required this.time,
     required this.total,
+    required this.color,
   }) : super(key: key);
 
   final Duration time;
   final Duration total;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 256,
-      height: 256,
-      child: Stack(
-        alignment: AlignmentDirectional.center,
-        clipBehavior: Clip.none,
-        children: [
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: CircularProgressIndicator(
-              color: Colors.white,
-              // to not divide by zero add really small number
-              value: time.inSeconds / (total.inSeconds + 1e-5),
-              strokeWidth: 16,
-            ),
-          ),
-          Text(
-            time.toFormattedString(),
-            style: const TextStyle(
-              fontSize: 64,
-              color: Colors.white,
-            ),
-          ),
-        ],
+    return CircularPercentIndicator(
+      // to not divide by zero add really small number
+      percent: time.inSeconds / (total.inSeconds + 1e-5),
+      progressColor: color,
+      backgroundColor: color.withAlpha(125),
+      radius: 128,
+      lineWidth: 8,
+      backgroundWidth: 8,
+      circularStrokeCap: CircularStrokeCap.round,
+      center: Text(
+        time.toFormattedString(),
+        style: const TextStyle(
+          fontSize: 64,
+          // color: Colors.white,
+        ),
       ),
     );
   }
