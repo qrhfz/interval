@@ -8,6 +8,6 @@ class Task with _$Task {
   factory Task({
     required String name,
     required Duration duration,
-    @Default(Colors.red) Color color,
+    @Default(Colors.grey) Color color,
   }) = _Task;
 }
