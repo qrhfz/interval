@@ -15,21 +15,22 @@ final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 class MyApp extends StatelessWidget {
   MyApp({super.key});
 
-  final _router = GoRouter(routes: [
-    GoRoute(
-      path: '/',
-      builder: (context, state) => const HomeRoute(),
-      routes: [
-        GoRoute(
-          name: IntervalRoute.routeName,
-          path: 'interval',
-          builder: (context, state) => const IntervalRoute(),
-        ),
-      ],
-    ),
-  ], observers: [
-    routeObserver,
-  ]);
+  final _router = GoRouter(
+    routes: [
+      GoRoute(
+        path: '/',
+        builder: (context, state) => const HomeRoute(),
+        routes: [
+          GoRoute(
+            name: IntervalRoute.routeName,
+            path: 'interval',
+            builder: (context, state) => const IntervalRoute(),
+          ),
+        ],
+      ),
+    ],
+    observers: [routeObserver],
+  );
 
   @override
   Widget build(BuildContext context) {
