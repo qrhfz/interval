@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
 
@@ -15,16 +13,6 @@ import 'package:just_audio/just_audio.dart';
 
 import '../../domain/entitites/loop.dart';
 import '../app.dart';
-
-// const AndroidNotificationDetails androidPlatformChannelSpecifics =
-//     AndroidNotificationDetails('your channel id', 'your channel name',
-//         channelDescription: 'your channel description',
-//         importance: Importance.max,
-//         priority: Priority.high,
-//         ticker: 'ticker');
-
-// const NotificationDetails platformChannelSpecifics =
-//     NotificationDetails(android: androidPlatformChannelSpecifics);
 
 class IntervalRoute extends StatefulWidget {
   static const routeName = 'interval';

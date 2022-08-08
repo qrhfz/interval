@@ -118,7 +118,7 @@ class SetsInput extends StatelessWidget {
         },
         title: const Text(
           "Sets",
-          style: const TextStyle(fontSize: 24),
+          style: TextStyle(fontSize: 24),
         ),
         trailing: Text(
           value.toString(),
