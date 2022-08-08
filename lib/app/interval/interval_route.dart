@@ -16,15 +16,15 @@ import 'package:just_audio/just_audio.dart';
 import '../../domain/entitites/loop.dart';
 import '../app.dart';
 
-const AndroidNotificationDetails androidPlatformChannelSpecifics =
-    AndroidNotificationDetails('your channel id', 'your channel name',
-        channelDescription: 'your channel description',
-        importance: Importance.max,
-        priority: Priority.high,
-        ticker: 'ticker');
+// const AndroidNotificationDetails androidPlatformChannelSpecifics =
+//     AndroidNotificationDetails('your channel id', 'your channel name',
+//         channelDescription: 'your channel description',
+//         importance: Importance.max,
+//         priority: Priority.high,
+//         ticker: 'ticker');
 
-const NotificationDetails platformChannelSpecifics =
-    NotificationDetails(android: androidPlatformChannelSpecifics);
+// const NotificationDetails platformChannelSpecifics =
+//     NotificationDetails(android: androidPlatformChannelSpecifics);
 
 class IntervalRoute extends StatefulWidget {
   static const routeName = 'interval';
@@ -41,16 +41,9 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
   void initState() {
     super.initState();
     final homeState = context.read<QuickStartCubit>().state;
-    context.read<IntervalCubit>().start(homeState.toLoops());
-
-    final intervalState = context.read<IntervalCubit>().state;
-    intervalState.maybeWhen(
-      running: (loops, loopIndex, set, taskIndex) {
-        final currentTaskLength = loops[loopIndex].tasks[taskIndex].duration;
-        context.read<TimerCubit>().start(currentTaskLength);
-      },
-      orElse: () {},
-    );
+    Future.microtask(() {
+      context.read<IntervalCubit>().start(homeState.toLoops());
+    });
   }
 
   @override
@@ -63,6 +56,7 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
   void dispose() {
     routeObserver.unsubscribe(this);
     player.dispose();
+    stopNotification();
     super.dispose();
   }
 
@@ -77,13 +71,34 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
     return loops[loopIndex].tasks[taskIndex];
   }
 
-  Future<void> startNotification(Task currentTask) async {
-    flutterLocalNotificationsPlugin.show(
-      1,
-      currentTask.name,
-      null,
-      platformChannelSpecifics,
+  Future<void> startNotification(Task currentTask, Duration timeleft) async {
+    final AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      'your channel id',
+      'your channel name',
+      channelDescription: 'color background channel description',
+      importance: Importance.max,
+      priority: Priority.high,
+      ticker: 'ticker',
+      color: currentTask.color,
+      colorized: true,
+      playSound: false,
     );
+
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.startForegroundService(
+            1, currentTask.name, timeleft.toFormattedString(),
+            notificationDetails: androidPlatformChannelSpecifics,
+            payload: 'item x');
+  }
+
+  Future<void> stopNotification() async {
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.stopForegroundService();
   }
 
   @override
@@ -96,9 +111,7 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
               running: (loops, loopIndex, set, taskIndex) {
                 final currentTask = loops[loopIndex].tasks[taskIndex];
 
-                context.read<TimerCubit>().start(currentTask.duration);
-
-                startNotification(currentTask);
+                context.read<TimerCubit>().start(currentTask);
               },
               finished: () {
                 GoRouter.of(context).pop();
@@ -110,9 +123,10 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
         BlocListener<TimerCubit, TimerState>(
           listener: (context, state) {
             state.maybeWhen(
-              running: (timeleft) {
+              running: (task, timeleft) {
                 player.seek(Duration.zero);
                 player.play();
+                startNotification(task, timeleft);
               },
               finished: () {
                 context.read<IntervalCubit>().next();
@@ -146,7 +160,7 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
               child: BlocBuilder<TimerCubit, TimerState>(
                 builder: (context, state) {
                   return state.maybeWhen(
-                    running: (_) => const Icon(Icons.pause),
+                    running: (task, timeleft) => const Icon(Icons.pause),
                     orElse: () => const Icon(Icons.play_arrow),
                   );
                 },
@@ -171,8 +185,8 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
                   BlocBuilder<TimerCubit, TimerState>(
                     builder: (context, state) {
                       final time = state.maybeWhen(
-                        running: (length) => length,
-                        paused: (length) => length,
+                        running: (task, timeleft) => timeleft,
+                        paused: (task, timeleft) => timeleft,
                         orElse: () => Duration.zero,
                       );
                       return TimerProgress(

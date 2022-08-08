@@ -5,6 +5,11 @@
         android:label="interval"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <service
+            android:name="com.dexterous.flutterlocalnotifications.ForegroundService"
+            android:exported="false"
+            android:stopWithTask="true"
+            />
         <activity
             android:name=".MainActivity"
             android:exported="true"
