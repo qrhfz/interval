@@ -60,8 +60,7 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
   }
 
   Future<void> startNotification(Task currentTask, Duration timeleft) async {
-    final AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails(
+    final androidPlatformChannelSpecifics = AndroidNotificationDetails(
       'your channel id',
       'your channel name',
       channelDescription: 'color background channel description',
@@ -78,9 +77,12 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
         ?.startForegroundService(
-            1, currentTask.name, timeleft.toFormattedString(),
-            notificationDetails: androidPlatformChannelSpecifics,
-            payload: 'item x');
+          1,
+          currentTask.name,
+          timeleft.toFormattedString(),
+          notificationDetails: androidPlatformChannelSpecifics,
+          payload: 'item x',
+        );
   }
 
   Future<void> stopNotification() async {
