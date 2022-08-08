@@ -71,6 +71,7 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
       color: currentTask.color,
       colorized: true,
       playSound: false,
+      enableVibration: false,
     );
 
     await flutterLocalNotificationsPlugin

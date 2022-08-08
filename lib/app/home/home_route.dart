@@ -20,22 +20,22 @@ class _HomeRouteState extends State<HomeRoute> {
   @override
   void initState() {
     super.initState();
+    initializeNotification();
+  }
 
+  void initializeNotification() {
     const initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
 
     const initializationSettings =
         InitializationSettings(android: initializationSettingsAndroid);
 
-    flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: selectNotification);
-  }
-
-  void selectNotification(String? payload) async {
-    if (payload != null) {
-      debugPrint('notification payload: $payload');
-    }
-    GoRouter.of(context).goNamed("interval");
+    flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onSelectNotification: (String? payload) {
+        GoRouter.of(context).goNamed("interval");
+      },
+    );
   }
 
   @override
