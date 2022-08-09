@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinbox/flutter_spinbox.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interval/app/preset_editor/cubit/editor_cubit.dart';
 import 'package:interval/domain/entitites/loop.dart';
@@ -37,7 +38,7 @@ class _PresetEditorState extends State<PresetEditor> {
                   showDialog(
                     context: context,
                     builder: (context) {
-                      return PresetNameDialog();
+                      return const PresetNameDialog();
                     },
                   );
                 },
@@ -51,7 +52,9 @@ class _PresetEditorState extends State<PresetEditor> {
             ],
           ),
           floatingActionButton: FloatingActionButton(
-            onPressed: () {},
+            onPressed: () {
+              context.read<EditorCubit>().addLoop();
+            },
             child: const Icon(Icons.add),
           ),
           body: state.when(
@@ -81,12 +84,17 @@ class _PresetEditorState extends State<PresetEditor> {
                               },
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
-                              footer: PresetFooter(loop: loop),
+                              footer: PresetFooter(
+                                loop: loop,
+                                loopIndex: loopIndex,
+                              ),
                               children: [
-                                for (final task in loop.tasks)
+                                for (final entry in loop.tasks.asMap().entries)
                                   TaskListTile(
-                                    task: task,
-                                    key: ValueKey(task.hashCode),
+                                    task: entry.value,
+                                    taskIndex: entry.key,
+                                    loopIndex: loopIndex,
+                                    key: ValueKey(entry.value.hashCode),
                                   ),
                               ],
                             ),
@@ -107,15 +115,15 @@ class _PresetEditorState extends State<PresetEditor> {
 
 class PresetNameDialog extends StatefulWidget {
   const PresetNameDialog({
-    super.key,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<PresetNameDialog> createState() => _PresetNameDialogState();
 }
 
 class _PresetNameDialogState extends State<PresetNameDialog> {
-  final TextEditingController controller = TextEditingController();
+  final controller = TextEditingController();
 
   @override
   void initState() {
@@ -128,19 +136,57 @@ class _PresetNameDialogState extends State<PresetNameDialog> {
 
   @override
   Widget build(BuildContext context) {
+    return ValueDialog(
+      title: "Change Preset Name",
+      onSaved: (context) {
+        context.read<EditorCubit>().updatePresetName(controller.text);
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TextField(controller: controller),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+}
+
+class ValueDialog extends StatelessWidget {
+  const ValueDialog({
+    required this.title,
+    required this.onSaved,
+    required this.child,
+    super.key,
+  });
+
+  final String title;
+  final Widget child;
+  final Function(BuildContext context) onSaved;
+
+  @override
+  Widget build(BuildContext context) {
     return Dialog(
       child: Container(
         padding: const EdgeInsets.all(8),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text("Change Preset Name"),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: TextField(controller: controller),
+              child: Text(
+                title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
+            child,
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton(
                   onPressed: () {
@@ -148,11 +194,9 @@ class _PresetNameDialogState extends State<PresetNameDialog> {
                   },
                   child: const Text("Cancel"),
                 ),
-                ElevatedButton(
+                TextButton(
                   onPressed: () {
-                    context
-                        .read<EditorCubit>()
-                        .updatePresetName(controller.text);
+                    onSaved(context);
                     Navigator.of(context).pop();
                   },
                   child: const Text("Save"),
@@ -164,33 +208,306 @@ class _PresetNameDialogState extends State<PresetNameDialog> {
       ),
     );
   }
-
-  @override
-  void dispose() {
-    super.dispose();
-    controller.dispose();
-  }
 }
 
 class PresetFooter extends StatelessWidget {
   const PresetFooter({
     Key? key,
     required this.loop,
+    required this.loopIndex,
   }) : super(key: key);
 
   final Loop loop;
+  final int loopIndex;
 
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        TextButton(onPressed: () {}, child: Text('${loop.sets} Set')),
         TextButton(
-          onPressed: () {},
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: const Text("Remove this loop?"),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        context.read<EditorCubit>().removeLoop(loop);
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('Confirm'),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+          child: const Text('Remove'),
+        ),
+        const Spacer(),
+        TextButton(
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return SetDialog(
+                  loop: loop,
+                  loopIndex: loopIndex,
+                );
+              },
+            );
+          },
+          child: Text('${loop.sets} Set'),
+        ),
+        TextButton(
+          onPressed: () {
+            showModalBottomSheet(
+              isScrollControlled: true,
+              context: context,
+              builder: (context) {
+                return TaskEditor(
+                  onSaved: (task) {
+                    context.read<EditorCubit>().addTaskToLoop(loopIndex, task);
+                  },
+                );
+              },
+            );
+          },
           child: const Text('Add'),
         ),
       ],
+    );
+  }
+}
+
+class TaskEditor extends StatefulWidget {
+  final Function(Task task) onSaved;
+  final Task? task;
+  const TaskEditor({
+    this.task,
+    required this.onSaved,
+    Key? key,
+  }) : super(key: key);
+  static const colors = [
+    Colors.red,
+    Colors.purple,
+    Colors.indigo,
+    Colors.blue,
+    Colors.cyan,
+    Colors.lime,
+    Colors.green,
+    Colors.orange,
+  ];
+
+  @override
+  State<TaskEditor> createState() => _TaskEditorState();
+}
+
+class _TaskEditorState extends State<TaskEditor> {
+  Color selectedColor = Colors.red;
+  final textController = TextEditingController();
+  int minutes = 0;
+  int seconds = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    setState(() {
+      final task = widget.task;
+      if (task != null) {
+        minutes = task.duration.inMinutes;
+        seconds = task.duration.inSeconds % 60;
+        textController.text = task.name;
+        selectedColor = task.color;
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextField(
+            controller: textController,
+            decoration: const InputDecoration(
+              label: Text('Name'),
+            ),
+          ),
+        ),
+        Wrap(
+          children: [
+            for (final color in TaskEditor.colors)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ColorSelectable(
+                  color: color,
+                  isSelected: color == selectedColor,
+                  onSelected: (color) {
+                    setState(() {
+                      selectedColor = color;
+                    });
+                  },
+                ),
+              )
+          ],
+        ),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 64,
+              child: SpinBox(
+                direction: Axis.vertical,
+                min: 0,
+                digits: 2,
+                value: minutes.toDouble(),
+                onChanged: (value) {
+                  setState(() {
+                    minutes = value.toInt();
+                  });
+                },
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text(
+                ":",
+                style: TextStyle(fontSize: 24),
+              ),
+            ),
+            SizedBox(
+              width: 64,
+              child: SpinBox(
+                direction: Axis.vertical,
+                min: 0,
+                max: 59,
+                digits: 2,
+                value: seconds.toDouble(),
+                onChanged: (value) {
+                  setState(() {
+                    seconds = value.toInt();
+                  });
+                },
+              ),
+            ),
+          ],
+        ),
+        // const Spacer(),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () {
+                final task = Task(
+                  name: textController.text,
+                  duration: Duration(
+                    minutes: minutes,
+                    seconds: seconds,
+                  ),
+                  color: selectedColor,
+                );
+                widget.onSaved(task);
+                Navigator.of(context).pop();
+              },
+              child: const Text('Save'),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class ColorSelectable extends StatelessWidget {
+  final Color color;
+  final bool isSelected;
+  final Function(Color) onSelected;
+
+  const ColorSelectable({
+    required this.color,
+    required this.isSelected,
+    required this.onSelected,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        onSelected(color);
+      },
+      child: Container(
+        padding: const EdgeInsets.all(2),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: isSelected ? Border.all(width: 2, color: Colors.blue) : null,
+        ),
+        child: Container(
+          width: 48,
+          height: 48,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: color,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SetDialog extends StatefulWidget {
+  final Loop loop;
+  final int loopIndex;
+  const SetDialog({
+    required this.loop,
+    required this.loopIndex,
+    super.key,
+  });
+
+  @override
+  State<SetDialog> createState() => _SetDialogState();
+}
+
+class _SetDialogState extends State<SetDialog> {
+  int count = 1;
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      count = widget.loop.sets;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueDialog(
+      title: "Change Sets Count",
+      onSaved: (context) {
+        context.read<EditorCubit>().updateSetCount(widget.loopIndex, count);
+      },
+      child: SpinBox(
+        min: 1,
+        value: count.toDouble(),
+        onChanged: (value) {
+          setState(() {
+            count = value.toInt();
+          });
+        },
+      ),
     );
   }
 }
@@ -241,9 +558,13 @@ class TaskListTile extends StatelessWidget {
   const TaskListTile({
     Key? key,
     required this.task,
+    required this.loopIndex,
+    required this.taskIndex,
   }) : super(key: key);
 
   final Task task;
+  final int loopIndex;
+  final int taskIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -257,7 +578,22 @@ class TaskListTile extends StatelessWidget {
         ),
         title: Text(task.name),
         trailing: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            showModalBottomSheet(
+              isScrollControlled: true,
+              context: context,
+              builder: (context) {
+                return TaskEditor(
+                  onSaved: (task) {
+                    context
+                        .read<EditorCubit>()
+                        .updateTask(loopIndex, taskIndex, task);
+                  },
+                  task: task,
+                );
+              },
+            );
+          },
           icon: const Icon(Icons.edit),
         ),
       ),

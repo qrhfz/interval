@@ -121,4 +121,71 @@ class EditorCubit extends Cubit<EditorState> {
       },
     ));
   }
+
+  void addLoop() {
+    emit(state.map(
+      initial: (state) => state,
+      data: (data) {
+        final loops = data.preset.loops.add(Loop(tasks: IList(), sets: 1));
+        return data.copyWith(
+          preset: data.preset.copyWith(loops: loops),
+        );
+      },
+    ));
+  }
+
+  void removeLoop(Loop loop) {
+    emit(state.map(
+      initial: (state) => state,
+      data: (data) {
+        final loops = data.preset.loops.remove(loop);
+        return data.copyWith(
+          preset: data.preset.copyWith(loops: loops),
+        );
+      },
+    ));
+  }
+
+  void updateSetCount(int loopIndex, int count) {
+    emit(state.map(
+      initial: (state) => state,
+      data: (data) {
+        final loops = data.preset.loops.toList();
+        loops[loopIndex] = loops[loopIndex].copyWith(sets: count);
+        return data.copyWith(
+          preset: data.preset.copyWith(loops: loops.toIList()),
+        );
+      },
+    ));
+  }
+
+  void addTaskToLoop(int loopIndex, Task task) {
+    emit(state.map(
+      initial: (state) => state,
+      data: (data) {
+        final loops = data.preset.loops.toList();
+        final loop = loops[loopIndex];
+        loops[loopIndex] = loop.copyWith(tasks: loop.tasks.add(task));
+        return data.copyWith(
+          preset: data.preset.copyWith(loops: loops.toIList()),
+        );
+      },
+    ));
+  }
+
+  void updateTask(int loopIndex, int taskIndex, Task task) {
+    emit(state.map(
+      initial: (state) => state,
+      data: (data) {
+        final loops = data.preset.loops.toList();
+        final loop = loops[loopIndex];
+        final tasks = loop.tasks.toList();
+        tasks[taskIndex] = task;
+        loops[loopIndex] = loop.copyWith(tasks: tasks.toIList());
+        return data.copyWith(
+          preset: data.preset.copyWith(loops: loops.toIList()),
+        );
+      },
+    ));
+  }
 }
