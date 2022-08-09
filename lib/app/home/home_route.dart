@@ -229,11 +229,11 @@ class SetsInput extends StatelessWidget {
       },
       title: const Text(
         "Sets",
-        style: TextStyle(fontSize: 24),
+        // style: TextStyle(fontSize: 24),
       ),
       trailing: Text(
         value.toString(),
-        style: const TextStyle(fontSize: 24),
+        // style: const TextStyle(fontSize: 24),
       ),
     );
   }
@@ -274,14 +274,14 @@ class TimeInput extends StatelessWidget {
       onTap: showInputDialog,
       title: Text(
         name,
-        style: const TextStyle(fontSize: 24),
+        // style: const TextStyle(fontSize: 24),
       ),
       trailing: Text(
         Duration(
           minutes: minutes,
           seconds: seconds,
         ).toFormattedString(),
-        style: const TextStyle(fontSize: 24),
+        // style: const TextStyle(fontSize: 24),
       ),
     );
   }

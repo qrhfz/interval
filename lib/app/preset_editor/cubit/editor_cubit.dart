@@ -110,4 +110,15 @@ class EditorCubit extends Cubit<EditorState> {
       },
     ));
   }
+
+  void updatePresetName(String text) {
+    emit(state.map(
+      initial: (state) => state,
+      data: (data) {
+        return data.copyWith(
+          preset: data.preset.copyWith(name: text),
+        );
+      },
+    ));
+  }
 }
