@@ -16,7 +16,13 @@ class PresetCubit extends Cubit<PresetState> {
 
   void fetchData() {
     final list = repo.getAllPreset();
+    final keys = repo.getAllKeys();
 
-    emit(PresetState.data(list));
+    emit(PresetState.data(keys, list));
+  }
+
+  Future<void> remove(int key) async {
+    await repo.deletePreset(key);
+    fetchData();
   }
 }

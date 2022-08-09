@@ -1,14 +1,19 @@
+import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinbox/flutter_spinbox.dart';
-import 'package:go_router/go_router.dart';
 import 'package:interval/app/preset_editor/cubit/editor_cubit.dart';
 import 'package:interval/domain/entitites/loop.dart';
 import 'package:interval/domain/entitites/task.dart';
 
+import '../../domain/entitites/preset.dart';
+
 class PresetEditor extends StatefulWidget {
-  const PresetEditor({Key? key}) : super(key: key);
   static const String routeName = "editor";
+  final Preset? preset;
+  final int? presetKey;
+
+  const PresetEditor({this.presetKey, this.preset, super.key});
 
   @override
   State<PresetEditor> createState() => _PresetEditorState();
@@ -18,7 +23,8 @@ class _PresetEditorState extends State<PresetEditor> {
   @override
   void initState() {
     super.initState();
-    context.read<EditorCubit>().initNew();
+    final preset = widget.preset ?? Preset(name: "", loops: IList());
+    context.read<EditorCubit>().init(widget.presetKey, preset);
   }
 
   @override
@@ -577,24 +583,62 @@ class TaskListTile extends StatelessWidget {
           decoration: BoxDecoration(shape: BoxShape.circle, color: task.color),
         ),
         title: Text(task.name),
-        trailing: IconButton(
-          onPressed: () {
-            showModalBottomSheet(
-              isScrollControlled: true,
-              context: context,
-              builder: (context) {
-                return TaskEditor(
-                  onSaved: (task) {
-                    context
-                        .read<EditorCubit>()
-                        .updateTask(loopIndex, taskIndex, task);
-                  },
-                  task: task,
-                );
-              },
-            );
+        trailing: PopupMenuButton(
+          itemBuilder: (_) {
+            return [
+              PopupMenuItem(
+                onTap: () async {
+                  await Future.delayed(const Duration(microseconds: 17));
+                  showModalBottomSheet(
+                    isScrollControlled: true,
+                    context: context,
+                    builder: (context) {
+                      return TaskEditor(
+                        onSaved: (task) {
+                          context
+                              .read<EditorCubit>()
+                              .updateTask(loopIndex, taskIndex, task);
+                        },
+                        task: task,
+                      );
+                    },
+                  );
+                },
+                child: const Text('Edit'),
+              ),
+              PopupMenuItem(
+                onTap: () async {
+                  await Future.delayed(const Duration(microseconds: 17));
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: const Text('Delete Confirmation'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              context
+                                  .read<EditorCubit>()
+                                  .removeTask(loopIndex, taskIndex);
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('Delete'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+                child: const Text('Remove'),
+              ),
+            ];
           },
-          icon: const Icon(Icons.edit),
         ),
       ),
     );

@@ -10,6 +10,10 @@ class PresetRepo {
     return db.getAllPreset().toIList();
   }
 
+  IList<int> getAllKeys() {
+    return db.getAllKeys().toIList();
+  }
+
   Preset? getPreset(int key) {
     return db.getPreset(key);
   }

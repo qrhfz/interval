@@ -16,9 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$Preset {
-  @HiveField(1)
   String get name => throw _privateConstructorUsedError;
-  @HiveField(2)
   IList<Loop> get loops => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -29,7 +27,7 @@ mixin _$Preset {
 abstract class $PresetCopyWith<$Res> {
   factory $PresetCopyWith(Preset value, $Res Function(Preset) then) =
       _$PresetCopyWithImpl<$Res>;
-  $Res call({@HiveField(1) String name, @HiveField(2) IList<Loop> loops});
+  $Res call({String name, IList<Loop> loops});
 }
 
 /// @nodoc
@@ -63,7 +61,7 @@ abstract class _$$_PresetCopyWith<$Res> implements $PresetCopyWith<$Res> {
   factory _$$_PresetCopyWith(_$_Preset value, $Res Function(_$_Preset) then) =
       __$$_PresetCopyWithImpl<$Res>;
   @override
-  $Res call({@HiveField(1) String name, @HiveField(2) IList<Loop> loops});
+  $Res call({String name, IList<Loop> loops});
 }
 
 /// @nodoc
@@ -95,16 +93,12 @@ class __$$_PresetCopyWithImpl<$Res> extends _$PresetCopyWithImpl<$Res>
 
 /// @nodoc
 
-@HiveType(typeId: 5, adapterName: 'PresetAdapter')
 class _$_Preset implements _Preset {
-  _$_Preset(
-      {@HiveField(1) required this.name, @HiveField(2) required this.loops});
+  _$_Preset({required this.name, required this.loops});
 
   @override
-  @HiveField(1)
   final String name;
   @override
-  @HiveField(2)
   final IList<Loop> loops;
 
   @override
@@ -135,14 +129,12 @@ class _$_Preset implements _Preset {
 
 abstract class _Preset implements Preset {
   factory _Preset(
-      {@HiveField(1) required final String name,
-      @HiveField(2) required final IList<Loop> loops}) = _$_Preset;
+      {required final String name,
+      required final IList<Loop> loops}) = _$_Preset;
 
   @override
-  @HiveField(1)
   String get name;
   @override
-  @HiveField(2)
   IList<Loop> get loops;
   @override
   @JsonKey(ignore: true)

@@ -16,9 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$Loop {
-  @HiveField(1)
   IList<Task> get tasks => throw _privateConstructorUsedError;
-  @HiveField(2)
   int get sets => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -29,7 +27,7 @@ mixin _$Loop {
 abstract class $LoopCopyWith<$Res> {
   factory $LoopCopyWith(Loop value, $Res Function(Loop) then) =
       _$LoopCopyWithImpl<$Res>;
-  $Res call({@HiveField(1) IList<Task> tasks, @HiveField(2) int sets});
+  $Res call({IList<Task> tasks, int sets});
 }
 
 /// @nodoc
@@ -63,7 +61,7 @@ abstract class _$$_LoopCopyWith<$Res> implements $LoopCopyWith<$Res> {
   factory _$$_LoopCopyWith(_$_Loop value, $Res Function(_$_Loop) then) =
       __$$_LoopCopyWithImpl<$Res>;
   @override
-  $Res call({@HiveField(1) IList<Task> tasks, @HiveField(2) int sets});
+  $Res call({IList<Task> tasks, int sets});
 }
 
 /// @nodoc
@@ -95,16 +93,12 @@ class __$$_LoopCopyWithImpl<$Res> extends _$LoopCopyWithImpl<$Res>
 
 /// @nodoc
 
-@HiveType(typeId: 4, adapterName: 'LoopAdapter')
 class _$_Loop implements _Loop {
-  _$_Loop(
-      {@HiveField(1) required this.tasks, @HiveField(2) required this.sets});
+  _$_Loop({required this.tasks, required this.sets});
 
   @override
-  @HiveField(1)
   final IList<Task> tasks;
   @override
-  @HiveField(2)
   final int sets;
 
   @override
@@ -134,15 +128,12 @@ class _$_Loop implements _Loop {
 }
 
 abstract class _Loop implements Loop {
-  factory _Loop(
-      {@HiveField(1) required final IList<Task> tasks,
-      @HiveField(2) required final int sets}) = _$_Loop;
+  factory _Loop({required final IList<Task> tasks, required final int sets}) =
+      _$_Loop;
 
   @override
-  @HiveField(1)
   IList<Task> get tasks;
   @override
-  @HiveField(2)
   int get sets;
   @override
   @JsonKey(ignore: true)

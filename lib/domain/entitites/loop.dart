@@ -7,10 +7,10 @@ part 'loop.freezed.dart';
 
 @freezed
 class Loop with _$Loop {
-  @HiveType(typeId: 4, adapterName: 'LoopAdapter')
+  // @HiveType(typeId: 4, adapterName: 'LoopAdapter')
   factory Loop({
-    @HiveField(1) required IList<Task> tasks,
-    @HiveField(2) required int sets,
+    required IList<Task> tasks,
+    required int sets,
   }) = _Loop;
 }
 

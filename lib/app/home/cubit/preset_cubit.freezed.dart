@@ -19,19 +19,20 @@ mixin _$PresetState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
-    required TResult Function(IList<Preset> presets) data,
+    required TResult Function(IList<int> presetKeys, IList<Preset> presets)
+        data,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(IList<Preset> presets)? data,
+    TResult Function(IList<int> presetKeys, IList<Preset> presets)? data,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(IList<Preset> presets)? data,
+    TResult Function(IList<int> presetKeys, IList<Preset> presets)? data,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -112,7 +113,8 @@ class _$_Initial implements _Initial {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
-    required TResult Function(IList<Preset> presets) data,
+    required TResult Function(IList<int> presetKeys, IList<Preset> presets)
+        data,
   }) {
     return initial();
   }
@@ -121,7 +123,7 @@ class _$_Initial implements _Initial {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(IList<Preset> presets)? data,
+    TResult Function(IList<int> presetKeys, IList<Preset> presets)? data,
   }) {
     return initial?.call();
   }
@@ -130,7 +132,7 @@ class _$_Initial implements _Initial {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(IList<Preset> presets)? data,
+    TResult Function(IList<int> presetKeys, IList<Preset> presets)? data,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -179,7 +181,7 @@ abstract class _Initial implements PresetState {
 abstract class _$$_DataCopyWith<$Res> {
   factory _$$_DataCopyWith(_$_Data value, $Res Function(_$_Data) then) =
       __$$_DataCopyWithImpl<$Res>;
-  $Res call({IList<Preset> presets});
+  $Res call({IList<int> presetKeys, IList<Preset> presets});
 }
 
 /// @nodoc
@@ -193,9 +195,14 @@ class __$$_DataCopyWithImpl<$Res> extends _$PresetStateCopyWithImpl<$Res>
 
   @override
   $Res call({
+    Object? presetKeys = freezed,
     Object? presets = freezed,
   }) {
     return _then(_$_Data(
+      presetKeys == freezed
+          ? _value.presetKeys
+          : presetKeys // ignore: cast_nullable_to_non_nullable
+              as IList<int>,
       presets == freezed
           ? _value.presets
           : presets // ignore: cast_nullable_to_non_nullable
@@ -207,14 +214,16 @@ class __$$_DataCopyWithImpl<$Res> extends _$PresetStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_Data implements _Data {
-  const _$_Data(this.presets);
+  const _$_Data(this.presetKeys, this.presets);
 
+  @override
+  final IList<int> presetKeys;
   @override
   final IList<Preset> presets;
 
   @override
   String toString() {
-    return 'PresetState.data(presets: $presets)';
+    return 'PresetState.data(presetKeys: $presetKeys, presets: $presets)';
   }
 
   @override
@@ -222,12 +231,16 @@ class _$_Data implements _Data {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_Data &&
+            const DeepCollectionEquality()
+                .equals(other.presetKeys, presetKeys) &&
             const DeepCollectionEquality().equals(other.presets, presets));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(presets));
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(presetKeys),
+      const DeepCollectionEquality().hash(presets));
 
   @JsonKey(ignore: true)
   @override
@@ -238,29 +251,30 @@ class _$_Data implements _Data {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
-    required TResult Function(IList<Preset> presets) data,
+    required TResult Function(IList<int> presetKeys, IList<Preset> presets)
+        data,
   }) {
-    return data(presets);
+    return data(presetKeys, presets);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(IList<Preset> presets)? data,
+    TResult Function(IList<int> presetKeys, IList<Preset> presets)? data,
   }) {
-    return data?.call(presets);
+    return data?.call(presetKeys, presets);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(IList<Preset> presets)? data,
+    TResult Function(IList<int> presetKeys, IList<Preset> presets)? data,
     required TResult orElse(),
   }) {
     if (data != null) {
-      return data(presets);
+      return data(presetKeys, presets);
     }
     return orElse();
   }
@@ -298,8 +312,10 @@ class _$_Data implements _Data {
 }
 
 abstract class _Data implements PresetState {
-  const factory _Data(final IList<Preset> presets) = _$_Data;
+  const factory _Data(
+      final IList<int> presetKeys, final IList<Preset> presets) = _$_Data;
 
+  IList<int> get presetKeys;
   IList<Preset> get presets;
   @JsonKey(ignore: true)
   _$$_DataCopyWith<_$_Data> get copyWith => throw _privateConstructorUsedError;

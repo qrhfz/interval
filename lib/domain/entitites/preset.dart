@@ -8,10 +8,10 @@ part 'preset.freezed.dart';
 
 @freezed
 class Preset with _$Preset {
-  @HiveType(typeId: 5, adapterName: 'PresetAdapter')
+  // @HiveType(typeId: 5, adapterName: 'PresetAdapter')
   factory Preset({
-    @HiveField(1) required String name,
-    @HiveField(2) required IList<Loop> loops,
+    required String name,
+    required IList<Loop> loops,
   }) = _Preset;
 }
 

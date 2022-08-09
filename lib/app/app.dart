@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -36,7 +38,17 @@ class MyApp extends StatelessWidget {
           GoRoute(
             name: PresetEditor.routeName,
             path: 'editor',
-            builder: (context, state) => const PresetEditor(),
+            builder: (context, state) {
+              log(state.extra.runtimeType.toString());
+              final extra = state.extra as List<Object>?;
+              if (extra != null) {
+                return PresetEditor(
+                  presetKey: extra[0] as int,
+                  preset: extra[1] as Preset,
+                );
+              }
+              return const PresetEditor();
+            },
           ),
         ],
       ),

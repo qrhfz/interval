@@ -17,34 +17,11 @@ class EditorCubit extends Cubit<EditorState> {
 
   final repo = getIt.get<PresetRepo>();
 
-  void initNew() {
+  void init(int? presetKey, Preset preset) {
     emit(
       EditorState.data(
-        null,
-        Preset(
-          name: "sample",
-          loops: IList([
-            Loop(
-                tasks: IList([
-                  Task(
-                      name: "Prepare",
-                      duration: const Duration(seconds: 3),
-                      color: Colors.blue),
-                ]),
-                sets: 1),
-            Loop(
-              tasks: IList([
-                Task(name: "Work", duration: const Duration(minutes: 3)),
-                Task(
-                  name: "Rest",
-                  duration: const Duration(minutes: 2),
-                  color: Colors.green,
-                ),
-              ]),
-              sets: 3,
-            )
-          ]),
-        ),
+        presetKey,
+        preset,
       ),
     );
   }
@@ -182,6 +159,22 @@ class EditorCubit extends Cubit<EditorState> {
         final tasks = loop.tasks.toList();
         tasks[taskIndex] = task;
         loops[loopIndex] = loop.copyWith(tasks: tasks.toIList());
+        return data.copyWith(
+          preset: data.preset.copyWith(loops: loops.toIList()),
+        );
+      },
+    ));
+  }
+
+  void removeTask(int loopIndex, int taskIndex) {
+    emit(state.map(
+      initial: (state) => state,
+      data: (data) {
+        final loops = data.preset.loops.toList();
+        final loop = loops[loopIndex];
+        final tasks = loop.tasks.removeAt(taskIndex);
+
+        loops[loopIndex] = loop.copyWith(tasks: tasks);
         return data.copyWith(
           preset: data.preset.copyWith(loops: loops.toIList()),
         );

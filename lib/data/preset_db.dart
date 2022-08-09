@@ -26,4 +26,8 @@ class PresetDB {
   Future<void> deletePreset(int key) {
     return box.delete(key);
   }
+
+  List<int> getAllKeys() {
+    return box.keys.cast<int>().toList();
+  }
 }

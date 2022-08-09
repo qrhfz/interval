@@ -68,11 +68,17 @@ class PresetListHeader extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const Text(
               "Presets",
               style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const Spacer(),
+            IconButton(
+              onPressed: () {
+                context.read<PresetCubit>().fetchData();
+              },
+              icon: const Icon(Icons.refresh),
             ),
             TextButton.icon(
               onPressed: () {
@@ -113,14 +119,15 @@ class _PresetListState extends State<PresetList> {
             hasScrollBody: false,
             child: Center(child: Text('Presets is Empty')),
           ),
-          data: (data) => SliverList(
+          data: (keys, presets) => SliverList(
             delegate: SliverChildBuilderDelegate(
               (context, index) {
-                final preset = data[index];
+                final preset = presets[index];
+                final key = keys[index];
                 return Card(
                   child: ListTile(
                     title: Text(preset.name),
-                    trailing: IconButton(
+                    leading: IconButton(
                       icon: const Icon(Icons.play_arrow),
                       onPressed: () {
                         GoRouter.of(context).goNamed(
@@ -129,10 +136,34 @@ class _PresetListState extends State<PresetList> {
                         );
                       },
                     ),
+                    trailing: PopupMenuButton(
+                      itemBuilder: (_) {
+                        return [
+                          PopupMenuItem(
+                            onTap: () async {
+                              await Future.delayed(
+                                  const Duration(microseconds: 17), () {
+                                GoRouter.of(context).goNamed(
+                                  PresetEditor.routeName,
+                                  extra: [key, preset],
+                                );
+                              });
+                            },
+                            child: const Text('Edit'),
+                          ),
+                          PopupMenuItem(
+                            onTap: () async {
+                              context.read<PresetCubit>().remove(key);
+                            },
+                            child: const Text('Remove'),
+                          ),
+                        ];
+                      },
+                    ),
                   ),
                 );
               },
-              childCount: data.length,
+              childCount: presets.length,
             ),
           ),
         );
