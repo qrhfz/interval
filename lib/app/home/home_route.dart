@@ -53,12 +53,6 @@ class _HomeRouteState extends State<HomeRoute> {
           PresetList()
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          GoRouter.of(context).goNamed(IntervalRoute.routeName);
-        },
-        child: const Icon(Icons.play_arrow),
-      ),
     );
   }
 }
@@ -126,7 +120,15 @@ class _PresetListState extends State<PresetList> {
                 return Card(
                   child: ListTile(
                     title: Text(preset.name),
-                    trailing: const Icon(Icons.play_arrow),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.play_arrow),
+                      onPressed: () {
+                        GoRouter.of(context).goNamed(
+                          IntervalRoute.routeName,
+                          extra: preset,
+                        );
+                      },
+                    ),
                   ),
                 );
               },
@@ -158,7 +160,7 @@ class QuickStartWidget extends StatelessWidget {
                 const Text(
                   "Quick Start",
                   style: TextStyle(
-                    fontSize: 24,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -189,6 +191,16 @@ class QuickStartWidget extends StatelessWidget {
                 SetsInput(state.sets, onChanged: (value) {
                   context.read<QuickStartCubit>().setLap(value.toInt());
                 }),
+                TextButton.icon(
+                  onPressed: () {
+                    GoRouter.of(context).goNamed(
+                      IntervalRoute.routeName,
+                      extra: context.read<QuickStartCubit>().state.preset,
+                    );
+                  },
+                  icon: const Icon(Icons.play_arrow),
+                  label: const Text('Play'),
+                )
               ],
             ),
           ),

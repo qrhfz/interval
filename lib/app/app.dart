@@ -6,6 +6,7 @@ import 'package:interval/app/home/cubit/preset_cubit.dart';
 import 'package:interval/app/interval/cubit/timer_cubit.dart';
 import 'package:interval/app/interval/interval_route.dart';
 
+import '../domain/entitites/preset.dart';
 import 'home/home_route.dart';
 import 'home/cubit/quick_start_cubit.dart';
 import 'interval/cubit/interval_cubit.dart';
@@ -27,7 +28,10 @@ class MyApp extends StatelessWidget {
           GoRoute(
             name: IntervalRoute.routeName,
             path: 'interval',
-            builder: (context, state) => const IntervalRoute(),
+            builder: (context, state) {
+              final preset = state.extra! as Preset;
+              return IntervalRoute(preset);
+            },
           ),
           GoRoute(
             name: PresetEditor.routeName,

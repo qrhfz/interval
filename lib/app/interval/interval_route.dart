@@ -13,12 +13,14 @@ import 'package:just_audio/just_audio.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 import '../../domain/entitites/loop.dart';
+import '../../domain/entitites/preset.dart';
 import '../app.dart';
 
 class IntervalRoute extends StatefulWidget {
   static const routeName = 'interval';
 
-  const IntervalRoute({super.key});
+  final Preset preset;
+  const IntervalRoute(this.preset, {super.key});
 
   @override
   State<IntervalRoute> createState() => _IntervalRouteState();
@@ -29,9 +31,9 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
   @override
   void initState() {
     super.initState();
-    final homeState = context.read<QuickStartCubit>().state;
+
     Future.microtask(() {
-      context.read<IntervalCubit>().start(homeState.toLoops());
+      context.read<IntervalCubit>().start(widget.preset.loops);
     });
   }
 
