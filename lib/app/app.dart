@@ -9,6 +9,7 @@ import 'package:interval/app/interval/interval_route.dart';
 import 'home/home_route.dart';
 import 'home/cubit/quick_start_cubit.dart';
 import 'interval/cubit/interval_cubit.dart';
+import 'preset_editor/cubit/editor_cubit.dart';
 import 'preset_editor/preset_editor.dart';
 
 final routeObserver = RouteObserver<ModalRoute<void>>();
@@ -47,6 +48,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => IntervalCubit()),
         BlocProvider(create: (context) => TimerCubit()),
         BlocProvider(create: (context) => PresetCubit()),
+        BlocProvider(create: (context) => EditorCubit()),
       ],
       child: MaterialApp.router(
         routerDelegate: _router.routerDelegate,

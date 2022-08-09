@@ -1,35 +1,38 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'preset_record.dart';
+part of 'task.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class PresetRecordAdapter extends TypeAdapter<PresetRecord> {
+class TaskAdapter extends TypeAdapter<_$_Task> {
   @override
-  final int typeId = 1;
+  final int typeId = 3;
 
   @override
-  PresetRecord read(BinaryReader reader) {
+  _$_Task read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return PresetRecord(
-      name: fields[0] as String?,
-      loops: (fields[1] as List?)?.cast<Loop>(),
+    return _$_Task(
+      name: fields[1] as String,
+      duration: fields[2] as Duration,
+      color: fields[3] as Color,
     );
   }
 
   @override
-  void write(BinaryWriter writer, PresetRecord obj) {
+  void write(BinaryWriter writer, _$_Task obj) {
     writer
-      ..writeByte(2)
-      ..writeByte(0)
-      ..write(obj.name)
+      ..writeByte(3)
       ..writeByte(1)
-      ..write(obj.loops);
+      ..write(obj.name)
+      ..writeByte(2)
+      ..write(obj.duration)
+      ..writeByte(3)
+      ..write(obj.color);
   }
 
   @override
@@ -38,7 +41,7 @@ class PresetRecordAdapter extends TypeAdapter<PresetRecord> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is PresetRecordAdapter &&
+      other is TaskAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

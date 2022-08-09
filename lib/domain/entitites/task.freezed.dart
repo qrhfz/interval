@@ -16,8 +16,11 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$Task {
+  @HiveField(1)
   String get name => throw _privateConstructorUsedError;
+  @HiveField(2)
   Duration get duration => throw _privateConstructorUsedError;
+  @HiveField(3)
   Color get color => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -28,7 +31,10 @@ mixin _$Task {
 abstract class $TaskCopyWith<$Res> {
   factory $TaskCopyWith(Task value, $Res Function(Task) then) =
       _$TaskCopyWithImpl<$Res>;
-  $Res call({String name, Duration duration, Color color});
+  $Res call(
+      {@HiveField(1) String name,
+      @HiveField(2) Duration duration,
+      @HiveField(3) Color color});
 }
 
 /// @nodoc
@@ -67,7 +73,10 @@ abstract class _$$_TaskCopyWith<$Res> implements $TaskCopyWith<$Res> {
   factory _$$_TaskCopyWith(_$_Task value, $Res Function(_$_Task) then) =
       __$$_TaskCopyWithImpl<$Res>;
   @override
-  $Res call({String name, Duration duration, Color color});
+  $Res call(
+      {@HiveField(1) String name,
+      @HiveField(2) Duration duration,
+      @HiveField(3) Color color});
 }
 
 /// @nodoc
@@ -104,16 +113,22 @@ class __$$_TaskCopyWithImpl<$Res> extends _$TaskCopyWithImpl<$Res>
 
 /// @nodoc
 
+@HiveType(typeId: 3, adapterName: 'TaskAdapter')
 class _$_Task implements _Task {
   _$_Task(
-      {required this.name, required this.duration, this.color = Colors.grey});
+      {@HiveField(1) required this.name,
+      @HiveField(2) required this.duration,
+      @HiveField(3) this.color = Colors.grey});
 
   @override
+  @HiveField(1)
   final String name;
   @override
+  @HiveField(2)
   final Duration duration;
   @override
   @JsonKey()
+  @HiveField(3)
   final Color color;
 
   @override
@@ -146,15 +161,18 @@ class _$_Task implements _Task {
 
 abstract class _Task implements Task {
   factory _Task(
-      {required final String name,
-      required final Duration duration,
-      final Color color}) = _$_Task;
+      {@HiveField(1) required final String name,
+      @HiveField(2) required final Duration duration,
+      @HiveField(3) final Color color}) = _$_Task;
 
   @override
+  @HiveField(1)
   String get name;
   @override
+  @HiveField(2)
   Duration get duration;
   @override
+  @HiveField(3)
   Color get color;
   @override
   @JsonKey(ignore: true)

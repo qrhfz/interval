@@ -1,5 +1,4 @@
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
-import 'package:interval/data/models/preset_record.dart';
 import 'package:interval/data/preset_db.dart';
 import 'package:interval/domain/entitites/preset.dart';
 
@@ -8,15 +7,15 @@ class PresetRepo {
 
   PresetRepo(this.db);
   IList<Preset> getAllPreset() {
-    return db.getAllPreset().map((e) => e.toEntity()).toIList();
+    return db.getAllPreset().toIList();
   }
 
   Preset? getPreset(int key) {
-    return db.getPreset(key)?.toEntity();
+    return db.getPreset(key);
   }
 
-  Future<void> putPreset(int key, Preset value) {
-    return db.putPreset(key, PresetRecord.fromEntity(value));
+  Future<void> putPreset(int? key, Preset value) {
+    return db.putPreset(key, value);
   }
 
   Future<void> deletePreset(int key) {

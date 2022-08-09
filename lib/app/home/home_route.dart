@@ -94,10 +94,21 @@ class PresetListHeader extends StatelessWidget {
   }
 }
 
-class PresetList extends StatelessWidget {
+class PresetList extends StatefulWidget {
   const PresetList({
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<PresetList> createState() => _PresetListState();
+}
+
+class _PresetListState extends State<PresetList> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<PresetCubit>().fetchData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,10 +122,11 @@ class PresetList extends StatelessWidget {
           data: (data) => SliverList(
             delegate: SliverChildBuilderDelegate(
               (context, index) {
-                return const Card(
+                final preset = data[index];
+                return Card(
                   child: ListTile(
-                    title: Text("Preset Name"),
-                    trailing: Icon(Icons.play_arrow),
+                    title: Text(preset.name),
+                    trailing: const Icon(Icons.play_arrow),
                   ),
                 );
               },
