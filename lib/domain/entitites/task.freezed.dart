@@ -106,7 +106,7 @@ class __$$_TaskCopyWithImpl<$Res> extends _$TaskCopyWithImpl<$Res>
 
 class _$_Task implements _Task {
   _$_Task(
-      {required this.name, required this.duration, this.color = Colors.red});
+      {required this.name, required this.duration, this.color = Colors.grey});
 
   @override
   final String name;

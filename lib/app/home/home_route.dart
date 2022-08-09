@@ -3,10 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_spinbox/flutter_spinbox.dart';
 import 'package:go_router/go_router.dart';
+import 'package:interval/app/home/cubit/preset_cubit.dart';
 import 'package:interval/app/home/cubit/quick_start_state.dart';
 import 'package:interval/app/interval/interval_route.dart';
 import 'package:interval/utils/duration_extension.dart';
 import '../app.dart';
+import '../preset_editor/preset_editor.dart';
 import 'cubit/quick_start_cubit.dart';
 
 class HomeRoute extends StatefulWidget {
@@ -40,68 +42,143 @@ class _HomeRouteState extends State<HomeRoute> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<QuickStartCubit, QuickStartState>(
+    return Scaffold(
+      appBar: AppBar(),
+      body: const CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: QuickStartWidget(),
+          ),
+          PresetListHeader(),
+          PresetList()
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          GoRouter.of(context).goNamed(IntervalRoute.routeName);
+        },
+        child: const Icon(Icons.play_arrow),
+      ),
+    );
+  }
+}
+
+class PresetListHeader extends StatelessWidget {
+  const PresetListHeader({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              "Presets",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            TextButton.icon(
+              onPressed: () {
+                GoRouter.of(context).goNamed(PresetEditor.routeName);
+              },
+              icon: const Icon(Icons.add),
+              label: const Text("New"),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class PresetList extends StatelessWidget {
+  const PresetList({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<PresetCubit, PresetState>(
       builder: (context, state) {
-        return Scaffold(
-          appBar: AppBar(),
-          body: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Card(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Text(
-                    "Quick Start",
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
+        return state.when(
+          initial: () => const SliverFillRemaining(
+            hasScrollBody: false,
+            child: Center(child: Text('Presets is Empty')),
+          ),
+          data: (data) => SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                return const Card(
+                  child: ListTile(
+                    title: Text("Preset Name"),
+                    trailing: Icon(Icons.play_arrow),
                   ),
-                  TimeInput(
-                    "Work",
-                    minutes: state.workMins,
-                    seconds: state.workSecs,
-                    setMinutes: (val) {
-                      context
-                          .read<QuickStartCubit>()
-                          .setWorkMinutes(val.toInt());
-                    },
-                    setSeconds: (val) {
-                      context
-                          .read<QuickStartCubit>()
-                          .setWorkSeconds(val.toInt());
-                    },
-                  ),
-                  const Divider(),
-                  TimeInput(
-                    "Rest",
-                    minutes: state.restMins,
-                    seconds: state.restSecs,
-                    setMinutes: (val) {
-                      context
-                          .read<QuickStartCubit>()
-                          .setRestMinutes(val.toInt());
-                    },
-                    setSeconds: (val) {
-                      context
-                          .read<QuickStartCubit>()
-                          .setRestSeconds(val.toInt());
-                    },
-                  ),
-                  const Divider(),
-                  SetsInput(state.sets, onChanged: (value) {
-                    context.read<QuickStartCubit>().setLap(value.toInt());
-                  }),
-                ],
-              ),
+                );
+              },
+              childCount: data.length,
             ),
           ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              GoRouter.of(context).goNamed(IntervalRoute.routeName);
-            },
-            child: const Icon(Icons.play_arrow),
+        );
+      },
+    );
+  }
+}
+
+class QuickStartWidget extends StatelessWidget {
+  const QuickStartWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<QuickStartCubit, QuickStartState>(
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Card(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Text(
+                  "Quick Start",
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                TimeInput(
+                  "Work",
+                  minutes: state.workMins,
+                  seconds: state.workSecs,
+                  setMinutes: (val) {
+                    context.read<QuickStartCubit>().setWorkMinutes(val.toInt());
+                  },
+                  setSeconds: (val) {
+                    context.read<QuickStartCubit>().setWorkSeconds(val.toInt());
+                  },
+                ),
+                const Divider(),
+                TimeInput(
+                  "Rest",
+                  minutes: state.restMins,
+                  seconds: state.restSecs,
+                  setMinutes: (val) {
+                    context.read<QuickStartCubit>().setRestMinutes(val.toInt());
+                  },
+                  setSeconds: (val) {
+                    context.read<QuickStartCubit>().setRestSeconds(val.toInt());
+                  },
+                ),
+                const Divider(),
+                SetsInput(state.sets, onChanged: (value) {
+                  context.read<QuickStartCubit>().setLap(value.toInt());
+                }),
+              ],
+            ),
           ),
         );
       },

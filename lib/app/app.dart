@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:go_router/go_router.dart';
+import 'package:interval/app/home/cubit/preset_cubit.dart';
 import 'package:interval/app/interval/cubit/timer_cubit.dart';
 import 'package:interval/app/interval/interval_route.dart';
 
 import 'home/home_route.dart';
 import 'home/cubit/quick_start_cubit.dart';
 import 'interval/cubit/interval_cubit.dart';
+import 'preset_editor/preset_editor.dart';
 
 final routeObserver = RouteObserver<ModalRoute<void>>();
 final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -26,6 +28,11 @@ class MyApp extends StatelessWidget {
             path: 'interval',
             builder: (context, state) => const IntervalRoute(),
           ),
+          GoRoute(
+            name: PresetEditor.routeName,
+            path: 'editor',
+            builder: (context, state) => const PresetEditor(),
+          ),
         ],
       ),
     ],
@@ -39,6 +46,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => QuickStartCubit()),
         BlocProvider(create: (context) => IntervalCubit()),
         BlocProvider(create: (context) => TimerCubit()),
+        BlocProvider(create: (context) => PresetCubit()),
       ],
       child: MaterialApp.router(
         routerDelegate: _router.routerDelegate,
