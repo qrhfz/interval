@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:hive/hive.dart';
 import 'package:interval/domain/entitites/preset.dart';
 

@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:go_router/go_router.dart';
-import 'package:interval/app/home/cubit/quick_start_cubit.dart';
 import 'package:interval/app/interval/cubit/interval_cubit.dart';
 import 'package:interval/app/interval/cubit/timer_cubit.dart';
 import 'package:interval/domain/entitites/task.dart';
@@ -62,7 +60,7 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
       IList<Loop> loops, int loopIndex, int set, int taskIndex) {
     try {
       return loops[loopIndex].tasks[taskIndex];
-    } on RangeError catch (e) {
+    } on RangeError catch (_) {
       return Task(name: "error", duration: Duration.zero);
     }
   }
