@@ -26,20 +26,20 @@ class EditorCubit extends Cubit<EditorState> {
   }
 
   void save() async {
-    final newState = await state.when(
-      initial: () async => state,
+    final newState = await state.maybeWhen(
+      orElse: () async => state,
       data: (key, value) async {
         final respondKey = await repo.putPreset(key, value);
         return EditorState.data(respondKey, value);
       },
     );
-
+    emit(const EditorState.save());
     emit(newState);
   }
 
   void moveTask(int loopIndex, int oldIndex, int newIndex) {
-    emit(state.map(
-      initial: (state) => state,
+    emit(state.maybeMap(
+      orElse: () => state,
       data: (data) {
         final loops = data.preset.loops.toList();
         final loop = loops[loopIndex];
@@ -62,8 +62,8 @@ class EditorCubit extends Cubit<EditorState> {
 
   void moveLoopUp(int loopIndex) {
     if (loopIndex == 0) return;
-    emit(state.map(
-      initial: (state) => state,
+    emit(state.maybeMap(
+      orElse: () => state,
       data: (data) {
         final loops = data.preset.loops.toList();
         final loop = loops.removeAt(loopIndex);
@@ -76,8 +76,8 @@ class EditorCubit extends Cubit<EditorState> {
   }
 
   void moveLoopDown(int loopIndex) {
-    emit(state.map(
-      initial: (state) => state,
+    emit(state.maybeMap(
+      orElse: () => state,
       data: (data) {
         if (loopIndex == data.preset.loops.length - 1) return data;
         final loops = data.preset.loops.toList();
@@ -91,8 +91,8 @@ class EditorCubit extends Cubit<EditorState> {
   }
 
   void updatePresetName(String text) {
-    emit(state.map(
-      initial: (state) => state,
+    emit(state.maybeMap(
+      orElse: () => state,
       data: (data) {
         return data.copyWith(
           preset: data.preset.copyWith(name: text),
@@ -102,8 +102,8 @@ class EditorCubit extends Cubit<EditorState> {
   }
 
   void addLoop() {
-    emit(state.map(
-      initial: (state) => state,
+    emit(state.maybeMap(
+      orElse: () => state,
       data: (data) {
         final loops = data.preset.loops.add(Loop(tasks: IList(), sets: 1));
         return data.copyWith(
@@ -114,8 +114,8 @@ class EditorCubit extends Cubit<EditorState> {
   }
 
   void removeLoop(Loop loop) {
-    emit(state.map(
-      initial: (state) => state,
+    emit(state.maybeMap(
+      orElse: () => state,
       data: (data) {
         final loops = data.preset.loops.remove(loop);
         return data.copyWith(
@@ -126,8 +126,8 @@ class EditorCubit extends Cubit<EditorState> {
   }
 
   void updateSetCount(int loopIndex, int count) {
-    emit(state.map(
-      initial: (state) => state,
+    emit(state.maybeMap(
+      orElse: () => state,
       data: (data) {
         final loops = data.preset.loops.toList();
         loops[loopIndex] = loops[loopIndex].copyWith(sets: count);
@@ -139,8 +139,8 @@ class EditorCubit extends Cubit<EditorState> {
   }
 
   void addTaskToLoop(int loopIndex, Task task) {
-    emit(state.map(
-      initial: (state) => state,
+    emit(state.maybeMap(
+      orElse: () => state,
       data: (data) {
         final loops = data.preset.loops.toList();
         final loop = loops[loopIndex];
@@ -170,8 +170,8 @@ class EditorCubit extends Cubit<EditorState> {
   }
 
   void updateTask(int loopIndex, int taskIndex, Task task) {
-    emit(state.map(
-      initial: (state) => state,
+    emit(state.maybeMap(
+      orElse: () => state,
       data: (data) {
         final loops = data.preset.loops.toList();
         final loop = loops[loopIndex];
@@ -192,8 +192,8 @@ class EditorCubit extends Cubit<EditorState> {
   }
 
   void removeTask(int loopIndex, int taskIndex) {
-    emit(state.map(
-      initial: (state) => state,
+    emit(state.maybeMap(
+      orElse: () => state,
       data: (data) {
         final loops = data.preset.loops.toList();
         final loop = loops[loopIndex];

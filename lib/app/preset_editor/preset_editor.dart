@@ -31,11 +31,17 @@ class _PresetEditorState extends State<PresetEditor> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<EditorCubit, EditorState>(
+      buildWhen: (previous, current) {
+        return current.maybeMap(
+          data: (_) => true,
+          orElse: () => false,
+        );
+      },
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
-            title: state.when(
-              initial: () => const Text(""),
+            title: state.maybeWhen(
+              orElse: () => const Text(""),
               data: (key, preset) => Text(preset.name),
             ),
             actions: [
@@ -64,8 +70,8 @@ class _PresetEditorState extends State<PresetEditor> {
             },
             child: const Icon(Icons.add),
           ),
-          body: state.when(
-            initial: () => const Center(child: Text("empty")),
+          body: state.maybeWhen(
+            orElse: () => const Center(child: Text("empty")),
             data: (key, preset) {
               return CustomScrollView(
                 slivers: preset.loops.asMap().entries.map((entry) {
@@ -135,10 +141,11 @@ class _PresetNameDialogState extends State<PresetNameDialog> {
   @override
   void initState() {
     super.initState();
-    controller.text = context.read<EditorCubit>().state.when(
-          initial: () => "",
-          data: (key, preset) => preset.name,
-        );
+    final state = context.read<EditorCubit>().state;
+    controller.text = state.maybeWhen(
+      orElse: () => "",
+      data: (key, preset) => preset.name,
+    );
   }
 
   @override

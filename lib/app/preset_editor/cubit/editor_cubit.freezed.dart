@@ -20,18 +20,21 @@ mixin _$EditorState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function(int? key, Preset preset) data,
+    required TResult Function() save,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function(int? key, Preset preset)? data,
+    TResult Function()? save,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function(int? key, Preset preset)? data,
+    TResult Function()? save,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -39,18 +42,21 @@ mixin _$EditorState {
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
     required TResult Function(_Data value) data,
+    required TResult Function(_Save value) save,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
     TResult Function(_Data value)? data,
+    TResult Function(_Save value)? save,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
     TResult Function(_Data value)? data,
+    TResult Function(_Save value)? save,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -113,6 +119,7 @@ class _$_Initial implements _Initial {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function(int? key, Preset preset) data,
+    required TResult Function() save,
   }) {
     return initial();
   }
@@ -122,6 +129,7 @@ class _$_Initial implements _Initial {
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function(int? key, Preset preset)? data,
+    TResult Function()? save,
   }) {
     return initial?.call();
   }
@@ -131,6 +139,7 @@ class _$_Initial implements _Initial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function(int? key, Preset preset)? data,
+    TResult Function()? save,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -144,6 +153,7 @@ class _$_Initial implements _Initial {
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
     required TResult Function(_Data value) data,
+    required TResult Function(_Save value) save,
   }) {
     return initial(this);
   }
@@ -153,6 +163,7 @@ class _$_Initial implements _Initial {
   TResult? mapOrNull<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
     TResult Function(_Data value)? data,
+    TResult Function(_Save value)? save,
   }) {
     return initial?.call(this);
   }
@@ -162,6 +173,7 @@ class _$_Initial implements _Initial {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
     TResult Function(_Data value)? data,
+    TResult Function(_Save value)? save,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -258,6 +270,7 @@ class _$_Data implements _Data {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function(int? key, Preset preset) data,
+    required TResult Function() save,
   }) {
     return data(key, preset);
   }
@@ -267,6 +280,7 @@ class _$_Data implements _Data {
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function(int? key, Preset preset)? data,
+    TResult Function()? save,
   }) {
     return data?.call(key, preset);
   }
@@ -276,6 +290,7 @@ class _$_Data implements _Data {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function(int? key, Preset preset)? data,
+    TResult Function()? save,
     required TResult orElse(),
   }) {
     if (data != null) {
@@ -289,6 +304,7 @@ class _$_Data implements _Data {
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
     required TResult Function(_Data value) data,
+    required TResult Function(_Save value) save,
   }) {
     return data(this);
   }
@@ -298,6 +314,7 @@ class _$_Data implements _Data {
   TResult? mapOrNull<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
     TResult Function(_Data value)? data,
+    TResult Function(_Save value)? save,
   }) {
     return data?.call(this);
   }
@@ -307,6 +324,7 @@ class _$_Data implements _Data {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
     TResult Function(_Data value)? data,
+    TResult Function(_Save value)? save,
     required TResult orElse(),
   }) {
     if (data != null) {
@@ -323,4 +341,112 @@ abstract class _Data implements EditorState {
   Preset get preset;
   @JsonKey(ignore: true)
   _$$_DataCopyWith<_$_Data> get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$_SaveCopyWith<$Res> {
+  factory _$$_SaveCopyWith(_$_Save value, $Res Function(_$_Save) then) =
+      __$$_SaveCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$_SaveCopyWithImpl<$Res> extends _$EditorStateCopyWithImpl<$Res>
+    implements _$$_SaveCopyWith<$Res> {
+  __$$_SaveCopyWithImpl(_$_Save _value, $Res Function(_$_Save) _then)
+      : super(_value, (v) => _then(v as _$_Save));
+
+  @override
+  _$_Save get _value => super._value as _$_Save;
+}
+
+/// @nodoc
+
+class _$_Save implements _Save {
+  const _$_Save();
+
+  @override
+  String toString() {
+    return 'EditorState.save()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$_Save);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function(int? key, Preset preset) data,
+    required TResult Function() save,
+  }) {
+    return save();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function(int? key, Preset preset)? data,
+    TResult Function()? save,
+  }) {
+    return save?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function(int? key, Preset preset)? data,
+    TResult Function()? save,
+    required TResult orElse(),
+  }) {
+    if (save != null) {
+      return save();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Initial value) initial,
+    required TResult Function(_Data value) data,
+    required TResult Function(_Save value) save,
+  }) {
+    return save(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(_Initial value)? initial,
+    TResult Function(_Data value)? data,
+    TResult Function(_Save value)? save,
+  }) {
+    return save?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Initial value)? initial,
+    TResult Function(_Data value)? data,
+    TResult Function(_Save value)? save,
+    required TResult orElse(),
+  }) {
+    if (save != null) {
+      return save(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _Save implements EditorState {
+  const factory _Save() = _$_Save;
 }
