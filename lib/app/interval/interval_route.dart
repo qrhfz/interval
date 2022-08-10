@@ -54,12 +54,17 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
   @override
   void didPop() {
     context.read<TimerCubit>().stop();
+    context.read<IntervalCubit>().stop();
     super.didPop();
   }
 
   Task getCurrentTask(
       IList<Loop> loops, int loopIndex, int set, int taskIndex) {
-    return loops[loopIndex].tasks[taskIndex];
+    try {
+      return loops[loopIndex].tasks[taskIndex];
+    } on RangeError catch (e) {
+      return Task(name: "error", duration: Duration.zero);
+    }
   }
 
   Future<void> startNotification(Task currentTask, Duration timeleft) async {
@@ -103,13 +108,14 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
           listener: (context, state) {
             state.maybeWhen(
               running: (loops, loopIndex, set, taskIndex) {
-                final currentTask = loops[loopIndex].tasks[taskIndex];
+                final currentTask =
+                    getCurrentTask(loops, loopIndex, set, taskIndex);
 
                 context.read<TimerCubit>().start(currentTask);
               },
-              finished: () {
-                GoRouter.of(context).pop();
-              },
+              // finished: () {
+              //   GoRouter.of(context).pop();
+              // },
               orElse: () {},
             );
           },
@@ -217,8 +223,7 @@ class TimerProgress extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CircularPercentIndicator(
-      // to not divide by zero add really small number
-      percent: time.inSeconds / (total.inSeconds + 1e-5),
+      percent: getPercentage(),
       progressColor: color,
       backgroundColor: color.withAlpha(125),
       radius: 128,
@@ -234,4 +239,7 @@ class TimerProgress extends StatelessWidget {
       ),
     );
   }
+
+  double getPercentage() =>
+      total.inSeconds > 0 ? time.inSeconds / total.inSeconds : 0;
 }
