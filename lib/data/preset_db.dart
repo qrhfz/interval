@@ -1,29 +1,29 @@
 import 'package:hive/hive.dart';
-import 'package:interval/domain/entitites/preset.dart';
+import 'package:interval/data/models/preset_model.dart';
 
 class PresetDB {
-  final box = Hive.box<Preset>('presets');
+  final box = Hive.box<PresetModel>('presets');
 
-  List<Preset> getAllPreset() {
+  List<PresetModel> getAllPreset() {
     return box.values.toList();
   }
 
-  Preset? getPreset(int key) {
-    return box.get(key);
+  PresetModel? getPreset(int id) {
+    return box.get(id);
   }
 
-  Future<int> putPreset(int? key, Preset value) async {
-    if (key != null) {
-      await box.put(key, value);
-      return key;
-    } else {
-      final id = await box.add(value);
+  Future<int> putPreset(int? id, PresetModel value) async {
+    if (id != null) {
+      await box.put(id, value);
       return id;
+    } else {
+      final responseId = await box.add(value);
+      return responseId;
     }
   }
 
-  Future<void> deletePreset(int key) {
-    return box.delete(key);
+  Future<void> deletePreset(int id) {
+    return box.delete(id);
   }
 
   List<int> getAllKeys() {
