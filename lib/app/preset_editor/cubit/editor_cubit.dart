@@ -144,12 +144,29 @@ class EditorCubit extends Cubit<EditorState> {
       data: (data) {
         final loops = data.preset.loops.toList();
         final loop = loops[loopIndex];
+
+        if (loop.tasks.contains(task)) {
+          task = _addDuplicateTrailingNumber(task);
+        }
+
         loops[loopIndex] = loop.copyWith(tasks: loop.tasks.add(task));
         return data.copyWith(
           preset: data.preset.copyWith(loops: loops.toIList()),
         );
       },
     ));
+  }
+
+  Task _addDuplicateTrailingNumber(Task task) {
+    final exp = RegExp(r"^.*?(?: #([0-9]+)){0,1}$");
+    final match = exp.firstMatch(task.name);
+    final iter = match?[0];
+    var i = iter != null ? int.tryParse(iter) ?? 0 : 0;
+
+    i++;
+
+    task = task.copyWith(name: "${task.name} #$i");
+    return task;
   }
 
   void updateTask(int loopIndex, int taskIndex, Task task) {
@@ -159,7 +176,13 @@ class EditorCubit extends Cubit<EditorState> {
         final loops = data.preset.loops.toList();
         final loop = loops[loopIndex];
         final tasks = loop.tasks.toList();
+
+        if (loop.tasks.contains(task)) {
+          task = _addDuplicateTrailingNumber(task);
+        }
+
         tasks[taskIndex] = task;
+
         loops[loopIndex] = loop.copyWith(tasks: tasks.toIList());
         return data.copyWith(
           preset: data.preset.copyWith(loops: loops.toIList()),
