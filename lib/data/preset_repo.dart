@@ -13,7 +13,7 @@ class PresetRepo {
   }
 
   Future<void> importJson(List<Map<String, dynamic>> json) async {
-    db.drop();
+    await db.drop();
 
     for (var item in json) {
       final preset = PresetModel.fromJson(item);

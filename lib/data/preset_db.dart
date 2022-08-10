@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:hive/hive.dart';
 import 'package:interval/data/models/preset_model.dart';
 
@@ -5,6 +7,7 @@ class PresetDB {
   final box = Hive.box<PresetModel>('presets');
 
   List<PresetModel> getAllPreset() {
+    log(box.values.toList().toString(), name: 'PresetDB.getAllPreset');
     return box.values.toList();
   }
 

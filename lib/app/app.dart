@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:go_router/go_router.dart';
+import 'package:interval/app/backup/backup_page.dart';
+import 'package:interval/app/backup/cubit/backup_cubit.dart';
 import 'package:interval/app/home/cubit/preset_cubit.dart';
 import 'package:interval/app/interval/cubit/timer_cubit.dart';
 import 'package:interval/app/interval/interval_route.dart';
@@ -36,6 +38,13 @@ class MyApp extends StatelessWidget {
             },
           ),
           GoRoute(
+            name: 'backup',
+            path: 'backup',
+            builder: (context, state) {
+              return const BackupPage();
+            },
+          ),
+          GoRoute(
             name: PresetEditor.routeName,
             path: 'editor',
             builder: (context, state) {
@@ -65,6 +74,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => TimerCubit()),
         BlocProvider(create: (context) => PresetCubit()),
         BlocProvider(create: (context) => EditorCubit()),
+        BlocProvider(create: (context) => BackupCubit()),
       ],
       child: MaterialApp.router(
         routerDelegate: _router.routerDelegate,

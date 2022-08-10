@@ -39,7 +39,7 @@ class TaskModel extends HiveObject {
     );
   }
 
-  Task toEntity() => Task(name: name, duration: duration);
+  Task toEntity() => Task(name: name, duration: duration, color: color);
 
   factory TaskModel.fromJson(Map<String, dynamic> json) =>
       _$TaskModelFromJson(json);

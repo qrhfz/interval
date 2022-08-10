@@ -53,7 +53,28 @@ class _HomeRouteState extends State<HomeRoute> {
         );
       },
       child: Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          title: const Text("Loop Timer"),
+          actions: [
+            PopupMenuButton(
+              itemBuilder: (context) {
+                return [
+                  PopupMenuItem(
+                    child: const Text('Backup'),
+                    onTap: () async {
+                      await Future.delayed(
+                        const Duration(microseconds: 17),
+                        () {
+                          GoRouter.of(context).goNamed('backup');
+                        },
+                      );
+                    },
+                  ),
+                ];
+              },
+            )
+          ],
+        ),
         body: const CustomScrollView(
           slivers: [
             SliverToBoxAdapter(

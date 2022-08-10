@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -17,7 +19,7 @@ class PresetCubit extends Cubit<PresetState> {
   void fetchData() {
     final list = repo.getAllPreset();
     final keys = repo.getAllKeys();
-
+    log(list.toString(), name: 'PresetCubit.fetchData');
     emit(PresetState.data(keys, list));
   }
 
