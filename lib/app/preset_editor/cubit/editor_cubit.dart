@@ -26,13 +26,16 @@ class EditorCubit extends Cubit<EditorState> {
     );
   }
 
-  void save() {
-    state.when(
-      initial: () {},
-      data: (key, value) {
-        repo.putPreset(key, value);
+  void save() async {
+    final newState = await state.when(
+      initial: () async => state,
+      data: (key, value) async {
+        final respondKey = await repo.putPreset(key, value);
+        return EditorState.data(respondKey, value);
       },
     );
+
+    emit(newState);
   }
 
   void moveTask(int loopIndex, int oldIndex, int newIndex) {

@@ -5,6 +5,7 @@ import 'package:flutter_spinbox/flutter_spinbox.dart';
 import 'package:interval/app/preset_editor/cubit/editor_cubit.dart';
 import 'package:interval/domain/entitites/loop.dart';
 import 'package:interval/domain/entitites/task.dart';
+import 'package:interval/utils/duration_extension.dart';
 
 import '../../domain/entitites/preset.dart';
 
@@ -583,6 +584,7 @@ class TaskListTile extends StatelessWidget {
           decoration: BoxDecoration(shape: BoxShape.circle, color: task.color),
         ),
         title: Text(task.name),
+        subtitle: Text(task.duration.toFormattedString()),
         trailing: PopupMenuButton(
           itemBuilder: (_) {
             return [

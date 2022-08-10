@@ -14,12 +14,13 @@ class PresetDB {
     return box.get(key);
   }
 
-  Future<void> putPreset(int? key, Preset value) async {
+  Future<int> putPreset(int? key, Preset value) async {
     if (key != null) {
-      return await box.put(key, value);
+      await box.put(key, value);
+      return key;
     } else {
       final id = await box.add(value);
-      log("$id");
+      return id;
     }
   }
 

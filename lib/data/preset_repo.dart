@@ -18,7 +18,7 @@ class PresetRepo {
     return db.getPreset(key);
   }
 
-  Future<void> putPreset(int? key, Preset value) {
+  Future<int> putPreset(int? key, Preset value) {
     return db.putPreset(key, value);
   }
 
