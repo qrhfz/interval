@@ -6,7 +6,6 @@ import 'package:bloc/bloc.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:interval/data/preset_repo.dart';
-import 'package:path_provider/path_provider.dart';
 
 import '../../../di.dart';
 
