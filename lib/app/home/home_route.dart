@@ -55,25 +55,7 @@ class _HomeRouteState extends State<HomeRoute> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text("Loop Timer"),
-          actions: [
-            PopupMenuButton(
-              itemBuilder: (context) {
-                return [
-                  PopupMenuItem(
-                    child: const Text('Backup'),
-                    onTap: () async {
-                      await Future.delayed(
-                        const Duration(microseconds: 17),
-                        () {
-                          GoRouter.of(context).goNamed('backup');
-                        },
-                      );
-                    },
-                  ),
-                ];
-              },
-            )
-          ],
+          actions: const [HomeMenu()],
         ),
         body: const CustomScrollView(
           slivers: [
@@ -85,6 +67,33 @@ class _HomeRouteState extends State<HomeRoute> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class HomeMenu extends StatelessWidget {
+  const HomeMenu({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    void goToBackupPage() {
+      GoRouter.of(context).goNamed('backup');
+    }
+
+    return PopupMenuButton(
+      itemBuilder: (context) {
+        return [
+          PopupMenuItem(
+            child: const Text('Backup'),
+            onTap: () async {
+              await Future.delayed(const Duration(microseconds: 17));
+              goToBackupPage();
+            },
+          ),
+        ];
+      },
     );
   }
 }
@@ -304,11 +313,10 @@ class SetsInput extends StatelessWidget {
       },
       title: const Text(
         "Sets",
-        // style: TextStyle(fontSize: 24),
       ),
       trailing: Text(
         value.toString(),
-        // style: const TextStyle(fontSize: 24),
+        style: const TextStyle(color: Colors.red),
       ),
     );
   }
@@ -356,7 +364,7 @@ class TimeInput extends StatelessWidget {
           minutes: minutes,
           seconds: seconds,
         ).toFormattedString(),
-        // style: const TextStyle(fontSize: 24),
+        style: const TextStyle(color: Colors.red),
       ),
     );
   }
