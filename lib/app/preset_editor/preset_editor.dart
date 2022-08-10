@@ -24,7 +24,7 @@ class _PresetEditorState extends State<PresetEditor> {
   @override
   void initState() {
     super.initState();
-    final preset = widget.preset ?? Preset(name: "", loops: IList());
+    final preset = widget.preset;
     context.read<EditorCubit>().init(widget.presetKey, preset);
   }
 

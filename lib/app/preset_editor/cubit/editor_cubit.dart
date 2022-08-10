@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:interval/data/preset_repo.dart';
 import 'package:interval/di.dart';
@@ -16,14 +17,40 @@ class EditorCubit extends Cubit<EditorState> {
 
   final repo = getIt.get<PresetRepo>();
 
-  void init(int? presetKey, Preset preset) {
-    emit(
-      EditorState.data(
+  void init(int? presetKey, Preset? preset) {
+    if (preset != null) {
+      emit(EditorState.data(
         presetKey,
         preset,
-      ),
-    );
+      ));
+    } else {
+      emit(EditorState.data(
+        presetKey,
+        _samplePreset,
+      ));
+    }
   }
+
+  final _samplePreset = Preset(
+    name: 'My Preset',
+    loops: IList([
+      Loop(
+        tasks: IList([
+          Task(
+            name: "Work",
+            duration: const Duration(minutes: 10),
+            color: Colors.red,
+          ),
+          Task(
+            name: "Rest",
+            duration: const Duration(minutes: 5),
+            color: Colors.blue,
+          ),
+        ]),
+        sets: 1,
+      ),
+    ]),
+  );
 
   void save() async {
     final newState = await state.maybeWhen(
