@@ -15,7 +15,7 @@ import '../app.dart';
 class IntervalRoute extends StatefulWidget {
   static const routeName = 'interval';
 
-  final Preset preset;
+  final Preset? preset;
   const IntervalRoute(this.preset, {super.key});
 
   @override
@@ -28,8 +28,11 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
   void initState() {
     super.initState();
 
+    final preset = widget.preset;
+
+    if (preset == null) return;
     Future.microtask(() {
-      context.read<IntervalCubit>().start(widget.preset.loops);
+      context.read<IntervalCubit>().start(preset.loops);
     });
   }
 

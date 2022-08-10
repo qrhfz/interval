@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
             name: IntervalRoute.routeName,
             path: 'interval',
             builder: (context, state) {
-              final preset = state.extra! as Preset;
+              final preset = state.extra as Preset?;
               return IntervalRoute(preset);
             },
           ),
