@@ -7,6 +7,20 @@ class PresetRepo {
   final PresetDB db;
 
   PresetRepo(this.db);
+
+  List<Map<String, dynamic>> exportJson() {
+    return db.getAllPreset().map((e) => e.toJson()).toList();
+  }
+
+  Future<void> importJson(List<Map<String, dynamic>> json) async {
+    db.drop();
+
+    for (var item in json) {
+      final preset = PresetModel.fromJson(item);
+      await db.putPreset(null, preset);
+    }
+  }
+
   IList<Preset> getAllPreset() {
     return db.getAllPreset().map((e) => e.toEntity()).toIList();
   }

@@ -26,6 +26,10 @@ class PresetDB {
     return box.delete(id);
   }
 
+  Future<void> drop() {
+    return box.clear();
+  }
+
   List<int> getAllKeys() {
     return box.keys.cast<int>().toList();
   }
