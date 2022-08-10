@@ -51,26 +51,26 @@ mixin _$IntervalState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Running value) running,
-    required TResult Function(_Paused value) paused,
-    required TResult Function(_Finished value) finished,
+    required TResult Function(IntervalInitial value) initial,
+    required TResult Function(IntervalRunning value) running,
+    required TResult Function(IntervalPaused value) paused,
+    required TResult Function(IntervalFinished value) finished,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Running value)? running,
-    TResult Function(_Paused value)? paused,
-    TResult Function(_Finished value)? finished,
+    TResult Function(IntervalInitial value)? initial,
+    TResult Function(IntervalRunning value)? running,
+    TResult Function(IntervalPaused value)? paused,
+    TResult Function(IntervalFinished value)? finished,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Running value)? running,
-    TResult Function(_Paused value)? paused,
-    TResult Function(_Finished value)? finished,
+    TResult Function(IntervalInitial value)? initial,
+    TResult Function(IntervalRunning value)? running,
+    TResult Function(IntervalPaused value)? paused,
+    TResult Function(IntervalFinished value)? finished,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -94,26 +94,28 @@ class _$IntervalStateCopyWithImpl<$Res>
 }
 
 /// @nodoc
-abstract class _$$_InitialCopyWith<$Res> {
-  factory _$$_InitialCopyWith(
-          _$_Initial value, $Res Function(_$_Initial) then) =
-      __$$_InitialCopyWithImpl<$Res>;
+abstract class _$$IntervalInitialCopyWith<$Res> {
+  factory _$$IntervalInitialCopyWith(
+          _$IntervalInitial value, $Res Function(_$IntervalInitial) then) =
+      __$$IntervalInitialCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_InitialCopyWithImpl<$Res> extends _$IntervalStateCopyWithImpl<$Res>
-    implements _$$_InitialCopyWith<$Res> {
-  __$$_InitialCopyWithImpl(_$_Initial _value, $Res Function(_$_Initial) _then)
-      : super(_value, (v) => _then(v as _$_Initial));
+class __$$IntervalInitialCopyWithImpl<$Res>
+    extends _$IntervalStateCopyWithImpl<$Res>
+    implements _$$IntervalInitialCopyWith<$Res> {
+  __$$IntervalInitialCopyWithImpl(
+      _$IntervalInitial _value, $Res Function(_$IntervalInitial) _then)
+      : super(_value, (v) => _then(v as _$IntervalInitial));
 
   @override
-  _$_Initial get _value => super._value as _$_Initial;
+  _$IntervalInitial get _value => super._value as _$IntervalInitial;
 }
 
 /// @nodoc
 
-class _$_Initial implements _Initial {
-  const _$_Initial();
+class _$IntervalInitial implements IntervalInitial {
+  const _$IntervalInitial();
 
   @override
   String toString() {
@@ -123,7 +125,7 @@ class _$_Initial implements _Initial {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_Initial);
+        (other.runtimeType == runtimeType && other is _$IntervalInitial);
   }
 
   @override
@@ -177,10 +179,10 @@ class _$_Initial implements _Initial {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Running value) running,
-    required TResult Function(_Paused value) paused,
-    required TResult Function(_Finished value) finished,
+    required TResult Function(IntervalInitial value) initial,
+    required TResult Function(IntervalRunning value) running,
+    required TResult Function(IntervalPaused value) paused,
+    required TResult Function(IntervalFinished value) finished,
   }) {
     return initial(this);
   }
@@ -188,10 +190,10 @@ class _$_Initial implements _Initial {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Running value)? running,
-    TResult Function(_Paused value)? paused,
-    TResult Function(_Finished value)? finished,
+    TResult Function(IntervalInitial value)? initial,
+    TResult Function(IntervalRunning value)? running,
+    TResult Function(IntervalPaused value)? paused,
+    TResult Function(IntervalFinished value)? finished,
   }) {
     return initial?.call(this);
   }
@@ -199,10 +201,10 @@ class _$_Initial implements _Initial {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Running value)? running,
-    TResult Function(_Paused value)? paused,
-    TResult Function(_Finished value)? finished,
+    TResult Function(IntervalInitial value)? initial,
+    TResult Function(IntervalRunning value)? running,
+    TResult Function(IntervalPaused value)? paused,
+    TResult Function(IntervalFinished value)? finished,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -212,26 +214,28 @@ class _$_Initial implements _Initial {
   }
 }
 
-abstract class _Initial implements IntervalState {
-  const factory _Initial() = _$_Initial;
+abstract class IntervalInitial implements IntervalState {
+  const factory IntervalInitial() = _$IntervalInitial;
 }
 
 /// @nodoc
-abstract class _$$_RunningCopyWith<$Res> {
-  factory _$$_RunningCopyWith(
-          _$_Running value, $Res Function(_$_Running) then) =
-      __$$_RunningCopyWithImpl<$Res>;
+abstract class _$$IntervalRunningCopyWith<$Res> {
+  factory _$$IntervalRunningCopyWith(
+          _$IntervalRunning value, $Res Function(_$IntervalRunning) then) =
+      __$$IntervalRunningCopyWithImpl<$Res>;
   $Res call({IList<Loop> loops, int loopIndex, int set, int taskIndex});
 }
 
 /// @nodoc
-class __$$_RunningCopyWithImpl<$Res> extends _$IntervalStateCopyWithImpl<$Res>
-    implements _$$_RunningCopyWith<$Res> {
-  __$$_RunningCopyWithImpl(_$_Running _value, $Res Function(_$_Running) _then)
-      : super(_value, (v) => _then(v as _$_Running));
+class __$$IntervalRunningCopyWithImpl<$Res>
+    extends _$IntervalStateCopyWithImpl<$Res>
+    implements _$$IntervalRunningCopyWith<$Res> {
+  __$$IntervalRunningCopyWithImpl(
+      _$IntervalRunning _value, $Res Function(_$IntervalRunning) _then)
+      : super(_value, (v) => _then(v as _$IntervalRunning));
 
   @override
-  _$_Running get _value => super._value as _$_Running;
+  _$IntervalRunning get _value => super._value as _$IntervalRunning;
 
   @override
   $Res call({
@@ -240,7 +244,7 @@ class __$$_RunningCopyWithImpl<$Res> extends _$IntervalStateCopyWithImpl<$Res>
     Object? set = freezed,
     Object? taskIndex = freezed,
   }) {
-    return _then(_$_Running(
+    return _then(_$IntervalRunning(
       loops == freezed
           ? _value.loops
           : loops // ignore: cast_nullable_to_non_nullable
@@ -263,8 +267,8 @@ class __$$_RunningCopyWithImpl<$Res> extends _$IntervalStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_Running implements _Running {
-  const _$_Running(this.loops, this.loopIndex, this.set, this.taskIndex);
+class _$IntervalRunning implements IntervalRunning {
+  const _$IntervalRunning(this.loops, this.loopIndex, this.set, this.taskIndex);
 
   @override
   final IList<Loop> loops;
@@ -284,7 +288,7 @@ class _$_Running implements _Running {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Running &&
+            other is _$IntervalRunning &&
             const DeepCollectionEquality().equals(other.loops, loops) &&
             const DeepCollectionEquality().equals(other.loopIndex, loopIndex) &&
             const DeepCollectionEquality().equals(other.set, set) &&
@@ -301,8 +305,8 @@ class _$_Running implements _Running {
 
   @JsonKey(ignore: true)
   @override
-  _$$_RunningCopyWith<_$_Running> get copyWith =>
-      __$$_RunningCopyWithImpl<_$_Running>(this, _$identity);
+  _$$IntervalRunningCopyWith<_$IntervalRunning> get copyWith =>
+      __$$IntervalRunningCopyWithImpl<_$IntervalRunning>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -352,10 +356,10 @@ class _$_Running implements _Running {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Running value) running,
-    required TResult Function(_Paused value) paused,
-    required TResult Function(_Finished value) finished,
+    required TResult Function(IntervalInitial value) initial,
+    required TResult Function(IntervalRunning value) running,
+    required TResult Function(IntervalPaused value) paused,
+    required TResult Function(IntervalFinished value) finished,
   }) {
     return running(this);
   }
@@ -363,10 +367,10 @@ class _$_Running implements _Running {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Running value)? running,
-    TResult Function(_Paused value)? paused,
-    TResult Function(_Finished value)? finished,
+    TResult Function(IntervalInitial value)? initial,
+    TResult Function(IntervalRunning value)? running,
+    TResult Function(IntervalPaused value)? paused,
+    TResult Function(IntervalFinished value)? finished,
   }) {
     return running?.call(this);
   }
@@ -374,10 +378,10 @@ class _$_Running implements _Running {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Running value)? running,
-    TResult Function(_Paused value)? paused,
-    TResult Function(_Finished value)? finished,
+    TResult Function(IntervalInitial value)? initial,
+    TResult Function(IntervalRunning value)? running,
+    TResult Function(IntervalPaused value)? paused,
+    TResult Function(IntervalFinished value)? finished,
     required TResult orElse(),
   }) {
     if (running != null) {
@@ -387,34 +391,37 @@ class _$_Running implements _Running {
   }
 }
 
-abstract class _Running implements IntervalState {
-  const factory _Running(final IList<Loop> loops, final int loopIndex,
-      final int set, final int taskIndex) = _$_Running;
+abstract class IntervalRunning implements IntervalState {
+  const factory IntervalRunning(final IList<Loop> loops, final int loopIndex,
+      final int set, final int taskIndex) = _$IntervalRunning;
 
   IList<Loop> get loops;
   int get loopIndex;
   int get set;
   int get taskIndex;
   @JsonKey(ignore: true)
-  _$$_RunningCopyWith<_$_Running> get copyWith =>
+  _$$IntervalRunningCopyWith<_$IntervalRunning> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$_PausedCopyWith<$Res> {
-  factory _$$_PausedCopyWith(_$_Paused value, $Res Function(_$_Paused) then) =
-      __$$_PausedCopyWithImpl<$Res>;
+abstract class _$$IntervalPausedCopyWith<$Res> {
+  factory _$$IntervalPausedCopyWith(
+          _$IntervalPaused value, $Res Function(_$IntervalPaused) then) =
+      __$$IntervalPausedCopyWithImpl<$Res>;
   $Res call({IList<Loop> loops, int loopIndex, int set, int taskIndex});
 }
 
 /// @nodoc
-class __$$_PausedCopyWithImpl<$Res> extends _$IntervalStateCopyWithImpl<$Res>
-    implements _$$_PausedCopyWith<$Res> {
-  __$$_PausedCopyWithImpl(_$_Paused _value, $Res Function(_$_Paused) _then)
-      : super(_value, (v) => _then(v as _$_Paused));
+class __$$IntervalPausedCopyWithImpl<$Res>
+    extends _$IntervalStateCopyWithImpl<$Res>
+    implements _$$IntervalPausedCopyWith<$Res> {
+  __$$IntervalPausedCopyWithImpl(
+      _$IntervalPaused _value, $Res Function(_$IntervalPaused) _then)
+      : super(_value, (v) => _then(v as _$IntervalPaused));
 
   @override
-  _$_Paused get _value => super._value as _$_Paused;
+  _$IntervalPaused get _value => super._value as _$IntervalPaused;
 
   @override
   $Res call({
@@ -423,7 +430,7 @@ class __$$_PausedCopyWithImpl<$Res> extends _$IntervalStateCopyWithImpl<$Res>
     Object? set = freezed,
     Object? taskIndex = freezed,
   }) {
-    return _then(_$_Paused(
+    return _then(_$IntervalPaused(
       loops == freezed
           ? _value.loops
           : loops // ignore: cast_nullable_to_non_nullable
@@ -446,8 +453,8 @@ class __$$_PausedCopyWithImpl<$Res> extends _$IntervalStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_Paused implements _Paused {
-  const _$_Paused(this.loops, this.loopIndex, this.set, this.taskIndex);
+class _$IntervalPaused implements IntervalPaused {
+  const _$IntervalPaused(this.loops, this.loopIndex, this.set, this.taskIndex);
 
   @override
   final IList<Loop> loops;
@@ -467,7 +474,7 @@ class _$_Paused implements _Paused {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Paused &&
+            other is _$IntervalPaused &&
             const DeepCollectionEquality().equals(other.loops, loops) &&
             const DeepCollectionEquality().equals(other.loopIndex, loopIndex) &&
             const DeepCollectionEquality().equals(other.set, set) &&
@@ -484,8 +491,8 @@ class _$_Paused implements _Paused {
 
   @JsonKey(ignore: true)
   @override
-  _$$_PausedCopyWith<_$_Paused> get copyWith =>
-      __$$_PausedCopyWithImpl<_$_Paused>(this, _$identity);
+  _$$IntervalPausedCopyWith<_$IntervalPaused> get copyWith =>
+      __$$IntervalPausedCopyWithImpl<_$IntervalPaused>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -535,10 +542,10 @@ class _$_Paused implements _Paused {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Running value) running,
-    required TResult Function(_Paused value) paused,
-    required TResult Function(_Finished value) finished,
+    required TResult Function(IntervalInitial value) initial,
+    required TResult Function(IntervalRunning value) running,
+    required TResult Function(IntervalPaused value) paused,
+    required TResult Function(IntervalFinished value) finished,
   }) {
     return paused(this);
   }
@@ -546,10 +553,10 @@ class _$_Paused implements _Paused {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Running value)? running,
-    TResult Function(_Paused value)? paused,
-    TResult Function(_Finished value)? finished,
+    TResult Function(IntervalInitial value)? initial,
+    TResult Function(IntervalRunning value)? running,
+    TResult Function(IntervalPaused value)? paused,
+    TResult Function(IntervalFinished value)? finished,
   }) {
     return paused?.call(this);
   }
@@ -557,10 +564,10 @@ class _$_Paused implements _Paused {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Running value)? running,
-    TResult Function(_Paused value)? paused,
-    TResult Function(_Finished value)? finished,
+    TResult Function(IntervalInitial value)? initial,
+    TResult Function(IntervalRunning value)? running,
+    TResult Function(IntervalPaused value)? paused,
+    TResult Function(IntervalFinished value)? finished,
     required TResult orElse(),
   }) {
     if (paused != null) {
@@ -570,41 +577,42 @@ class _$_Paused implements _Paused {
   }
 }
 
-abstract class _Paused implements IntervalState {
-  const factory _Paused(final IList<Loop> loops, final int loopIndex,
-      final int set, final int taskIndex) = _$_Paused;
+abstract class IntervalPaused implements IntervalState {
+  const factory IntervalPaused(final IList<Loop> loops, final int loopIndex,
+      final int set, final int taskIndex) = _$IntervalPaused;
 
   IList<Loop> get loops;
   int get loopIndex;
   int get set;
   int get taskIndex;
   @JsonKey(ignore: true)
-  _$$_PausedCopyWith<_$_Paused> get copyWith =>
+  _$$IntervalPausedCopyWith<_$IntervalPaused> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$_FinishedCopyWith<$Res> {
-  factory _$$_FinishedCopyWith(
-          _$_Finished value, $Res Function(_$_Finished) then) =
-      __$$_FinishedCopyWithImpl<$Res>;
+abstract class _$$IntervalFinishedCopyWith<$Res> {
+  factory _$$IntervalFinishedCopyWith(
+          _$IntervalFinished value, $Res Function(_$IntervalFinished) then) =
+      __$$IntervalFinishedCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_FinishedCopyWithImpl<$Res> extends _$IntervalStateCopyWithImpl<$Res>
-    implements _$$_FinishedCopyWith<$Res> {
-  __$$_FinishedCopyWithImpl(
-      _$_Finished _value, $Res Function(_$_Finished) _then)
-      : super(_value, (v) => _then(v as _$_Finished));
+class __$$IntervalFinishedCopyWithImpl<$Res>
+    extends _$IntervalStateCopyWithImpl<$Res>
+    implements _$$IntervalFinishedCopyWith<$Res> {
+  __$$IntervalFinishedCopyWithImpl(
+      _$IntervalFinished _value, $Res Function(_$IntervalFinished) _then)
+      : super(_value, (v) => _then(v as _$IntervalFinished));
 
   @override
-  _$_Finished get _value => super._value as _$_Finished;
+  _$IntervalFinished get _value => super._value as _$IntervalFinished;
 }
 
 /// @nodoc
 
-class _$_Finished implements _Finished {
-  const _$_Finished();
+class _$IntervalFinished implements IntervalFinished {
+  const _$IntervalFinished();
 
   @override
   String toString() {
@@ -614,7 +622,7 @@ class _$_Finished implements _Finished {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_Finished);
+        (other.runtimeType == runtimeType && other is _$IntervalFinished);
   }
 
   @override
@@ -668,10 +676,10 @@ class _$_Finished implements _Finished {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Running value) running,
-    required TResult Function(_Paused value) paused,
-    required TResult Function(_Finished value) finished,
+    required TResult Function(IntervalInitial value) initial,
+    required TResult Function(IntervalRunning value) running,
+    required TResult Function(IntervalPaused value) paused,
+    required TResult Function(IntervalFinished value) finished,
   }) {
     return finished(this);
   }
@@ -679,10 +687,10 @@ class _$_Finished implements _Finished {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Running value)? running,
-    TResult Function(_Paused value)? paused,
-    TResult Function(_Finished value)? finished,
+    TResult Function(IntervalInitial value)? initial,
+    TResult Function(IntervalRunning value)? running,
+    TResult Function(IntervalPaused value)? paused,
+    TResult Function(IntervalFinished value)? finished,
   }) {
     return finished?.call(this);
   }
@@ -690,10 +698,10 @@ class _$_Finished implements _Finished {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Running value)? running,
-    TResult Function(_Paused value)? paused,
-    TResult Function(_Finished value)? finished,
+    TResult Function(IntervalInitial value)? initial,
+    TResult Function(IntervalRunning value)? running,
+    TResult Function(IntervalPaused value)? paused,
+    TResult Function(IntervalFinished value)? finished,
     required TResult orElse(),
   }) {
     if (finished != null) {
@@ -703,6 +711,6 @@ class _$_Finished implements _Finished {
   }
 }
 
-abstract class _Finished implements IntervalState {
-  const factory _Finished() = _$_Finished;
+abstract class IntervalFinished implements IntervalState {
+  const factory IntervalFinished() = _$IntervalFinished;
 }

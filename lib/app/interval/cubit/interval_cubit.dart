@@ -3,6 +3,7 @@ import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../domain/entitites/loop.dart';
+import '../../../domain/entitites/task.dart';
 
 part 'interval_state.dart';
 part 'interval_cubit.freezed.dart';

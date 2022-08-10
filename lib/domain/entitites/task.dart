@@ -3,14 +3,33 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive/hive.dart';
 
 part 'task.freezed.dart';
-part 'task.g.dart';
 
 @freezed
 class Task with _$Task {
-  @HiveType(typeId: 3, adapterName: 'TaskAdapter')
   factory Task({
-    @HiveField(1) required String name,
-    @HiveField(2) required Duration duration,
-    @HiveField(3) @Default(Colors.grey) Color color,
+    required String name,
+    required Duration duration,
+    @Default(Colors.grey) Color color,
   }) = _Task;
+}
+
+class TaskAdapter extends TypeAdapter<Task> {
+  @override
+  Task read(BinaryReader reader) {
+    final String name = reader.readString();
+    final Duration duration = reader.read();
+    final Color color = reader.read();
+    return Task(name: name, duration: duration, color: color);
+  }
+
+  @override
+  int get typeId => 3;
+
+  @override
+  void write(BinaryWriter writer, Task obj) {
+    writer
+      ..writeString(obj.name)
+      ..write<Duration>(obj.duration)
+      ..write<Color>(obj.color);
+  }
 }

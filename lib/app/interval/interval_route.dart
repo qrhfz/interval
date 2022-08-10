@@ -1,4 +1,3 @@
-import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,7 +9,6 @@ import 'package:interval/utils/duration_extension.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
-import '../../domain/entitites/loop.dart';
 import '../../domain/entitites/preset.dart';
 import '../app.dart';
 
@@ -56,15 +54,6 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
     super.didPop();
   }
 
-  Task getCurrentTask(
-      IList<Loop> loops, int loopIndex, int set, int taskIndex) {
-    try {
-      return loops[loopIndex].tasks[taskIndex];
-    } on RangeError catch (_) {
-      return Task(name: "error", duration: Duration.zero);
-    }
-  }
-
   Future<void> startNotification(Task currentTask, Duration timeleft) async {
     final androidPlatformChannelSpecifics = AndroidNotificationDetails(
       'your channel id',
@@ -104,16 +93,12 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
       listeners: [
         BlocListener<IntervalCubit, IntervalState>(
           listener: (context, state) {
-            state.maybeWhen(
-              running: (loops, loopIndex, set, taskIndex) {
-                final currentTask =
-                    getCurrentTask(loops, loopIndex, set, taskIndex);
+            state.maybeMap(
+              running: (running) {
+                final currentTask = running.currentTask;
 
                 context.read<TimerCubit>().start(currentTask);
               },
-              // finished: () {
-              //   GoRouter.of(context).pop();
-              // },
               orElse: () {},
             );
           },
@@ -136,14 +121,14 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
       ],
       child: BlocBuilder<IntervalCubit, IntervalState>(
         builder: (context, state) {
-          final currentTask = state.when(
-            running: getCurrentTask,
-            paused: getCurrentTask,
-            finished: () => Task(
+          final currentTask = state.map(
+            running: (running) => running.currentTask,
+            paused: (paused) => paused.currentTask,
+            finished: (_) => Task(
               name: "finished",
               duration: Duration.zero,
             ),
-            initial: () => Task(
+            initial: (_) => Task(
               name: "-",
               duration: Duration.zero,
             ),
