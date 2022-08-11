@@ -30,21 +30,26 @@ class BackupPage extends StatelessWidget {
         body: SizedBox(
           width: double.infinity,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              const Spacer(),
+              const Text("Export your presets into a .json file"),
               ElevatedButton(
                 onPressed: () {
                   context.read<BackupCubit>().export();
                 },
                 child: const Text('Export'),
               ),
+              const Spacer(),
+              const Text(
+                  "Import your presets from your previously created .json file"),
               ElevatedButton(
                 onPressed: () {
                   context.read<BackupCubit>().import();
                 },
                 child: const Text('Import'),
               ),
+              const Spacer(),
             ],
           ),
         ),
