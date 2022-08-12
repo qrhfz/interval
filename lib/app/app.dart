@@ -77,6 +77,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => BackupCubit()),
       ],
       child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
         routerDelegate: _router.routerDelegate,
         routeInformationParser: _router.routeInformationParser,
         routeInformationProvider: _router.routeInformationProvider,
