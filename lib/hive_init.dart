@@ -17,7 +17,7 @@ Future<void> initializeHive() async {
   final prefsBox = await Hive.openBox('prefs');
 
   if (!prefsBox.get("app_ran", defaultValue: false)) {
-    presetBox.add(
+    await presetBox.add(
       PresetModel(
         name: "Pomodoro",
         loops: [
@@ -54,6 +54,6 @@ Future<void> initializeHive() async {
         ],
       ),
     );
-    prefsBox.put("app_ran", true);
+    await prefsBox.put("app_ran", true);
   }
 }

@@ -4,7 +4,7 @@ import 'package:interval/hive_init.dart';
 import 'app/app.dart';
 
 void main() async {
-  setup();
   await initializeHive();
+  setup();
   runApp(MyApp());
 }
