@@ -168,6 +168,7 @@ class _PresetListState extends State<PresetList> {
                 return Card(
                   child: ListTile(
                     title: Text(preset.name),
+                    subtitle: Text(preset.totelDuration.toHHMMSS()),
                     leading: IconButton(
                       icon: const Icon(Icons.play_arrow),
                       onPressed: () {
@@ -363,7 +364,7 @@ class TimeInput extends StatelessWidget {
         Duration(
           minutes: minutes,
           seconds: seconds,
-        ).toFormattedString(),
+        ).toMMSS(),
         style: const TextStyle(color: Colors.red),
       ),
     );

@@ -93,8 +93,8 @@ class __$$_LoopCopyWithImpl<$Res> extends _$LoopCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_Loop implements _Loop {
-  _$_Loop({required this.tasks, required this.sets});
+class _$_Loop extends _Loop {
+  _$_Loop({required this.tasks, required this.sets}) : super._();
 
   @override
   final IList<Task> tasks;
@@ -127,9 +127,10 @@ class _$_Loop implements _Loop {
       __$$_LoopCopyWithImpl<_$_Loop>(this, _$identity);
 }
 
-abstract class _Loop implements Loop {
+abstract class _Loop extends Loop {
   factory _Loop({required final IList<Task> tasks, required final int sets}) =
       _$_Loop;
+  _Loop._() : super._();
 
   @override
   IList<Task> get tasks;

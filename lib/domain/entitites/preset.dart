@@ -7,9 +7,15 @@ part 'preset.freezed.dart';
 
 @freezed
 class Preset with _$Preset {
-  // @HiveType(typeId: 5, adapterName: 'PresetAdapter')
+  const Preset._();
   factory Preset({
     required String name,
     required IList<Loop> loops,
   }) = _Preset;
+
+  Duration get totelDuration {
+    return loops
+        .map((element) => element.totelDuration)
+        .reduce((value, element) => value + element);
+  }
 }

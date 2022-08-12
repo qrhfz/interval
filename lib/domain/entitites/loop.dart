@@ -6,9 +6,16 @@ part 'loop.freezed.dart';
 
 @freezed
 class Loop with _$Loop {
-  // @HiveType(typeId: 4, adapterName: 'LoopAdapter')
+  const Loop._();
   factory Loop({
     required IList<Task> tasks,
     required int sets,
   }) = _Loop;
+
+  Duration get totelDuration {
+    return tasks
+            .map((element) => element.duration)
+            .reduce((value, element) => value + value) *
+        sets;
+  }
 }

@@ -93,8 +93,8 @@ class __$$_PresetCopyWithImpl<$Res> extends _$PresetCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_Preset implements _Preset {
-  _$_Preset({required this.name, required this.loops});
+class _$_Preset extends _Preset {
+  _$_Preset({required this.name, required this.loops}) : super._();
 
   @override
   final String name;
@@ -127,10 +127,11 @@ class _$_Preset implements _Preset {
       __$$_PresetCopyWithImpl<_$_Preset>(this, _$identity);
 }
 
-abstract class _Preset implements Preset {
+abstract class _Preset extends Preset {
   factory _Preset(
       {required final String name,
       required final IList<Loop> loops}) = _$_Preset;
+  _Preset._() : super._();
 
   @override
   String get name;

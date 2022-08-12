@@ -77,7 +77,7 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
         ?.startForegroundService(
           1,
           currentTask.name,
-          timeleft.toFormattedString(),
+          timeleft.toMMSS(),
           notificationDetails: androidPlatformChannelSpecifics,
           payload: 'item x',
         );
@@ -217,7 +217,7 @@ class TimerProgress extends StatelessWidget {
       backgroundWidth: 8,
       circularStrokeCap: CircularStrokeCap.round,
       center: Text(
-        time.toFormattedString(),
+        time.toMMSS(),
         style: const TextStyle(
           fontSize: 64,
           // color: Colors.white,

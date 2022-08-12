@@ -72,19 +72,16 @@ class _PresetEditorState extends State<PresetEditor> {
           body: state.maybeWhen(
             orElse: () => const Center(child: Text("empty")),
             data: (key, preset) {
-              return CustomScrollView(
-                slivers: preset.loops.asMap().entries.map((entry) {
-                  final loop = entry.value;
-                  final loopIndex = entry.key;
-
-                  return SliverToBoxAdapter(
+              return CustomScrollView(slivers: [
+                for (final entry in preset.loops.asMap().entries)
+                  SliverToBoxAdapter(
                     child: Card(
                       child: Row(
                         children: [
                           Column(
                             children: [
-                              MoveUpButton(loopIndex: loopIndex),
-                              MoveDownButton(loopIndex: loopIndex),
+                              MoveUpButton(loopIndex: entry.key),
+                              MoveDownButton(loopIndex: entry.key),
                             ],
                           ),
                           Expanded(
@@ -92,20 +89,21 @@ class _PresetEditorState extends State<PresetEditor> {
                               onReorder: (oldIndex, newIndex) {
                                 context
                                     .read<EditorCubit>()
-                                    .moveTask(loopIndex, oldIndex, newIndex);
+                                    .moveTask(entry.key, oldIndex, newIndex);
                               },
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               footer: PresetFooter(
-                                loop: loop,
-                                loopIndex: loopIndex,
+                                loop: entry.value,
+                                loopIndex: entry.key,
                               ),
                               children: [
-                                for (final entry in loop.tasks.asMap().entries)
+                                for (final entry
+                                    in entry.value.tasks.asMap().entries)
                                   TaskListTile(
                                     task: entry.value,
                                     taskIndex: entry.key,
-                                    loopIndex: loopIndex,
+                                    loopIndex: entry.key,
                                     key: ValueKey(entry.value.hashCode),
                                   ),
                               ],
@@ -114,9 +112,29 @@ class _PresetEditorState extends State<PresetEditor> {
                         ],
                       ),
                     ),
-                  );
-                }).toList(),
-              );
+                  ),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text("Total duration"),
+                            Text(
+                              preset.totelDuration.toHHMMSS(),
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ]);
             },
           ),
         );
@@ -590,7 +608,7 @@ class TaskListTile extends StatelessWidget {
           decoration: BoxDecoration(shape: BoxShape.circle, color: task.color),
         ),
         title: Text(task.name),
-        subtitle: Text(task.duration.toFormattedString()),
+        subtitle: Text(task.duration.toMMSS()),
         trailing: PopupMenuButton(
           itemBuilder: (_) {
             return [
