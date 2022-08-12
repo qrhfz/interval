@@ -23,7 +23,8 @@ class IntervalRoute extends StatefulWidget {
 }
 
 class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
-  final player = AudioPlayer()..setAsset("assets/sounds/tick.ogg");
+  final tickingPlayer = AudioPlayer()..setAsset("assets/sounds/tick.ogg");
+  final timesUpPlayer = AudioPlayer()..setAsset("assets/sounds/timesup.ogg");
   @override
   void initState() {
     super.initState();
@@ -45,7 +46,8 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
   @override
   void dispose() {
     routeObserver.unsubscribe(this);
-    player.dispose();
+    tickingPlayer.dispose();
+    timesUpPlayer.dispose();
     stopNotification();
     super.dispose();
   }
@@ -110,11 +112,13 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
           listener: (context, state) {
             state.maybeWhen(
               running: (task, timeleft) {
-                player.seek(Duration.zero);
-                player.play();
+                tickingPlayer.seek(Duration.zero);
+                tickingPlayer.play();
                 startNotification(task, timeleft);
               },
               finished: () {
+                timesUpPlayer.seek(Duration.zero);
+                timesUpPlayer.play();
                 context.read<IntervalCubit>().next();
               },
               orElse: () {},
