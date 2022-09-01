@@ -25,6 +25,8 @@ class IntervalRoute extends StatefulWidget {
 class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
   final tickingPlayer = AudioPlayer()..setAsset("assets/sounds/tick.ogg");
   final timesUpPlayer = AudioPlayer()..setAsset("assets/sounds/timesup.ogg");
+  bool mute = false;
+
   @override
   void initState() {
     super.initState();
@@ -146,7 +148,20 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
               backgroundColor: Colors.transparent,
               elevation: 0,
               foregroundColor: Colors.red,
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    setState(() {
+                      mute = !mute;
+                    });
+                    timesUpPlayer.setVolume(mute ? 0 : 100);
+                    tickingPlayer.setVolume(mute ? 0 : 100);
+                  },
+                  icon: Icon(mute ? Icons.volume_off : Icons.volume_up),
+                )
+              ],
             ),
+
             floatingActionButton: FloatingActionButton(
               child: BlocBuilder<TimerCubit, TimerState>(
                 builder: (context, state) {
