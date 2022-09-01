@@ -8,7 +8,7 @@ import 'package:interval/app/home/cubit/quick_start_state.dart';
 import 'package:interval/app/interval/interval_route.dart';
 import 'package:interval/app/preset_editor/cubit/editor_cubit.dart';
 import 'package:interval/utils/duration_extension.dart';
-import '../app.dart';
+import '../../main.dart';
 import '../preset_editor/preset_editor.dart';
 import 'cubit/quick_start_cubit.dart';
 

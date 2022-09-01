@@ -10,6 +10,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 import '../../domain/entitites/preset.dart';
+import '../../main.dart';
 import '../app.dart';
 
 class IntervalRoute extends StatefulWidget {

@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interval/app/backup/backup_page.dart';
 import 'package:interval/app/backup/cubit/backup_cubit.dart';
@@ -18,7 +17,6 @@ import 'preset_editor/cubit/editor_cubit.dart';
 import 'preset_editor/preset_editor.dart';
 
 final routeObserver = RouteObserver<ModalRoute<void>>();
-final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});
