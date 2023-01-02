@@ -73,15 +73,15 @@ class _PresetEditorState extends State<PresetEditor> {
             orElse: () => const Center(child: Text("empty")),
             data: (key, preset) {
               return CustomScrollView(slivers: [
-                for (final entry in preset.loops.asMap().entries)
+                for (final loop in preset.loops.asMap().entries)
                   SliverToBoxAdapter(
                     child: Card(
                       child: Row(
                         children: [
                           Column(
                             children: [
-                              MoveUpButton(loopIndex: entry.key),
-                              MoveDownButton(loopIndex: entry.key),
+                              MoveUpButton(loopIndex: loop.key),
+                              MoveDownButton(loopIndex: loop.key),
                             ],
                           ),
                           Expanded(
@@ -89,22 +89,22 @@ class _PresetEditorState extends State<PresetEditor> {
                               onReorder: (oldIndex, newIndex) {
                                 context
                                     .read<EditorCubit>()
-                                    .moveTask(entry.key, oldIndex, newIndex);
+                                    .moveTask(loop.key, oldIndex, newIndex);
                               },
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               footer: PresetFooter(
-                                loop: entry.value,
-                                loopIndex: entry.key,
+                                loop: loop.value,
+                                loopIndex: loop.key,
                               ),
                               children: [
-                                for (final entry
-                                    in entry.value.tasks.asMap().entries)
+                                for (final task
+                                    in loop.value.tasks.asMap().entries)
                                   TaskListTile(
-                                    task: entry.value,
-                                    taskIndex: entry.key,
-                                    loopIndex: entry.key,
-                                    key: ValueKey(entry.value.hashCode),
+                                    task: task.value,
+                                    taskIndex: task.key,
+                                    loopIndex: loop.key,
+                                    key: ValueKey(task.value.hashCode),
                                   ),
                               ],
                             ),
@@ -304,10 +304,15 @@ class PresetFooter extends StatelessWidget {
               isScrollControlled: true,
               context: context,
               builder: (context) {
-                return TaskEditor(
-                  onSaved: (task) {
-                    context.read<EditorCubit>().addTaskToLoop(loopIndex, task);
-                  },
+                return Padding(
+                  padding: MediaQuery.of(context).viewInsets,
+                  child: TaskEditor(
+                    onSaved: (task) {
+                      context
+                          .read<EditorCubit>()
+                          .addTaskToLoop(loopIndex, task);
+                    },
+                  ),
                 );
               },
             );

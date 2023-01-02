@@ -13,6 +13,10 @@ class Loop with _$Loop {
   }) = _Loop;
 
   Duration get totelDuration {
+    if (tasks.isEmpty) {
+      return Duration.zero;
+    }
+
     return tasks
             .map((element) => element.duration)
             .reduce((value, element) => value + value) *
