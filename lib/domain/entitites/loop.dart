@@ -19,7 +19,7 @@ class Loop with _$Loop {
 
     return tasks
             .map((element) => element.duration)
-            .reduce((value, element) => value + value) *
+            .reduce((prev, next) => prev + next) *
         sets;
   }
 }

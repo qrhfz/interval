@@ -409,6 +409,7 @@ class _TaskEditorState extends State<TaskEditor> {
                 listHeight: 64,
                 listWidth: 48,
                 isInfinite: true,
+                initValue: minutes,
               ),
               const Padding(
                 padding: EdgeInsets.all(8.0),
@@ -425,6 +426,7 @@ class _TaskEditorState extends State<TaskEditor> {
                 listHeight: 64,
                 listWidth: 48,
                 isInfinite: true,
+                initValue: seconds,
               ),
             ],
           ),

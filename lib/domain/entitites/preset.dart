@@ -16,6 +16,6 @@ class Preset with _$Preset {
   Duration get totelDuration {
     return loops
         .map((element) => element.totelDuration)
-        .reduce((value, element) => value + element);
+        .reduce((prev, next) => prev + next);
   }
 }
