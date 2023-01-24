@@ -5,6 +5,7 @@ import 'package:interval/app/preset_editor/cubit/editor_cubit.dart';
 import 'package:interval/domain/entitites/loop.dart';
 import 'package:interval/domain/entitites/task.dart';
 import 'package:interval/utils/duration_extension.dart';
+import 'package:wheel_chooser/wheel_chooser.dart';
 
 import '../../domain/entitites/preset.dart';
 
@@ -301,18 +302,12 @@ class PresetFooter extends StatelessWidget {
         TextButton(
           onPressed: () {
             showModalBottomSheet(
-              isScrollControlled: true,
               context: context,
               builder: (context) {
-                return Padding(
-                  padding: MediaQuery.of(context).viewInsets,
-                  child: TaskEditor(
-                    onSaved: (task) {
-                      context
-                          .read<EditorCubit>()
-                          .addTaskToLoop(loopIndex, task);
-                    },
-                  ),
+                return TaskEditor(
+                  onSaved: (task) {
+                    context.read<EditorCubit>().addTaskToLoop(loopIndex, task);
+                  },
                 );
               },
             );
@@ -370,100 +365,93 @@ class _TaskEditorState extends State<TaskEditor> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextField(
-            controller: textController,
-            decoration: const InputDecoration(
-              label: Text('Name'),
+    return SingleChildScrollView(
+      padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: TextField(
+              controller: textController,
+              decoration: const InputDecoration(
+                label: Text('Name'),
+              ),
             ),
           ),
-        ),
-        Wrap(
-          children: [
-            for (final color in TaskEditor.colors)
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ColorSelectable(
-                  color: color,
-                  isSelected: color == selectedColor,
-                  onSelected: (color) {
-                    setState(() {
-                      selectedColor = color;
-                    });
-                  },
-                ),
-              )
-          ],
-        ),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: 64,
-              child: SpinBox(
-                direction: Axis.vertical,
-                min: 0,
-                digits: 2,
-                value: minutes.toDouble(),
-                onChanged: (value) {
-                  setState(() {
-                    minutes = value.toInt();
-                  });
-                },
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                ":",
-                style: TextStyle(fontSize: 24),
-              ),
-            ),
-            SizedBox(
-              width: 64,
-              child: SpinBox(
-                direction: Axis.vertical,
-                min: 0,
-                max: 59,
-                digits: 2,
-                value: seconds.toDouble(),
-                onChanged: (value) {
-                  setState(() {
-                    seconds = value.toInt();
-                  });
-                },
-              ),
-            ),
-          ],
-        ),
-        // const Spacer(),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () {
-                final task = Task(
-                  name: textController.text,
-                  duration: Duration(
-                    minutes: minutes,
-                    seconds: seconds,
+          Wrap(
+            children: [
+              for (final color in TaskEditor.colors)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ColorSelectable(
+                    color: color,
+                    isSelected: color == selectedColor,
+                    onSelected: (color) {
+                      setState(() {
+                        selectedColor = color;
+                      });
+                    },
                   ),
-                  color: selectedColor,
-                );
-                widget.onSaved(task);
-                Navigator.of(context).pop();
-              },
-              child: const Text('Save'),
+                )
+            ],
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              WheelChooser.integer(
+                onValueChanged: (i) => minutes = i,
+                minValue: 0,
+                maxValue: 99,
+                step: 1,
+                listHeight: 64,
+                listWidth: 48,
+                isInfinite: true,
+              ),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  ":",
+                  style: TextStyle(fontSize: 24),
+                ),
+              ),
+              WheelChooser.integer(
+                onValueChanged: (i) => seconds = i,
+                minValue: 0,
+                maxValue: 59,
+                step: 1,
+                listHeight: 64,
+                listWidth: 48,
+                isInfinite: true,
+              ),
+            ],
+          ),
+          // const Spacer(),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  final task = Task(
+                    name: textController.text,
+                    duration: Duration(
+                      minutes: minutes,
+                      seconds: seconds,
+                    ),
+                    color: selectedColor,
+                  );
+                  widget.onSaved(task);
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Save'),
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -493,8 +481,8 @@ class ColorSelectable extends StatelessWidget {
           border: isSelected ? Border.all(width: 2, color: Colors.blue) : null,
         ),
         child: Container(
-          width: 48,
-          height: 48,
+          width: 36,
+          height: 36,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: color,
