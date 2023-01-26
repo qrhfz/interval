@@ -610,18 +610,19 @@ class TaskListTile extends StatelessWidget {
             return [
               PopupMenuItem(
                 onTap: () async {
-                  await Future.delayed(const Duration(microseconds: 17));
+                  // add delay so onTap can open bottom sheet. huh?
+                  await Future.microtask(() {});
                   showModalBottomSheet(
                     isScrollControlled: true,
                     context: context,
                     builder: (context) {
                       return TaskEditor(
+                        task: task,
                         onSaved: (task) {
                           context
                               .read<EditorCubit>()
                               .updateTask(loopIndex, taskIndex, task);
                         },
-                        task: task,
                       );
                     },
                   );
