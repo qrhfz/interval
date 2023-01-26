@@ -54,7 +54,7 @@ class _HomeRouteState extends State<HomeRoute> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Loop Timer"),
+          title: const Text("Interval"),
           actions: const [HomeMenu()],
         ),
         body: const CustomScrollView(
