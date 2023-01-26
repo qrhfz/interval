@@ -105,7 +105,8 @@ class _PresetEditorState extends State<PresetEditor> {
                                     task: task.value,
                                     taskIndex: task.key,
                                     loopIndex: loop.key,
-                                    key: ValueKey(task.value.hashCode),
+                                    key: Key(
+                                        "${loop.key}:${task.key}:${task.value.hashCode}"),
                                   ),
                               ],
                             ),
