@@ -25,8 +25,8 @@ mixin _$PresetState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(IList<int> presetKeys, IList<Preset> presets)? data,
+    TResult? Function()? initial,
+    TResult? Function(IList<int> presetKeys, IList<Preset> presets)? data,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -44,8 +44,8 @@ mixin _$PresetState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Data value)? data,
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_Data value)? data,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -61,16 +61,18 @@ mixin _$PresetState {
 abstract class $PresetStateCopyWith<$Res> {
   factory $PresetStateCopyWith(
           PresetState value, $Res Function(PresetState) then) =
-      _$PresetStateCopyWithImpl<$Res>;
+      _$PresetStateCopyWithImpl<$Res, PresetState>;
 }
 
 /// @nodoc
-class _$PresetStateCopyWithImpl<$Res> implements $PresetStateCopyWith<$Res> {
+class _$PresetStateCopyWithImpl<$Res, $Val extends PresetState>
+    implements $PresetStateCopyWith<$Res> {
   _$PresetStateCopyWithImpl(this._value, this._then);
 
-  final PresetState _value;
   // ignore: unused_field
-  final $Res Function(PresetState) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 }
 
 /// @nodoc
@@ -81,13 +83,11 @@ abstract class _$$_InitialCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_InitialCopyWithImpl<$Res> extends _$PresetStateCopyWithImpl<$Res>
+class __$$_InitialCopyWithImpl<$Res>
+    extends _$PresetStateCopyWithImpl<$Res, _$_Initial>
     implements _$$_InitialCopyWith<$Res> {
   __$$_InitialCopyWithImpl(_$_Initial _value, $Res Function(_$_Initial) _then)
-      : super(_value, (v) => _then(v as _$_Initial));
-
-  @override
-  _$_Initial get _value => super._value as _$_Initial;
+      : super(_value, _then);
 }
 
 /// @nodoc
@@ -122,8 +122,8 @@ class _$_Initial implements _Initial {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(IList<int> presetKeys, IList<Preset> presets)? data,
+    TResult? Function()? initial,
+    TResult? Function(IList<int> presetKeys, IList<Preset> presets)? data,
   }) {
     return initial?.call();
   }
@@ -153,8 +153,8 @@ class _$_Initial implements _Initial {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Data value)? data,
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_Data value)? data,
   }) {
     return initial?.call(this);
   }
@@ -181,29 +181,29 @@ abstract class _Initial implements PresetState {
 abstract class _$$_DataCopyWith<$Res> {
   factory _$$_DataCopyWith(_$_Data value, $Res Function(_$_Data) then) =
       __$$_DataCopyWithImpl<$Res>;
+  @useResult
   $Res call({IList<int> presetKeys, IList<Preset> presets});
 }
 
 /// @nodoc
-class __$$_DataCopyWithImpl<$Res> extends _$PresetStateCopyWithImpl<$Res>
+class __$$_DataCopyWithImpl<$Res>
+    extends _$PresetStateCopyWithImpl<$Res, _$_Data>
     implements _$$_DataCopyWith<$Res> {
   __$$_DataCopyWithImpl(_$_Data _value, $Res Function(_$_Data) _then)
-      : super(_value, (v) => _then(v as _$_Data));
+      : super(_value, _then);
 
-  @override
-  _$_Data get _value => super._value as _$_Data;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? presetKeys = freezed,
-    Object? presets = freezed,
+    Object? presetKeys = null,
+    Object? presets = null,
   }) {
     return _then(_$_Data(
-      presetKeys == freezed
+      null == presetKeys
           ? _value.presetKeys
           : presetKeys // ignore: cast_nullable_to_non_nullable
               as IList<int>,
-      presets == freezed
+      null == presets
           ? _value.presets
           : presets // ignore: cast_nullable_to_non_nullable
               as IList<Preset>,
@@ -244,6 +244,7 @@ class _$_Data implements _Data {
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_DataCopyWith<_$_Data> get copyWith =>
       __$$_DataCopyWithImpl<_$_Data>(this, _$identity);
 
@@ -260,8 +261,8 @@ class _$_Data implements _Data {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(IList<int> presetKeys, IList<Preset> presets)? data,
+    TResult? Function()? initial,
+    TResult? Function(IList<int> presetKeys, IList<Preset> presets)? data,
   }) {
     return data?.call(presetKeys, presets);
   }
@@ -291,8 +292,8 @@ class _$_Data implements _Data {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Data value)? data,
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_Data value)? data,
   }) {
     return data?.call(this);
   }

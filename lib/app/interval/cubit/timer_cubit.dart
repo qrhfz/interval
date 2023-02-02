@@ -55,6 +55,12 @@ class TimerCubit extends Cubit<TimerState> {
     timer = null;
   }
 
+  void quit() {
+    emit(const TimerState.quit());
+    timer?.cancel();
+    timer = null;
+  }
+
   @override
   Future<void> close() {
     timer?.cancel();

@@ -30,12 +30,12 @@ mixin _$IntervalState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(IList<Loop> loops, int loopIndex, int set, int taskIndex)?
+    TResult? Function()? initial,
+    TResult? Function(IList<Loop> loops, int loopIndex, int set, int taskIndex)?
         running,
-    TResult Function(IList<Loop> loops, int loopIndex, int set, int taskIndex)?
+    TResult? Function(IList<Loop> loops, int loopIndex, int set, int taskIndex)?
         paused,
-    TResult Function()? finished,
+    TResult? Function()? finished,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -59,10 +59,10 @@ mixin _$IntervalState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(IntervalInitial value)? initial,
-    TResult Function(IntervalRunning value)? running,
-    TResult Function(IntervalPaused value)? paused,
-    TResult Function(IntervalFinished value)? finished,
+    TResult? Function(IntervalInitial value)? initial,
+    TResult? Function(IntervalRunning value)? running,
+    TResult? Function(IntervalPaused value)? paused,
+    TResult? Function(IntervalFinished value)? finished,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -80,17 +80,18 @@ mixin _$IntervalState {
 abstract class $IntervalStateCopyWith<$Res> {
   factory $IntervalStateCopyWith(
           IntervalState value, $Res Function(IntervalState) then) =
-      _$IntervalStateCopyWithImpl<$Res>;
+      _$IntervalStateCopyWithImpl<$Res, IntervalState>;
 }
 
 /// @nodoc
-class _$IntervalStateCopyWithImpl<$Res>
+class _$IntervalStateCopyWithImpl<$Res, $Val extends IntervalState>
     implements $IntervalStateCopyWith<$Res> {
   _$IntervalStateCopyWithImpl(this._value, this._then);
 
-  final IntervalState _value;
   // ignore: unused_field
-  final $Res Function(IntervalState) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 }
 
 /// @nodoc
@@ -102,14 +103,11 @@ abstract class _$$IntervalInitialCopyWith<$Res> {
 
 /// @nodoc
 class __$$IntervalInitialCopyWithImpl<$Res>
-    extends _$IntervalStateCopyWithImpl<$Res>
+    extends _$IntervalStateCopyWithImpl<$Res, _$IntervalInitial>
     implements _$$IntervalInitialCopyWith<$Res> {
   __$$IntervalInitialCopyWithImpl(
       _$IntervalInitial _value, $Res Function(_$IntervalInitial) _then)
-      : super(_value, (v) => _then(v as _$IntervalInitial));
-
-  @override
-  _$IntervalInitial get _value => super._value as _$IntervalInitial;
+      : super(_value, _then);
 }
 
 /// @nodoc
@@ -149,12 +147,12 @@ class _$IntervalInitial implements IntervalInitial {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(IList<Loop> loops, int loopIndex, int set, int taskIndex)?
+    TResult? Function()? initial,
+    TResult? Function(IList<Loop> loops, int loopIndex, int set, int taskIndex)?
         running,
-    TResult Function(IList<Loop> loops, int loopIndex, int set, int taskIndex)?
+    TResult? Function(IList<Loop> loops, int loopIndex, int set, int taskIndex)?
         paused,
-    TResult Function()? finished,
+    TResult? Function()? finished,
   }) {
     return initial?.call();
   }
@@ -190,10 +188,10 @@ class _$IntervalInitial implements IntervalInitial {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(IntervalInitial value)? initial,
-    TResult Function(IntervalRunning value)? running,
-    TResult Function(IntervalPaused value)? paused,
-    TResult Function(IntervalFinished value)? finished,
+    TResult? Function(IntervalInitial value)? initial,
+    TResult? Function(IntervalRunning value)? running,
+    TResult? Function(IntervalPaused value)? paused,
+    TResult? Function(IntervalFinished value)? finished,
   }) {
     return initial?.call(this);
   }
@@ -223,41 +221,40 @@ abstract class _$$IntervalRunningCopyWith<$Res> {
   factory _$$IntervalRunningCopyWith(
           _$IntervalRunning value, $Res Function(_$IntervalRunning) then) =
       __$$IntervalRunningCopyWithImpl<$Res>;
+  @useResult
   $Res call({IList<Loop> loops, int loopIndex, int set, int taskIndex});
 }
 
 /// @nodoc
 class __$$IntervalRunningCopyWithImpl<$Res>
-    extends _$IntervalStateCopyWithImpl<$Res>
+    extends _$IntervalStateCopyWithImpl<$Res, _$IntervalRunning>
     implements _$$IntervalRunningCopyWith<$Res> {
   __$$IntervalRunningCopyWithImpl(
       _$IntervalRunning _value, $Res Function(_$IntervalRunning) _then)
-      : super(_value, (v) => _then(v as _$IntervalRunning));
+      : super(_value, _then);
 
-  @override
-  _$IntervalRunning get _value => super._value as _$IntervalRunning;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? loops = freezed,
-    Object? loopIndex = freezed,
-    Object? set = freezed,
-    Object? taskIndex = freezed,
+    Object? loops = null,
+    Object? loopIndex = null,
+    Object? set = null,
+    Object? taskIndex = null,
   }) {
     return _then(_$IntervalRunning(
-      loops == freezed
+      null == loops
           ? _value.loops
           : loops // ignore: cast_nullable_to_non_nullable
               as IList<Loop>,
-      loopIndex == freezed
+      null == loopIndex
           ? _value.loopIndex
           : loopIndex // ignore: cast_nullable_to_non_nullable
               as int,
-      set == freezed
+      null == set
           ? _value.set
           : set // ignore: cast_nullable_to_non_nullable
               as int,
-      taskIndex == freezed
+      null == taskIndex
           ? _value.taskIndex
           : taskIndex // ignore: cast_nullable_to_non_nullable
               as int,
@@ -290,21 +287,20 @@ class _$IntervalRunning implements IntervalRunning {
         (other.runtimeType == runtimeType &&
             other is _$IntervalRunning &&
             const DeepCollectionEquality().equals(other.loops, loops) &&
-            const DeepCollectionEquality().equals(other.loopIndex, loopIndex) &&
-            const DeepCollectionEquality().equals(other.set, set) &&
-            const DeepCollectionEquality().equals(other.taskIndex, taskIndex));
+            (identical(other.loopIndex, loopIndex) ||
+                other.loopIndex == loopIndex) &&
+            (identical(other.set, set) || other.set == set) &&
+            (identical(other.taskIndex, taskIndex) ||
+                other.taskIndex == taskIndex));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(loops),
-      const DeepCollectionEquality().hash(loopIndex),
-      const DeepCollectionEquality().hash(set),
-      const DeepCollectionEquality().hash(taskIndex));
+  int get hashCode => Object.hash(runtimeType,
+      const DeepCollectionEquality().hash(loops), loopIndex, set, taskIndex);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$IntervalRunningCopyWith<_$IntervalRunning> get copyWith =>
       __$$IntervalRunningCopyWithImpl<_$IntervalRunning>(this, _$identity);
 
@@ -326,12 +322,12 @@ class _$IntervalRunning implements IntervalRunning {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(IList<Loop> loops, int loopIndex, int set, int taskIndex)?
+    TResult? Function()? initial,
+    TResult? Function(IList<Loop> loops, int loopIndex, int set, int taskIndex)?
         running,
-    TResult Function(IList<Loop> loops, int loopIndex, int set, int taskIndex)?
+    TResult? Function(IList<Loop> loops, int loopIndex, int set, int taskIndex)?
         paused,
-    TResult Function()? finished,
+    TResult? Function()? finished,
   }) {
     return running?.call(loops, loopIndex, set, taskIndex);
   }
@@ -367,10 +363,10 @@ class _$IntervalRunning implements IntervalRunning {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(IntervalInitial value)? initial,
-    TResult Function(IntervalRunning value)? running,
-    TResult Function(IntervalPaused value)? paused,
-    TResult Function(IntervalFinished value)? finished,
+    TResult? Function(IntervalInitial value)? initial,
+    TResult? Function(IntervalRunning value)? running,
+    TResult? Function(IntervalPaused value)? paused,
+    TResult? Function(IntervalFinished value)? finished,
   }) {
     return running?.call(this);
   }
@@ -409,41 +405,40 @@ abstract class _$$IntervalPausedCopyWith<$Res> {
   factory _$$IntervalPausedCopyWith(
           _$IntervalPaused value, $Res Function(_$IntervalPaused) then) =
       __$$IntervalPausedCopyWithImpl<$Res>;
+  @useResult
   $Res call({IList<Loop> loops, int loopIndex, int set, int taskIndex});
 }
 
 /// @nodoc
 class __$$IntervalPausedCopyWithImpl<$Res>
-    extends _$IntervalStateCopyWithImpl<$Res>
+    extends _$IntervalStateCopyWithImpl<$Res, _$IntervalPaused>
     implements _$$IntervalPausedCopyWith<$Res> {
   __$$IntervalPausedCopyWithImpl(
       _$IntervalPaused _value, $Res Function(_$IntervalPaused) _then)
-      : super(_value, (v) => _then(v as _$IntervalPaused));
+      : super(_value, _then);
 
-  @override
-  _$IntervalPaused get _value => super._value as _$IntervalPaused;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? loops = freezed,
-    Object? loopIndex = freezed,
-    Object? set = freezed,
-    Object? taskIndex = freezed,
+    Object? loops = null,
+    Object? loopIndex = null,
+    Object? set = null,
+    Object? taskIndex = null,
   }) {
     return _then(_$IntervalPaused(
-      loops == freezed
+      null == loops
           ? _value.loops
           : loops // ignore: cast_nullable_to_non_nullable
               as IList<Loop>,
-      loopIndex == freezed
+      null == loopIndex
           ? _value.loopIndex
           : loopIndex // ignore: cast_nullable_to_non_nullable
               as int,
-      set == freezed
+      null == set
           ? _value.set
           : set // ignore: cast_nullable_to_non_nullable
               as int,
-      taskIndex == freezed
+      null == taskIndex
           ? _value.taskIndex
           : taskIndex // ignore: cast_nullable_to_non_nullable
               as int,
@@ -476,21 +471,20 @@ class _$IntervalPaused implements IntervalPaused {
         (other.runtimeType == runtimeType &&
             other is _$IntervalPaused &&
             const DeepCollectionEquality().equals(other.loops, loops) &&
-            const DeepCollectionEquality().equals(other.loopIndex, loopIndex) &&
-            const DeepCollectionEquality().equals(other.set, set) &&
-            const DeepCollectionEquality().equals(other.taskIndex, taskIndex));
+            (identical(other.loopIndex, loopIndex) ||
+                other.loopIndex == loopIndex) &&
+            (identical(other.set, set) || other.set == set) &&
+            (identical(other.taskIndex, taskIndex) ||
+                other.taskIndex == taskIndex));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(loops),
-      const DeepCollectionEquality().hash(loopIndex),
-      const DeepCollectionEquality().hash(set),
-      const DeepCollectionEquality().hash(taskIndex));
+  int get hashCode => Object.hash(runtimeType,
+      const DeepCollectionEquality().hash(loops), loopIndex, set, taskIndex);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$IntervalPausedCopyWith<_$IntervalPaused> get copyWith =>
       __$$IntervalPausedCopyWithImpl<_$IntervalPaused>(this, _$identity);
 
@@ -512,12 +506,12 @@ class _$IntervalPaused implements IntervalPaused {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(IList<Loop> loops, int loopIndex, int set, int taskIndex)?
+    TResult? Function()? initial,
+    TResult? Function(IList<Loop> loops, int loopIndex, int set, int taskIndex)?
         running,
-    TResult Function(IList<Loop> loops, int loopIndex, int set, int taskIndex)?
+    TResult? Function(IList<Loop> loops, int loopIndex, int set, int taskIndex)?
         paused,
-    TResult Function()? finished,
+    TResult? Function()? finished,
   }) {
     return paused?.call(loops, loopIndex, set, taskIndex);
   }
@@ -553,10 +547,10 @@ class _$IntervalPaused implements IntervalPaused {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(IntervalInitial value)? initial,
-    TResult Function(IntervalRunning value)? running,
-    TResult Function(IntervalPaused value)? paused,
-    TResult Function(IntervalFinished value)? finished,
+    TResult? Function(IntervalInitial value)? initial,
+    TResult? Function(IntervalRunning value)? running,
+    TResult? Function(IntervalPaused value)? paused,
+    TResult? Function(IntervalFinished value)? finished,
   }) {
     return paused?.call(this);
   }
@@ -599,14 +593,11 @@ abstract class _$$IntervalFinishedCopyWith<$Res> {
 
 /// @nodoc
 class __$$IntervalFinishedCopyWithImpl<$Res>
-    extends _$IntervalStateCopyWithImpl<$Res>
+    extends _$IntervalStateCopyWithImpl<$Res, _$IntervalFinished>
     implements _$$IntervalFinishedCopyWith<$Res> {
   __$$IntervalFinishedCopyWithImpl(
       _$IntervalFinished _value, $Res Function(_$IntervalFinished) _then)
-      : super(_value, (v) => _then(v as _$IntervalFinished));
-
-  @override
-  _$IntervalFinished get _value => super._value as _$IntervalFinished;
+      : super(_value, _then);
 }
 
 /// @nodoc
@@ -646,12 +637,12 @@ class _$IntervalFinished implements IntervalFinished {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(IList<Loop> loops, int loopIndex, int set, int taskIndex)?
+    TResult? Function()? initial,
+    TResult? Function(IList<Loop> loops, int loopIndex, int set, int taskIndex)?
         running,
-    TResult Function(IList<Loop> loops, int loopIndex, int set, int taskIndex)?
+    TResult? Function(IList<Loop> loops, int loopIndex, int set, int taskIndex)?
         paused,
-    TResult Function()? finished,
+    TResult? Function()? finished,
   }) {
     return finished?.call();
   }
@@ -687,10 +678,10 @@ class _$IntervalFinished implements IntervalFinished {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(IntervalInitial value)? initial,
-    TResult Function(IntervalRunning value)? running,
-    TResult Function(IntervalPaused value)? paused,
-    TResult Function(IntervalFinished value)? finished,
+    TResult? Function(IntervalInitial value)? initial,
+    TResult? Function(IntervalRunning value)? running,
+    TResult? Function(IntervalPaused value)? paused,
+    TResult? Function(IntervalFinished value)? finished,
   }) {
     return finished?.call(this);
   }

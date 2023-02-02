@@ -31,49 +31,52 @@ mixin _$QuickStartState {
 abstract class $QuickStartStateCopyWith<$Res> {
   factory $QuickStartStateCopyWith(
           QuickStartState value, $Res Function(QuickStartState) then) =
-      _$QuickStartStateCopyWithImpl<$Res>;
+      _$QuickStartStateCopyWithImpl<$Res, QuickStartState>;
+  @useResult
   $Res call({int workMins, int workSecs, int restMins, int restSecs, int sets});
 }
 
 /// @nodoc
-class _$QuickStartStateCopyWithImpl<$Res>
+class _$QuickStartStateCopyWithImpl<$Res, $Val extends QuickStartState>
     implements $QuickStartStateCopyWith<$Res> {
   _$QuickStartStateCopyWithImpl(this._value, this._then);
 
-  final QuickStartState _value;
   // ignore: unused_field
-  final $Res Function(QuickStartState) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? workMins = freezed,
-    Object? workSecs = freezed,
-    Object? restMins = freezed,
-    Object? restSecs = freezed,
-    Object? sets = freezed,
+    Object? workMins = null,
+    Object? workSecs = null,
+    Object? restMins = null,
+    Object? restSecs = null,
+    Object? sets = null,
   }) {
     return _then(_value.copyWith(
-      workMins: workMins == freezed
+      workMins: null == workMins
           ? _value.workMins
           : workMins // ignore: cast_nullable_to_non_nullable
               as int,
-      workSecs: workSecs == freezed
+      workSecs: null == workSecs
           ? _value.workSecs
           : workSecs // ignore: cast_nullable_to_non_nullable
               as int,
-      restMins: restMins == freezed
+      restMins: null == restMins
           ? _value.restMins
           : restMins // ignore: cast_nullable_to_non_nullable
               as int,
-      restSecs: restSecs == freezed
+      restSecs: null == restSecs
           ? _value.restSecs
           : restSecs // ignore: cast_nullable_to_non_nullable
               as int,
-      sets: sets == freezed
+      sets: null == sets
           ? _value.sets
           : sets // ignore: cast_nullable_to_non_nullable
               as int,
-    ));
+    ) as $Val);
   }
 }
 
@@ -84,46 +87,45 @@ abstract class _$$_QuickStartStateCopyWith<$Res>
           _$_QuickStartState value, $Res Function(_$_QuickStartState) then) =
       __$$_QuickStartStateCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call({int workMins, int workSecs, int restMins, int restSecs, int sets});
 }
 
 /// @nodoc
 class __$$_QuickStartStateCopyWithImpl<$Res>
-    extends _$QuickStartStateCopyWithImpl<$Res>
+    extends _$QuickStartStateCopyWithImpl<$Res, _$_QuickStartState>
     implements _$$_QuickStartStateCopyWith<$Res> {
   __$$_QuickStartStateCopyWithImpl(
       _$_QuickStartState _value, $Res Function(_$_QuickStartState) _then)
-      : super(_value, (v) => _then(v as _$_QuickStartState));
+      : super(_value, _then);
 
-  @override
-  _$_QuickStartState get _value => super._value as _$_QuickStartState;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? workMins = freezed,
-    Object? workSecs = freezed,
-    Object? restMins = freezed,
-    Object? restSecs = freezed,
-    Object? sets = freezed,
+    Object? workMins = null,
+    Object? workSecs = null,
+    Object? restMins = null,
+    Object? restSecs = null,
+    Object? sets = null,
   }) {
     return _then(_$_QuickStartState(
-      workMins: workMins == freezed
+      workMins: null == workMins
           ? _value.workMins
           : workMins // ignore: cast_nullable_to_non_nullable
               as int,
-      workSecs: workSecs == freezed
+      workSecs: null == workSecs
           ? _value.workSecs
           : workSecs // ignore: cast_nullable_to_non_nullable
               as int,
-      restMins: restMins == freezed
+      restMins: null == restMins
           ? _value.restMins
           : restMins // ignore: cast_nullable_to_non_nullable
               as int,
-      restSecs: restSecs == freezed
+      restSecs: null == restSecs
           ? _value.restSecs
           : restSecs // ignore: cast_nullable_to_non_nullable
               as int,
-      sets: sets == freezed
+      sets: null == sets
           ? _value.sets
           : sets // ignore: cast_nullable_to_non_nullable
               as int,
@@ -168,24 +170,24 @@ class _$_QuickStartState extends _QuickStartState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_QuickStartState &&
-            const DeepCollectionEquality().equals(other.workMins, workMins) &&
-            const DeepCollectionEquality().equals(other.workSecs, workSecs) &&
-            const DeepCollectionEquality().equals(other.restMins, restMins) &&
-            const DeepCollectionEquality().equals(other.restSecs, restSecs) &&
-            const DeepCollectionEquality().equals(other.sets, sets));
+            (identical(other.workMins, workMins) ||
+                other.workMins == workMins) &&
+            (identical(other.workSecs, workSecs) ||
+                other.workSecs == workSecs) &&
+            (identical(other.restMins, restMins) ||
+                other.restMins == restMins) &&
+            (identical(other.restSecs, restSecs) ||
+                other.restSecs == restSecs) &&
+            (identical(other.sets, sets) || other.sets == sets));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(workMins),
-      const DeepCollectionEquality().hash(workSecs),
-      const DeepCollectionEquality().hash(restMins),
-      const DeepCollectionEquality().hash(restSecs),
-      const DeepCollectionEquality().hash(sets));
+  int get hashCode =>
+      Object.hash(runtimeType, workMins, workSecs, restMins, restSecs, sets);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_QuickStartStateCopyWith<_$_QuickStartState> get copyWith =>
       __$$_QuickStartStateCopyWithImpl<_$_QuickStartState>(this, _$identity);
 }

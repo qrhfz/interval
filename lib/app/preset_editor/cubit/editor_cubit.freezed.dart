@@ -25,9 +25,9 @@ mixin _$EditorState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(int? key, Preset preset)? data,
-    TResult Function()? save,
+    TResult? Function()? initial,
+    TResult? Function(int? key, Preset preset)? data,
+    TResult? Function()? save,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -47,9 +47,9 @@ mixin _$EditorState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Data value)? data,
-    TResult Function(_Save value)? save,
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_Data value)? data,
+    TResult? Function(_Save value)? save,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -66,16 +66,18 @@ mixin _$EditorState {
 abstract class $EditorStateCopyWith<$Res> {
   factory $EditorStateCopyWith(
           EditorState value, $Res Function(EditorState) then) =
-      _$EditorStateCopyWithImpl<$Res>;
+      _$EditorStateCopyWithImpl<$Res, EditorState>;
 }
 
 /// @nodoc
-class _$EditorStateCopyWithImpl<$Res> implements $EditorStateCopyWith<$Res> {
+class _$EditorStateCopyWithImpl<$Res, $Val extends EditorState>
+    implements $EditorStateCopyWith<$Res> {
   _$EditorStateCopyWithImpl(this._value, this._then);
 
-  final EditorState _value;
   // ignore: unused_field
-  final $Res Function(EditorState) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 }
 
 /// @nodoc
@@ -86,13 +88,11 @@ abstract class _$$_InitialCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_InitialCopyWithImpl<$Res> extends _$EditorStateCopyWithImpl<$Res>
+class __$$_InitialCopyWithImpl<$Res>
+    extends _$EditorStateCopyWithImpl<$Res, _$_Initial>
     implements _$$_InitialCopyWith<$Res> {
   __$$_InitialCopyWithImpl(_$_Initial _value, $Res Function(_$_Initial) _then)
-      : super(_value, (v) => _then(v as _$_Initial));
-
-  @override
-  _$_Initial get _value => super._value as _$_Initial;
+      : super(_value, _then);
 }
 
 /// @nodoc
@@ -127,9 +127,9 @@ class _$_Initial implements _Initial {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(int? key, Preset preset)? data,
-    TResult Function()? save,
+    TResult? Function()? initial,
+    TResult? Function(int? key, Preset preset)? data,
+    TResult? Function()? save,
   }) {
     return initial?.call();
   }
@@ -161,9 +161,9 @@ class _$_Initial implements _Initial {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Data value)? data,
-    TResult Function(_Save value)? save,
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_Data value)? data,
+    TResult? Function(_Save value)? save,
   }) {
     return initial?.call(this);
   }
@@ -191,31 +191,31 @@ abstract class _Initial implements EditorState {
 abstract class _$$_DataCopyWith<$Res> {
   factory _$$_DataCopyWith(_$_Data value, $Res Function(_$_Data) then) =
       __$$_DataCopyWithImpl<$Res>;
+  @useResult
   $Res call({int? key, Preset preset});
 
   $PresetCopyWith<$Res> get preset;
 }
 
 /// @nodoc
-class __$$_DataCopyWithImpl<$Res> extends _$EditorStateCopyWithImpl<$Res>
+class __$$_DataCopyWithImpl<$Res>
+    extends _$EditorStateCopyWithImpl<$Res, _$_Data>
     implements _$$_DataCopyWith<$Res> {
   __$$_DataCopyWithImpl(_$_Data _value, $Res Function(_$_Data) _then)
-      : super(_value, (v) => _then(v as _$_Data));
+      : super(_value, _then);
 
-  @override
-  _$_Data get _value => super._value as _$_Data;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? key = freezed,
-    Object? preset = freezed,
+    Object? preset = null,
   }) {
     return _then(_$_Data(
-      key == freezed
+      freezed == key
           ? _value.key
           : key // ignore: cast_nullable_to_non_nullable
               as int?,
-      preset == freezed
+      null == preset
           ? _value.preset
           : preset // ignore: cast_nullable_to_non_nullable
               as Preset,
@@ -223,6 +223,7 @@ class __$$_DataCopyWithImpl<$Res> extends _$EditorStateCopyWithImpl<$Res>
   }
 
   @override
+  @pragma('vm:prefer-inline')
   $PresetCopyWith<$Res> get preset {
     return $PresetCopyWith<$Res>(_value.preset, (value) {
       return _then(_value.copyWith(preset: value));
@@ -250,18 +251,16 @@ class _$_Data implements _Data {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_Data &&
-            const DeepCollectionEquality().equals(other.key, key) &&
-            const DeepCollectionEquality().equals(other.preset, preset));
+            (identical(other.key, key) || other.key == key) &&
+            (identical(other.preset, preset) || other.preset == preset));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(key),
-      const DeepCollectionEquality().hash(preset));
+  int get hashCode => Object.hash(runtimeType, key, preset);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_DataCopyWith<_$_Data> get copyWith =>
       __$$_DataCopyWithImpl<_$_Data>(this, _$identity);
 
@@ -278,9 +277,9 @@ class _$_Data implements _Data {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(int? key, Preset preset)? data,
-    TResult Function()? save,
+    TResult? Function()? initial,
+    TResult? Function(int? key, Preset preset)? data,
+    TResult? Function()? save,
   }) {
     return data?.call(key, preset);
   }
@@ -312,9 +311,9 @@ class _$_Data implements _Data {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Data value)? data,
-    TResult Function(_Save value)? save,
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_Data value)? data,
+    TResult? Function(_Save value)? save,
   }) {
     return data?.call(this);
   }
@@ -350,13 +349,11 @@ abstract class _$$_SaveCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_SaveCopyWithImpl<$Res> extends _$EditorStateCopyWithImpl<$Res>
+class __$$_SaveCopyWithImpl<$Res>
+    extends _$EditorStateCopyWithImpl<$Res, _$_Save>
     implements _$$_SaveCopyWith<$Res> {
   __$$_SaveCopyWithImpl(_$_Save _value, $Res Function(_$_Save) _then)
-      : super(_value, (v) => _then(v as _$_Save));
-
-  @override
-  _$_Save get _value => super._value as _$_Save;
+      : super(_value, _then);
 }
 
 /// @nodoc
@@ -391,9 +388,9 @@ class _$_Save implements _Save {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(int? key, Preset preset)? data,
-    TResult Function()? save,
+    TResult? Function()? initial,
+    TResult? Function(int? key, Preset preset)? data,
+    TResult? Function()? save,
   }) {
     return save?.call();
   }
@@ -425,9 +422,9 @@ class _$_Save implements _Save {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Data value)? data,
-    TResult Function(_Save value)? save,
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_Data value)? data,
+    TResult? Function(_Save value)? save,
   }) {
     return save?.call(this);
   }

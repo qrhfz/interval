@@ -55,7 +55,7 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
 
   @override
   void didPop() {
-    context.read<TimerCubit>().stop();
+    context.read<TimerCubit>().quit();
     context.read<IntervalCubit>().stop();
     super.didPop();
   }
@@ -175,6 +175,7 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
             body: SizedBox(
               width: double.infinity,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
@@ -184,7 +185,6 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
                         // color: Colors.white,
                         fontWeight: FontWeight.bold),
                   ),
-                  const Spacer(),
                   BlocBuilder<TimerCubit, TimerState>(
                     builder: (context, state) {
                       final time = state.maybeWhen(
@@ -199,7 +199,6 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
                       );
                     },
                   ),
-                  const Spacer(),
                 ],
               ),
             ),

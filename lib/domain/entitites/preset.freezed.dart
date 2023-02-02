@@ -26,33 +26,37 @@ mixin _$Preset {
 /// @nodoc
 abstract class $PresetCopyWith<$Res> {
   factory $PresetCopyWith(Preset value, $Res Function(Preset) then) =
-      _$PresetCopyWithImpl<$Res>;
+      _$PresetCopyWithImpl<$Res, Preset>;
+  @useResult
   $Res call({String name, IList<Loop> loops});
 }
 
 /// @nodoc
-class _$PresetCopyWithImpl<$Res> implements $PresetCopyWith<$Res> {
+class _$PresetCopyWithImpl<$Res, $Val extends Preset>
+    implements $PresetCopyWith<$Res> {
   _$PresetCopyWithImpl(this._value, this._then);
 
-  final Preset _value;
   // ignore: unused_field
-  final $Res Function(Preset) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? name = freezed,
-    Object? loops = freezed,
+    Object? name = null,
+    Object? loops = null,
   }) {
     return _then(_value.copyWith(
-      name: name == freezed
+      name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      loops: loops == freezed
+      loops: null == loops
           ? _value.loops
           : loops // ignore: cast_nullable_to_non_nullable
               as IList<Loop>,
-    ));
+    ) as $Val);
   }
 }
 
@@ -61,29 +65,29 @@ abstract class _$$_PresetCopyWith<$Res> implements $PresetCopyWith<$Res> {
   factory _$$_PresetCopyWith(_$_Preset value, $Res Function(_$_Preset) then) =
       __$$_PresetCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call({String name, IList<Loop> loops});
 }
 
 /// @nodoc
-class __$$_PresetCopyWithImpl<$Res> extends _$PresetCopyWithImpl<$Res>
+class __$$_PresetCopyWithImpl<$Res>
+    extends _$PresetCopyWithImpl<$Res, _$_Preset>
     implements _$$_PresetCopyWith<$Res> {
   __$$_PresetCopyWithImpl(_$_Preset _value, $Res Function(_$_Preset) _then)
-      : super(_value, (v) => _then(v as _$_Preset));
+      : super(_value, _then);
 
-  @override
-  _$_Preset get _value => super._value as _$_Preset;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? name = freezed,
-    Object? loops = freezed,
+    Object? name = null,
+    Object? loops = null,
   }) {
     return _then(_$_Preset(
-      name: name == freezed
+      name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      loops: loops == freezed
+      loops: null == loops
           ? _value.loops
           : loops // ignore: cast_nullable_to_non_nullable
               as IList<Loop>,
@@ -111,18 +115,17 @@ class _$_Preset extends _Preset {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_Preset &&
-            const DeepCollectionEquality().equals(other.name, name) &&
+            (identical(other.name, name) || other.name == name) &&
             const DeepCollectionEquality().equals(other.loops, loops));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(name),
-      const DeepCollectionEquality().hash(loops));
+      runtimeType, name, const DeepCollectionEquality().hash(loops));
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_PresetCopyWith<_$_Preset> get copyWith =>
       __$$_PresetCopyWithImpl<_$_Preset>(this, _$identity);
 }

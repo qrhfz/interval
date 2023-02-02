@@ -6,4 +6,5 @@ class TimerState with _$TimerState {
   const factory TimerState.running(Task task, Duration timeleft) = _Running;
   const factory TimerState.paused(Task task, Duration timeleft) = _Paused;
   const factory TimerState.finished() = _Finished;
+  const factory TimerState.quit() = _Quit;
 }

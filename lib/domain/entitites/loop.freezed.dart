@@ -26,33 +26,37 @@ mixin _$Loop {
 /// @nodoc
 abstract class $LoopCopyWith<$Res> {
   factory $LoopCopyWith(Loop value, $Res Function(Loop) then) =
-      _$LoopCopyWithImpl<$Res>;
+      _$LoopCopyWithImpl<$Res, Loop>;
+  @useResult
   $Res call({IList<Task> tasks, int sets});
 }
 
 /// @nodoc
-class _$LoopCopyWithImpl<$Res> implements $LoopCopyWith<$Res> {
+class _$LoopCopyWithImpl<$Res, $Val extends Loop>
+    implements $LoopCopyWith<$Res> {
   _$LoopCopyWithImpl(this._value, this._then);
 
-  final Loop _value;
   // ignore: unused_field
-  final $Res Function(Loop) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? tasks = freezed,
-    Object? sets = freezed,
+    Object? tasks = null,
+    Object? sets = null,
   }) {
     return _then(_value.copyWith(
-      tasks: tasks == freezed
+      tasks: null == tasks
           ? _value.tasks
           : tasks // ignore: cast_nullable_to_non_nullable
               as IList<Task>,
-      sets: sets == freezed
+      sets: null == sets
           ? _value.sets
           : sets // ignore: cast_nullable_to_non_nullable
               as int,
-    ));
+    ) as $Val);
   }
 }
 
@@ -61,29 +65,28 @@ abstract class _$$_LoopCopyWith<$Res> implements $LoopCopyWith<$Res> {
   factory _$$_LoopCopyWith(_$_Loop value, $Res Function(_$_Loop) then) =
       __$$_LoopCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call({IList<Task> tasks, int sets});
 }
 
 /// @nodoc
-class __$$_LoopCopyWithImpl<$Res> extends _$LoopCopyWithImpl<$Res>
+class __$$_LoopCopyWithImpl<$Res> extends _$LoopCopyWithImpl<$Res, _$_Loop>
     implements _$$_LoopCopyWith<$Res> {
   __$$_LoopCopyWithImpl(_$_Loop _value, $Res Function(_$_Loop) _then)
-      : super(_value, (v) => _then(v as _$_Loop));
+      : super(_value, _then);
 
-  @override
-  _$_Loop get _value => super._value as _$_Loop;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? tasks = freezed,
-    Object? sets = freezed,
+    Object? tasks = null,
+    Object? sets = null,
   }) {
     return _then(_$_Loop(
-      tasks: tasks == freezed
+      tasks: null == tasks
           ? _value.tasks
           : tasks // ignore: cast_nullable_to_non_nullable
               as IList<Task>,
-      sets: sets == freezed
+      sets: null == sets
           ? _value.sets
           : sets // ignore: cast_nullable_to_non_nullable
               as int,
@@ -112,17 +115,16 @@ class _$_Loop extends _Loop {
         (other.runtimeType == runtimeType &&
             other is _$_Loop &&
             const DeepCollectionEquality().equals(other.tasks, tasks) &&
-            const DeepCollectionEquality().equals(other.sets, sets));
+            (identical(other.sets, sets) || other.sets == sets));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(tasks),
-      const DeepCollectionEquality().hash(sets));
+      runtimeType, const DeepCollectionEquality().hash(tasks), sets);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_LoopCopyWith<_$_Loop> get copyWith =>
       __$$_LoopCopyWithImpl<_$_Loop>(this, _$identity);
 }
