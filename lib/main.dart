@@ -13,10 +13,7 @@ final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 void main() async {
   await initializeHive();
   await initNotification();
-
   setup();
-
-  await getIt.get<AudioService>().startAudioService();
   runApp(MyApp());
 }
 
