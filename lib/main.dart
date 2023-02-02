@@ -12,13 +12,22 @@ final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 void main() async {
   await initializeHive();
+  await initNotification();
+
   setup();
-  await flutterLocalNotificationsPlugin
+
+  await getIt.get<AudioService>().startAudioService();
+  runApp(MyApp());
+}
+
+Future<void> initNotification() async {
+  final permit = await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
       ?.requestPermission();
-  await getIt.get<AudioService>().startAudioService();
-
+  if (permit != true) {
+    return;
+  }
   const initializationSettingsAndroid =
       AndroidInitializationSettings('@mipmap/ic_launcher');
 
@@ -31,6 +40,4 @@ void main() async {
       routeListenable.value = true;
     },
   );
-
-  runApp(MyApp());
 }
