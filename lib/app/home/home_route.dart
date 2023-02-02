@@ -9,6 +9,7 @@ import 'package:interval/app/interval/interval_route.dart';
 import 'package:interval/app/preset_editor/cubit/editor_cubit.dart';
 import 'package:interval/utils/duration_extension.dart';
 import '../../main.dart';
+import '../../route_notifier.dart';
 import '../preset_editor/preset_editor.dart';
 import 'cubit/quick_start_cubit.dart';
 
@@ -24,22 +25,12 @@ class _HomeRouteState extends State<HomeRoute> {
   void initState() {
     super.initState();
     initializeNotification();
+    routeListenable.addListener(() {
+      GoRouter.of(context).goNamed("interval");
+    });
   }
 
-  void initializeNotification() {
-    const initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-
-    const initializationSettings =
-        InitializationSettings(android: initializationSettingsAndroid);
-
-    flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-      onSelectNotification: (String? payload) {
-        GoRouter.of(context).goNamed("interval");
-      },
-    );
-  }
+  void initializeNotification() {}
 
   @override
   Widget build(BuildContext context) {

@@ -79,7 +79,7 @@ class MyApp extends StatelessWidget {
         routerDelegate: _router.routerDelegate,
         routeInformationParser: _router.routeInformationParser,
         routeInformationProvider: _router.routeInformationProvider,
-        title: 'Flutter Demo',
+        title: 'Interval',
         theme: ThemeData(
           primarySwatch: Colors.red,
           floatingActionButtonTheme: const FloatingActionButtonThemeData(
