@@ -4,11 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:interval/app/interval/cubit/interval_cubit.dart';
 import 'package:interval/app/interval/cubit/timer_cubit.dart';
+import 'package:interval/audio.dart';
 import 'package:interval/domain/entitites/task.dart';
 import 'package:interval/utils/duration_extension.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
+import '../../di.dart';
 import '../../domain/entitites/preset.dart';
 import '../../main.dart';
 import '../app.dart';
@@ -24,8 +26,6 @@ class IntervalRoute extends StatefulWidget {
 }
 
 class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
-  final tickingPlayer = AudioPlayer()..setAsset("assets/sounds/tick.ogg");
-  final timesUpPlayer = AudioPlayer()..setAsset("assets/sounds/timesup.ogg");
   bool mute = false;
 
   @override
@@ -49,8 +49,6 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
   @override
   void dispose() {
     routeObserver.unsubscribe(this);
-    tickingPlayer.dispose();
-    timesUpPlayer.dispose();
     stopNotification();
     super.dispose();
   }
@@ -115,13 +113,11 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
           listener: (context, state) {
             state.maybeWhen(
               running: (task, timeleft) {
-                tickingPlayer.seek(Duration.zero);
-                tickingPlayer.play();
+                getIt.get<AudioService>().tick();
                 startNotification(task, timeleft);
               },
               finished: () {
-                timesUpPlayer.seek(Duration.zero);
-                timesUpPlayer.play();
+                getIt.get<AudioService>().timesup();
                 context.read<IntervalCubit>().next();
               },
               orElse: () {},
@@ -155,8 +151,8 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
                     setState(() {
                       mute = !mute;
                     });
-                    timesUpPlayer.setVolume(mute ? 0 : 100);
-                    tickingPlayer.setVolume(mute ? 0 : 100);
+
+                    getIt.get<AudioService>().setVolume(mute ? 0 : 100);
                   },
                   icon: Icon(mute ? Icons.volume_off : Icons.volume_up),
                 )
