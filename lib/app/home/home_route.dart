@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_spinbox/flutter_spinbox.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interval/app/home/cubit/preset_cubit.dart';
@@ -8,7 +7,6 @@ import 'package:interval/app/home/cubit/quick_start_state.dart';
 import 'package:interval/app/interval/interval_route.dart';
 import 'package:interval/app/preset_editor/cubit/editor_cubit.dart';
 import 'package:interval/utils/duration_extension.dart';
-import '../../main.dart';
 import '../../route_notifier.dart';
 import '../preset_editor/preset_editor.dart';
 import 'cubit/quick_start_cubit.dart';

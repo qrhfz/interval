@@ -7,7 +7,6 @@ import 'package:interval/app/interval/cubit/timer_cubit.dart';
 import 'package:interval/audio.dart';
 import 'package:interval/domain/entitites/task.dart';
 import 'package:interval/utils/duration_extension.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 import '../../di.dart';
