@@ -7,7 +7,7 @@
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <service
-            android:name="com.dexterous.flutterlocalnotifications.ForegroundService"
+            android:name=".TimerService"
             android:exported="false"
             android:stopWithTask="true"
             />

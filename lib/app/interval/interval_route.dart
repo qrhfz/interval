@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interval/app/interval/cubit/interval_cubit.dart';
 import 'package:interval/app/interval/cubit/timer_cubit.dart';
+import 'package:interval/app/notification_manager.dart';
 import 'package:interval/audio.dart';
 import 'package:interval/domain/entitites/task.dart';
 import 'package:interval/utils/duration_extension.dart';
@@ -24,6 +25,9 @@ class IntervalRoute extends StatefulWidget {
 
 class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
   bool mute = false;
+  late final notifManager = NotificationManager(() {
+    stop();
+  });
 
   @override
   void initState() {
@@ -35,6 +39,11 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
     Future.microtask(() {
       context.read<IntervalCubit>().start(preset.loops);
     });
+  }
+
+  void stop() {
+    context.read<TimerCubit>().quit();
+    context.read<IntervalCubit>().stop();
   }
 
   @override
@@ -52,14 +61,20 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
 
   @override
   void didPop() {
-    context.read<TimerCubit>().quit();
-    context.read<IntervalCubit>().stop();
+    stop();
     super.didPop();
   }
 
-  Future<void> startNotification(Task currentTask, Duration timeleft) async {}
+  Future<void> startNotification(Task currentTask, Duration timeleft) async {
+    notifManager.showTimer(
+      currentTask.name,
+      timeleft.toHHMMSS(),
+    );
+  }
 
-  Future<void> stopNotification() async {}
+  Future<void> stopNotification() async {
+    notifManager.dismissTimer();
+  }
 
   @override
   Widget build(BuildContext context) {
