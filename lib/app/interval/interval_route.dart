@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:interval/app/interval/cubit/interval_cubit.dart';
 import 'package:interval/app/interval/cubit/timer_cubit.dart';
 import 'package:interval/audio.dart';
@@ -11,7 +10,6 @@ import 'package:percent_indicator/percent_indicator.dart';
 
 import '../../di.dart';
 import '../../domain/entitites/preset.dart';
-import '../../main.dart';
 import '../app.dart';
 
 class IntervalRoute extends StatefulWidget {
@@ -59,38 +57,9 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
     super.didPop();
   }
 
-  Future<void> startNotification(Task currentTask, Duration timeleft) async {
-    final androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      'your channel id',
-      'your channel name',
-      channelDescription: 'color background channel description',
-      importance: Importance.max,
-      priority: Priority.high,
-      ticker: 'ticker',
-      color: currentTask.color,
-      colorized: true,
-      playSound: false,
-      enableVibration: false,
-    );
+  Future<void> startNotification(Task currentTask, Duration timeleft) async {}
 
-    await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
-        ?.startForegroundService(
-          1,
-          currentTask.name,
-          timeleft.toMMSS(),
-          notificationDetails: androidPlatformChannelSpecifics,
-          payload: 'item x',
-        );
-  }
-
-  Future<void> stopNotification() async {
-    await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
-        ?.stopForegroundService();
-  }
+  Future<void> stopNotification() async {}
 
   @override
   Widget build(BuildContext context) {
