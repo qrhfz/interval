@@ -81,6 +81,7 @@ class MyApp extends StatelessWidget {
         routeInformationProvider: _router.routeInformationProvider,
         title: 'Interval',
         theme: ThemeData(
+          useMaterial3: false,
           primarySwatch: Colors.red,
           floatingActionButtonTheme: const FloatingActionButtonThemeData(
             backgroundColor: Colors.white,
