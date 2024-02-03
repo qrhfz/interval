@@ -1,7 +1,6 @@
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_spinbox/flutter_spinbox.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interval/app/home/cubit/preset_cubit.dart';
 import 'package:interval/app/home/quick_start_controller.dart';
