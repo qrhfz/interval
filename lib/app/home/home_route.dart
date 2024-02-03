@@ -1,15 +1,19 @@
+import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinbox/flutter_spinbox.dart';
 import 'package:go_router/go_router.dart';
 import 'package:interval/app/home/cubit/preset_cubit.dart';
-import 'package:interval/app/home/cubit/quick_start_state.dart';
+import 'package:interval/app/home/quick_start_controller.dart';
 import 'package:interval/app/interval/interval_route.dart';
 import 'package:interval/app/preset_editor/cubit/editor_cubit.dart';
+import 'package:interval/domain/entitites/loop.dart';
+import 'package:interval/domain/entitites/preset.dart';
+import 'package:interval/domain/entitites/task.dart';
 import 'package:interval/utils/duration_extension.dart';
 import '../../route_notifier.dart';
 import '../preset_editor/preset_editor.dart';
-import 'cubit/quick_start_cubit.dart';
+import '../widgets/duration_field.dart';
 
 class HomeRoute extends StatefulWidget {
   const HomeRoute({Key? key}) : super(key: key);
@@ -46,13 +50,13 @@ class _HomeRouteState extends State<HomeRoute> {
           title: const Text("Interval"),
           actions: const [HomeMenu()],
         ),
-        body: const CustomScrollView(
+        body: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
               child: QuickStartWidget(),
             ),
-            PresetListHeader(),
-            PresetList()
+            const PresetListHeader(),
+            const PresetList(),
           ],
         ),
       ),
@@ -204,70 +208,105 @@ class _PresetListState extends State<PresetList> {
 }
 
 class QuickStartWidget extends StatelessWidget {
-  const QuickStartWidget({
+  QuickStartWidget({
     Key? key,
   }) : super(key: key);
 
+  final controller = QuickStartController();
+
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<QuickStartCubit, QuickStartState>(
-      builder: (context, state) {
-        return Padding(
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Card(
+        child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Card(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
                   "Quick Start",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                TimeInput(
-                  "Work",
-                  minutes: state.workMins,
-                  seconds: state.workSecs,
-                  setMinutes: (val) {
-                    context.read<QuickStartCubit>().setWorkMinutes(val.toInt());
-                  },
-                  setSeconds: (val) {
-                    context.read<QuickStartCubit>().setWorkSeconds(val.toInt());
-                  },
-                ),
-                const Divider(),
-                TimeInput(
-                  "Rest",
-                  minutes: state.restMins,
-                  seconds: state.restSecs,
-                  setMinutes: (val) {
-                    context.read<QuickStartCubit>().setRestMinutes(val.toInt());
-                  },
-                  setSeconds: (val) {
-                    context.read<QuickStartCubit>().setRestSeconds(val.toInt());
-                  },
-                ),
-                const Divider(),
-                SetsInput(state.sets, onChanged: (value) {
-                  context.read<QuickStartCubit>().setLap(value.toInt());
-                }),
-                TextButton.icon(
-                  onPressed: () {
-                    GoRouter.of(context).goNamed(
-                      IntervalRoute.routeName,
-                      extra: context.read<QuickStartCubit>().state.preset,
-                    );
-                  },
-                  icon: const Icon(Icons.play_arrow),
-                  label: const Text('Play'),
-                )
-              ],
-            ),
+              ),
+              Row(
+                children: [
+                  const Text("Work"),
+                  const Spacer(),
+                  ListenableBuilder(
+                    listenable: controller.work,
+                    builder: (context, _) {
+                      return DurationField(
+                        value: controller.work.value,
+                        onDurationChange: (duration) {
+                          controller.work.value = duration;
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
+              const Divider(),
+              Row(
+                children: [
+                  const Text("Rest"),
+                  const Spacer(),
+                  ListenableBuilder(
+                      listenable: controller.rest,
+                      builder: (context, _) {
+                        return DurationField(
+                          value: controller.rest.value,
+                          onDurationChange: (duration) {
+                            controller.rest.value = duration;
+                          },
+                        );
+                      }),
+                ],
+              ),
+              const Divider(),
+              ListenableBuilder(
+                listenable: controller.sets,
+                builder: (context, _) {
+                  return SetsInput(
+                    controller.sets.value,
+                    onChanged: (value) {
+                      controller.setSets(value);
+                    },
+                  );
+                },
+              ),
+              TextButton.icon(
+                onPressed: () {
+                  final preset = Preset(
+                    name: "Quick Start",
+                    loops: IList([
+                      Loop(
+                        tasks: IList([
+                          Task(name: "Work", duration: controller.work.value),
+                          Task(name: "Rest", duration: controller.rest.value),
+                        ]),
+                        sets: controller.sets.value,
+                      )
+                    ]),
+                  );
+                  GoRouter.of(context).goNamed(
+                    IntervalRoute.routeName,
+                    extra: preset,
+                  );
+                },
+                icon: const Icon(Icons.play_arrow),
+                label: const Text('Play'),
+              )
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }
@@ -280,140 +319,32 @@ class SetsInput extends StatelessWidget {
   }) : super(key: key);
 
   final int value;
-  final Function(double) onChanged;
+  final Function(int) onChanged;
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      onTap: () {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return Dialog(
-              child: SizedBox(
-                width: 128,
-                child: SpinBox(
-                  value: value.toDouble(),
-                  min: 1,
-                  onChanged: onChanged,
-                ),
-              ),
-            );
+    return Row(
+      children: [
+        const Text(
+          "Sets",
+        ),
+        const Spacer(),
+        IconButton(
+          onPressed: () {
+            onChanged(value - 1);
           },
-        );
-      },
-      title: const Text(
-        "Sets",
-      ),
-      trailing: Text(
-        value.toString(),
-        style: const TextStyle(color: Colors.red),
-      ),
+          icon: const Icon(Icons.remove),
+        ),
+        Text(
+          value.toString(),
+          style: const TextStyle(fontSize: 18),
+        ),
+        IconButton(
+          onPressed: () {
+            onChanged(value + 1);
+          },
+          icon: const Icon(Icons.add),
+        ),
+      ],
     );
-  }
-}
-
-class TimeInput extends StatelessWidget {
-  final String name;
-  final int minutes;
-  final int seconds;
-  final Function(double) setSeconds;
-  final Function(double) setMinutes;
-
-  const TimeInput(
-    this.name, {
-    required this.minutes,
-    required this.seconds,
-    required this.setMinutes,
-    required this.setSeconds,
-    super.key,
-  });
-  @override
-  Widget build(BuildContext context) {
-    void showInputDialog() {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return UpdateTimeDialog(
-            minutes: minutes,
-            seconds: seconds,
-            setMinutes: setMinutes,
-            setSeconds: setSeconds,
-          );
-        },
-      );
-    }
-
-    return ListTile(
-      onTap: showInputDialog,
-      title: Text(
-        name,
-        // style: const TextStyle(fontSize: 24),
-      ),
-      trailing: Text(
-        Duration(
-          minutes: minutes,
-          seconds: seconds,
-        ).toMMSS(),
-        style: const TextStyle(color: Colors.red),
-      ),
-    );
-  }
-}
-
-class UpdateTimeDialog extends StatelessWidget {
-  final Function(double) setSeconds;
-  final Function(double) setMinutes;
-  final int minutes;
-  final int seconds;
-
-  const UpdateTimeDialog({
-    required this.setMinutes,
-    required this.setSeconds,
-    required this.minutes,
-    required this.seconds,
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-        child: Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: 64,
-            child: SpinBox(
-              direction: Axis.vertical,
-              digits: 2,
-              onChanged: setMinutes,
-              value: minutes.toDouble(),
-              min: 0,
-            ),
-          ),
-          const SizedBox(
-            width: 32,
-            child: Text(
-              ":",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 32),
-            ),
-          ),
-          SizedBox(
-            width: 64,
-            child: SpinBox(
-              direction: Axis.vertical,
-              digits: 2,
-              onChanged: setSeconds,
-              value: seconds.toDouble(),
-              min: 0,
-              max: 59,
-            ),
-          ),
-        ],
-      ),
-    ));
   }
 }
