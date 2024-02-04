@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
-
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:interval/app/interval/cubit/interval_cubit.dart';
-import 'package:interval/app/interval/cubit/timer_cubit.dart';
+import 'package:interval/app/interval/interval_controller.dart';
 import 'package:interval/app/notification_manager.dart';
-import 'package:interval/audio.dart';
+import 'package:interval/di.dart';
 import 'package:interval/domain/entitites/task.dart';
 import 'package:interval/utils/duration_extension.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
-import '../../di.dart';
 import '../../domain/entitites/preset.dart';
 import '../app.dart';
 
@@ -25,25 +21,16 @@ class IntervalRoute extends StatefulWidget {
 
 class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
   bool mute = false;
+  late final controller = IntervalController(widget.preset!);
+
   late final notifManager = NotificationManager(() {
-    stop();
+    controller.stop();
   });
 
   @override
   void initState() {
     super.initState();
-
-    final preset = widget.preset;
-
-    if (preset == null) return;
-    Future.microtask(() {
-      context.read<IntervalCubit>().start(preset.loops);
-    });
-  }
-
-  void stop() {
-    context.read<TimerCubit>().quit();
-    context.read<IntervalCubit>().stop();
+    getIt.registerSingleton<IntervalController>(controller);
   }
 
   @override
@@ -53,16 +40,17 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
   }
 
   @override
-  void dispose() {
-    routeObserver.unsubscribe(this);
-    stopNotification();
-    super.dispose();
+  void didPop() {
+    controller.stop();
+    super.didPop();
   }
 
   @override
-  void didPop() {
-    stop();
-    super.didPop();
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    stopNotification();
+    getIt.unregister<IntervalController>(instance: controller);
+    super.dispose();
   }
 
   Future<void> startNotification(Task currentTask, Duration timeleft) async {
@@ -78,116 +66,159 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocListener(
-      listeners: [
-        BlocListener<IntervalCubit, IntervalState>(
-          listener: (context, state) {
-            state.maybeMap(
-              running: (running) {
-                final currentTask = running.currentTask;
+    return ListenableBuilder(
+      listenable: controller.state,
+      builder: (context, _) {
+        final state = controller.state.value;
 
-                context.read<TimerCubit>().start(currentTask);
-              },
-              orElse: () {},
-            );
+        return switch (state) {
+          Running() => const RunningPage(),
+          Paused() => const Placeholder(),
+          Finished() => const Placeholder(),
+        };
+      },
+    );
+  }
+}
+
+class RunningPage extends StatefulWidget {
+  const RunningPage({super.key});
+
+  @override
+  State<RunningPage> createState() => _RunningPageState();
+}
+
+class _RunningPageState extends State<RunningPage> {
+  final IntervalController controller = getIt();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      // backgroundColor: currentTask.color,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        foregroundColor: Colors.red,
+        actions: const [
+          // IconButton(
+          //   onPressed: () {
+          //     setState(() {
+          //       mute = !mute;
+          //     });
+
+          //     getIt.get<AudioService>().setVolume(mute ? 0 : 100);
+          //   },
+          //   icon: Icon(mute ? Icons.volume_off : Icons.volume_up),
+          // ),
+        ],
+      ),
+
+      floatingActionButton: PauseButton(controller: controller),
+      body: const SizedBox(
+        width: double.infinity,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            TaskName(),
+            TaskTimer(),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class TaskName extends StatefulWidget {
+  const TaskName({super.key});
+
+  @override
+  State<TaskName> createState() => _TaskNameState();
+}
+
+class _TaskNameState extends State<TaskName> {
+  final IntervalController controller = getIt();
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder(
+      valueListenable: controller.state,
+      builder: (context, state, _) {
+        final runningState = state as Running;
+        return Text(
+          runningState.currentTask.name,
+          style: const TextStyle(
+            fontSize: 48,
+            // color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        );
+      },
+    );
+  }
+}
+
+class TaskTimer extends StatefulWidget {
+  const TaskTimer({super.key});
+
+  @override
+  State<TaskTimer> createState() => _TaskTimerState();
+}
+
+class _TaskTimerState extends State<TaskTimer> {
+  final IntervalController controller = getIt();
+
+  @override
+  Widget build(BuildContext context) {
+    final state = controller.state.value;
+
+    return switch (state) {
+      Running() => ValueListenableBuilder(
+          valueListenable: state.durationRemaning,
+          builder: (context, remaning, _) {
+            return TimerProgress(
+                time: remaning,
+                total: state.currentTask.duration,
+                color: state.currentTask.color);
           },
         ),
-        BlocListener<TimerCubit, TimerState>(
-          listener: (context, state) {
-            state.maybeWhen(
-              running: (task, timeleft) {
-                getIt.get<AudioService>().tick();
-                startNotification(task, timeleft);
-              },
-              finished: () {
-                getIt.get<AudioService>().timesup();
-                context.read<IntervalCubit>().next();
-              },
-              orElse: () {},
-            );
-          },
+      Paused() => TimerProgress(
+          time: state.durationRemaning,
+          total: state.currentTask.duration,
+          color: state.currentTask.color,
         ),
-      ],
-      child: BlocBuilder<IntervalCubit, IntervalState>(
-        builder: (context, state) {
-          final currentTask = state.map(
-            running: (running) => running.currentTask,
-            paused: (paused) => paused.currentTask,
-            finished: (_) => Task(
-              name: "finished",
-              duration: Duration.zero,
-            ),
-            initial: (_) => Task(
-              name: "-",
-              duration: Duration.zero,
-            ),
-          );
-          return Scaffold(
-            // backgroundColor: currentTask.color,
-            appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              foregroundColor: Colors.red,
-              actions: [
-                IconButton(
-                  onPressed: () {
-                    setState(() {
-                      mute = !mute;
-                    });
+      Finished() => const Placeholder(),
+    };
+  }
+}
 
-                    getIt.get<AudioService>().setVolume(mute ? 0 : 100);
-                  },
-                  icon: Icon(mute ? Icons.volume_off : Icons.volume_up),
-                )
-              ],
-            ),
+class PauseButton extends StatefulWidget {
+  const PauseButton({
+    super.key,
+    required this.controller,
+  });
 
-            floatingActionButton: FloatingActionButton(
-              child: BlocBuilder<TimerCubit, TimerState>(
-                builder: (context, state) {
-                  return state.maybeWhen(
-                    running: (task, timeleft) => const Icon(Icons.pause),
-                    orElse: () => const Icon(Icons.play_arrow),
-                  );
-                },
-              ),
-              onPressed: () {
-                context.read<TimerCubit>().pause();
-              },
-            ),
-            body: SizedBox(
-              width: double.infinity,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    currentTask.name,
-                    style: const TextStyle(
-                        fontSize: 48,
-                        // color: Colors.white,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  BlocBuilder<TimerCubit, TimerState>(
-                    builder: (context, state) {
-                      final time = state.maybeWhen(
-                        running: (task, timeleft) => timeleft,
-                        paused: (task, timeleft) => timeleft,
-                        orElse: () => Duration.zero,
-                      );
-                      return TimerProgress(
-                        time: time,
-                        total: currentTask.duration,
-                        color: currentTask.color,
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
-          );
+  final IntervalController controller;
+
+  @override
+  State<PauseButton> createState() => _PauseButtonState();
+}
+
+class _PauseButtonState extends State<PauseButton> {
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton(
+      child: ListenableBuilder(
+        listenable: widget.controller.state,
+        builder: (context, _) => switch (widget.controller.state.value) {
+          Running() => const Icon(Icons.pause),
+          Paused() => const Icon(Icons.play_arrow),
+          Finished() => const Placeholder(),
         },
       ),
+      onPressed: () {
+        widget.controller.pause();
+      },
     );
   }
 }
