@@ -61,6 +61,7 @@ sealed class IntervalState {
 }
 
 class Running extends IntervalState with _Active {
+  @override
   final int set;
   @override
   final int loopPos;
@@ -165,6 +166,7 @@ mixin _Active {
 }
 
 class Paused extends IntervalState with _Active {
+  @override
   final int set;
   @override
   final int loopPos;
@@ -213,25 +215,4 @@ class Finished extends IntervalState {
 
   @override
   void stop() {}
-}
-
-mixin _ActiveState {}
-
-class TransformListenable<T, R> extends ValueNotifier<R> {
-  final ValueNotifier<T> upstream;
-  final R Function(T data) transformer;
-
-  TransformListenable(this.upstream, this.transformer)
-      : super(transformer(upstream.value)) {
-    upstream.addListener(notifyListeners);
-  }
-
-  @override
-  get value => transformer(upstream.value);
-
-  @override
-  void dispose() {
-    upstream.removeListener(notifyListeners);
-    super.dispose();
-  }
 }
