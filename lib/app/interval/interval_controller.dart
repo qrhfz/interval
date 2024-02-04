@@ -2,9 +2,8 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
-import 'package:interval/domain/entitites/loop.dart';
-import 'package:interval/domain/entitites/preset.dart';
-
+import '../../domain/entitites/loop.dart';
+import '../../domain/entitites/preset.dart';
 import '../../domain/entitites/task.dart';
 
 class IntervalController {
@@ -19,6 +18,15 @@ class IntervalController {
   );
 
   IntervalController(this.preset);
+
+  void restart() {
+    _state.value = Running(
+      controller: this,
+      set: 1,
+      loopPos: 0,
+      taskPos: 0,
+    );
+  }
 
   void pause() {
     _state.value.pause();
@@ -69,10 +77,9 @@ class Running extends IntervalState with _Active {
     required super.controller,
     Duration? durationRemaning,
   }) {
-    final firstTask = controller.preset.loops.first.tasks.first;
+    final task = currentTask;
 
-    _durationRemaning = ValueNotifier(
-        durationRemaning ?? Duration(seconds: firstTask.duration.inSeconds));
+    _durationRemaning = ValueNotifier(durationRemaning ?? task.duration);
 
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       _durationRemaning.value -= const Duration(seconds: 1);
@@ -95,7 +102,7 @@ class Running extends IntervalState with _Active {
       controller: controller,
       loopPos: loopPos,
       set: set,
-      taskPos: taskPos + 1,
+      taskPos: taskPos,
       durationRemaning: _durationRemaning.value,
     ));
     dispose();
@@ -188,8 +195,6 @@ class Paused extends IntervalState with _Active {
       durationRemaning: durationRemaning,
     ));
   }
-
-  Task get currentTask => controller.preset.loops[loopPos].tasks[taskPos];
 
   @override
   void stop() {

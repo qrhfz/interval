@@ -73,8 +73,8 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
 
         return switch (state) {
           Running() => const RunningPage(),
-          Paused() => const Placeholder(),
-          Finished() => const Placeholder(),
+          Paused() => const RunningPage(),
+          Finished() => const FinishPage(),
         };
       },
     );
@@ -96,9 +96,6 @@ class _RunningPageState extends State<RunningPage> {
     return Scaffold(
       // backgroundColor: currentTask.color,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        foregroundColor: Colors.red,
         actions: const [
           // IconButton(
           //   onPressed: () {
@@ -113,7 +110,7 @@ class _RunningPageState extends State<RunningPage> {
         ],
       ),
 
-      floatingActionButton: PauseButton(controller: controller),
+      floatingActionButton: const PauseButton(),
       body: const SizedBox(
         width: double.infinity,
         child: Column(
@@ -122,6 +119,42 @@ class _RunningPageState extends State<RunningPage> {
           children: [
             TaskName(),
             TaskTimer(),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class FinishPage extends StatefulWidget {
+  const FinishPage({super.key});
+
+  @override
+  State<FinishPage> createState() => _FinishPageState();
+}
+
+class _FinishPageState extends State<FinishPage> {
+  final IntervalController controller = getIt();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              "Finished",
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+            ElevatedButton.icon(
+              onPressed: () {
+                controller.restart();
+              },
+              icon: const Icon(Icons.refresh),
+              label: const Text("Restart"),
+            )
           ],
         ),
       ),
@@ -144,16 +177,22 @@ class _TaskNameState extends State<TaskName> {
     return ValueListenableBuilder(
       valueListenable: controller.state,
       builder: (context, state, _) {
-        final runningState = state as Running;
-        return Text(
-          runningState.currentTask.name,
-          style: const TextStyle(
-            fontSize: 48,
-            // color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        );
+        return switch (state) {
+          Running() => textWidget(state.currentTask.name),
+          Paused() => textWidget(state.currentTask.name),
+          Finished() => const Placeholder(),
+        };
       },
+    );
+  }
+
+  Text textWidget(String text) {
+    return Text(
+      text,
+      style: const TextStyle(
+        fontSize: 48,
+        fontWeight: FontWeight.bold,
+      ),
     );
   }
 }
@@ -170,54 +209,54 @@ class _TaskTimerState extends State<TaskTimer> {
 
   @override
   Widget build(BuildContext context) {
-    final state = controller.state.value;
-
-    return switch (state) {
-      Running() => ValueListenableBuilder(
-          valueListenable: state.durationRemaning,
-          builder: (context, remaning, _) {
-            return TimerProgress(
-                time: remaning,
-                total: state.currentTask.duration,
-                color: state.currentTask.color);
-          },
-        ),
-      Paused() => TimerProgress(
-          time: state.durationRemaning,
-          total: state.currentTask.duration,
-          color: state.currentTask.color,
-        ),
-      Finished() => const Placeholder(),
-    };
+    return ValueListenableBuilder(
+      valueListenable: controller.state,
+      builder: (context, state, _) {
+        return switch (state) {
+          Running() => ValueListenableBuilder(
+              valueListenable: state.durationRemaning,
+              builder: (context, remaining, _) {
+                return TimerProgress(
+                  time: remaining,
+                  total: state.currentTask.duration,
+                  color: state.currentTask.color,
+                );
+              }),
+          Paused() => TimerProgress(
+              time: state.durationRemaning,
+              total: state.currentTask.duration,
+              color: state.currentTask.color,
+            ),
+          _ => const Placeholder()
+        };
+      },
+    );
   }
 }
 
 class PauseButton extends StatefulWidget {
-  const PauseButton({
-    super.key,
-    required this.controller,
-  });
-
-  final IntervalController controller;
+  const PauseButton({super.key});
 
   @override
   State<PauseButton> createState() => _PauseButtonState();
 }
 
 class _PauseButtonState extends State<PauseButton> {
+  final IntervalController controller = getIt();
+
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-      child: ListenableBuilder(
-        listenable: widget.controller.state,
-        builder: (context, _) => switch (widget.controller.state.value) {
+      child: ValueListenableBuilder(
+        valueListenable: controller.state,
+        builder: (context, state, _) => switch (state) {
           Running() => const Icon(Icons.pause),
           Paused() => const Icon(Icons.play_arrow),
           Finished() => const Placeholder(),
         },
       ),
       onPressed: () {
-        widget.controller.pause();
+        controller.pause();
       },
     );
   }
