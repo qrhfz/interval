@@ -1,21 +1,21 @@
-import 'package:just_audio/just_audio.dart';
+// import 'package:just_audio/just_audio.dart';
 
 class AudioService {
-  final tickingPlayer = AudioPlayer()..setAsset("assets/sounds/tick.ogg");
-  final timesUpPlayer = AudioPlayer()..setAsset("assets/sounds/timesup.ogg");
+  // final beep = AudioPlayer()..setAsset("assets/sounds/beep.ogg");
+  // final beep3 = AudioPlayer()..setAsset("assets/sounds/beep3.ogg");
 
   void setVolume(double n) {
-    timesUpPlayer.setVolume(n);
-    tickingPlayer.setVolume(n);
+    // beep.setVolume(n);
+    // beep3.setVolume(n);
   }
 
-  void tick() {
-    tickingPlayer.seek(Duration.zero);
-    tickingPlayer.play();
+  void setDone() {
+    // beep.seek(Duration.zero);
+    // beep.play();
   }
 
-  void timesup() {
-    timesUpPlayer.seek(Duration.zero);
-    timesUpPlayer.play();
+  void finish() {
+    // beep3.seek(Duration.zero);
+    // beep3.play();
   }
 }
