@@ -2,12 +2,23 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
+import 'package:interval/app/interval/timer_auido_controller.dart';
+import 'package:interval/di.dart';
+import 'package:interval/utils/duration_extension.dart';
 import '../../domain/entitites/loop.dart';
 import '../../domain/entitites/preset.dart';
 import '../../domain/entitites/task.dart';
+import '../notification_manager.dart';
 
 class IntervalController {
   final Preset preset;
+  final TimerAudioController audio = getIt();
+  late final _notification = NotificationManager(
+    onTimerDissmissed: () {
+      stop();
+    },
+  );
+
   late final _state = ValueNotifier<IntervalState>(
     Running(
       controller: this,
@@ -17,7 +28,10 @@ class IntervalController {
     ),
   );
 
-  IntervalController(this.preset);
+  IntervalController(this.preset) {
+    updateNotification();
+    _state.addListener(updateNotification);
+  }
 
   void restart() {
     _state.value = Running(
@@ -38,6 +52,12 @@ class IntervalController {
 
   void next() {
     _state.value.next();
+
+    if (state.value is Finished) {
+      audio.finish();
+    } else {
+      audio.setDone();
+    }
   }
 
   void prev() {}
@@ -45,6 +65,22 @@ class IntervalController {
   ValueListenable<IntervalState> get state => _state;
   void setState(IntervalState state) {
     _state.value = state;
+  }
+
+  void updateNotification() {
+    final state = _state.value;
+    switch (state) {
+      case Running():
+        _showTimer(state.currentTask.name, state.timeRemaning);
+      case Paused():
+        _showTimer(state.currentTask.name, state.durationRemaning);
+      case Finished():
+        _notification.dismissTimer();
+    }
+  }
+
+  void _showTimer(String taskName, Duration remaining) {
+    _notification.showTimer(taskName, remaining.toHHMMSS());
   }
 }
 
@@ -82,13 +118,17 @@ class Running extends IntervalState with _Active {
 
     _durationRemaning = ValueNotifier(durationRemaning ?? task.duration);
 
-    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      _durationRemaning.value -= const Duration(seconds: 1);
-      log("${_durationRemaning.value}");
-      if (_durationRemaning.value == Duration.zero) {
-        next();
-      }
-    });
+    timer = Timer.periodic(
+      const Duration(seconds: 1),
+      (timer) {
+        _durationRemaning.value -= const Duration(seconds: 1);
+        log("${_durationRemaning.value}");
+        controller.updateNotification();
+        if (_durationRemaning.value == Duration.zero) {
+          controller.next();
+        }
+      },
+    );
   }
 
   @override

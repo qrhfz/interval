@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:interval/app/interval/interval_controller.dart';
-import 'package:interval/app/notification_manager.dart';
 import 'package:interval/di.dart';
-import 'package:interval/domain/entitites/task.dart';
 import 'package:interval/utils/duration_extension.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
@@ -22,10 +20,6 @@ class IntervalRoute extends StatefulWidget {
 class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
   bool mute = false;
   late final controller = IntervalController(widget.preset!);
-
-  late final notifManager = NotificationManager(() {
-    controller.stop();
-  });
 
   @override
   void initState() {
@@ -48,20 +42,8 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
   @override
   void dispose() {
     routeObserver.unsubscribe(this);
-    stopNotification();
     getIt.unregister<IntervalController>(instance: controller);
     super.dispose();
-  }
-
-  Future<void> startNotification(Task currentTask, Duration timeleft) async {
-    notifManager.showTimer(
-      currentTask.name,
-      timeleft.toHHMMSS(),
-    );
-  }
-
-  Future<void> stopNotification() async {
-    notifManager.dismissTimer();
   }
 
   @override

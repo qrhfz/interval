@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 class NotificationManager {
   final void Function() onTimerDissmissed;
 
-  NotificationManager(this.onTimerDissmissed) {
+  NotificationManager({required this.onTimerDissmissed}) {
     channel.setMethodCallHandler((call) async {
       switch (call.method) {
         case "onTimerDismissed":
