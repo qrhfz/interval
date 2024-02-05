@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:interval/app/interval/interval_controller.dart';
+import 'package:interval/app/interval/timer_auido_controller.dart';
 import 'package:interval/di.dart';
 import 'package:interval/utils/duration_extension.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 import '../../domain/entitites/preset.dart';
 import '../app.dart';
+import '../notification_manager.dart';
 
 class IntervalRoute extends StatefulWidget {
   static const routeName = 'interval';
@@ -19,11 +21,16 @@ class IntervalRoute extends StatefulWidget {
 
 class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
   bool mute = false;
-  late final controller = IntervalController(widget.preset!);
+  late final IntervalController controller;
+  late final NotificationManager notification;
+  late final TimerAudioController timerAudioController;
 
   @override
   void initState() {
     super.initState();
+    controller = IntervalController(widget.preset!);
+    notification = NotificationManager(controller: controller);
+    timerAudioController = TimerAudioController(controller);
     getIt.registerSingleton<IntervalController>(controller);
   }
 
@@ -34,14 +41,10 @@ class _IntervalRouteState extends State<IntervalRoute> with RouteAware {
   }
 
   @override
-  void didPop() {
-    controller.stop();
-    super.didPop();
-  }
-
-  @override
   void dispose() {
     routeObserver.unsubscribe(this);
+    notification.dismissTimer();
+    controller.dispose();
     getIt.unregister<IntervalController>(instance: controller);
     super.dispose();
   }

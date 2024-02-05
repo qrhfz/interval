@@ -2,22 +2,13 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
-import 'package:interval/app/interval/timer_auido_controller.dart';
-import 'package:interval/di.dart';
-import 'package:interval/utils/duration_extension.dart';
+
 import '../../domain/entitites/loop.dart';
 import '../../domain/entitites/preset.dart';
 import '../../domain/entitites/task.dart';
-import '../notification_manager.dart';
 
 class IntervalController {
   final Preset preset;
-  final TimerAudioController audio = getIt();
-  late final _notification = NotificationManager(
-    onTimerDissmissed: () {
-      stop();
-    },
-  );
 
   late final _state = ValueNotifier<IntervalState>(
     Running(
@@ -28,10 +19,7 @@ class IntervalController {
     ),
   );
 
-  IntervalController(this.preset) {
-    updateNotification();
-    _state.addListener(updateNotification);
-  }
+  IntervalController(this.preset);
 
   void restart() {
     _state.value = Running(
@@ -51,37 +39,41 @@ class IntervalController {
   }
 
   void next() {
-    _state.value.next();
+    final oldState = _state.value;
+    oldState.next();
+    oldState.dispose();
 
-    if (state.value is Finished) {
-      audio.finish();
-    } else {
-      audio.setDone();
-    }
+    // if (state.value is Finished) {
+    //   audio.finish();
+    // } else {
+    //   audio.setDone();
+    // }
   }
 
-  void prev() {}
+  void dispose() {
+    _state.value.dispose();
+  }
 
   ValueListenable<IntervalState> get state => _state;
   void setState(IntervalState state) {
     _state.value = state;
   }
 
-  void updateNotification() {
-    final state = _state.value;
-    switch (state) {
-      case Running():
-        _showTimer(state.currentTask.name, state.timeRemaning);
-      case Paused():
-        _showTimer(state.currentTask.name, state.durationRemaning);
-      case Finished():
-        _notification.dismissTimer();
-    }
-  }
+  // void _updateNotification() {
+  //   final state = _state.value;
+  //   switch (state) {
+  //     case Running():
+  //       _showTimer(state.currentTask.name, state.timeRemaning);
+  //     case Paused():
+  //       _showTimer(state.currentTask.name, state.durationRemaning);
+  //     case Finished():
+  //       _notification.dismissTimer();
+  //   }
+  // }
 
-  void _showTimer(String taskName, Duration remaining) {
-    _notification.showTimer(taskName, remaining.toHHMMSS());
-  }
+  // void _showTimer(String taskName, Duration remaining) {
+  //   _notification.showTimer(taskName, remaining.toHHMMSS());
+  // }
 }
 
 sealed class IntervalState {
@@ -94,6 +86,8 @@ sealed class IntervalState {
   void pause();
 
   void stop();
+
+  void dispose();
 }
 
 class Running extends IntervalState with _Active {
@@ -123,7 +117,6 @@ class Running extends IntervalState with _Active {
       (timer) {
         _durationRemaning.value -= const Duration(seconds: 1);
         log("${_durationRemaning.value}");
-        controller.updateNotification();
         if (_durationRemaning.value == Duration.zero) {
           controller.next();
         }
@@ -134,7 +127,6 @@ class Running extends IntervalState with _Active {
   @override
   void next() {
     _next();
-    dispose();
   }
 
   @override
@@ -146,16 +138,15 @@ class Running extends IntervalState with _Active {
       taskPos: taskPos,
       durationRemaning: _durationRemaning.value,
     ));
-    dispose();
   }
 
   @override
   void stop() {
     controller.setState(Finished(controller: controller));
-    dispose();
   }
 
-  dispose() {
+  @override
+  void dispose() {
     _durationRemaning.dispose();
     timer?.cancel();
     timer = null;
@@ -242,6 +233,9 @@ class Paused extends IntervalState with _Active {
   void stop() {
     controller.setState(Finished(controller: controller));
   }
+
+  @override
+  void dispose() {}
 }
 
 class Finished extends IntervalState {
@@ -255,4 +249,7 @@ class Finished extends IntervalState {
 
   @override
   void stop() {}
+
+  @override
+  void dispose() {}
 }

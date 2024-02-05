@@ -1,16 +1,36 @@
 import 'package:flutter/services.dart';
+import 'package:interval/utils/duration_extension.dart';
+
+import 'interval/interval_controller.dart';
 
 class NotificationManager {
-  final void Function() onTimerDissmissed;
+  final IntervalController controller;
 
-  NotificationManager({required this.onTimerDissmissed}) {
+  NotificationManager({required this.controller}) {
     channel.setMethodCallHandler((call) async {
       switch (call.method) {
         case "onTimerDismissed":
-          onTimerDissmissed();
+          controller.stop();
           break;
       }
     });
+
+    void handler() {
+      final state = controller.state.value;
+      switch (state) {
+        case Running():
+          _subscribeToTimerUpdate(state);
+          break;
+        case Paused():
+          showTimer(state.currentTask.name, state.durationRemaning.toHHMMSS());
+          break;
+        case Finished():
+          break;
+      }
+    }
+
+    handler();
+    controller.state.addListener(handler);
   }
 
   final channel = const MethodChannel('interval.qori.dev/notification');
@@ -26,5 +46,15 @@ class NotificationManager {
     channel.invokeMethod("dismissTimer");
   }
 
-  void setOnTimerDismissed(void Function() onTimerDissmissed) {}
+  void _subscribeToTimerUpdate(Running state) {
+    void show() {
+      showTimer(
+        state.currentTask.name,
+        state.durationRemaning.value.toHHMMSS(),
+      );
+    }
+
+    show();
+    state.durationRemaning.addListener(show);
+  }
 }
