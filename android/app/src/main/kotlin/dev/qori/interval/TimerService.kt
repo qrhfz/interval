@@ -14,13 +14,15 @@ class TimerService : Service() {
         const val NOTIFICATION_CHANNEL_ID = "TimerServiceNotificationChannelID"
         const val ACTION_STOP = "ACTION_STOP"
         const val ACTION_SHOW = "ACTION_SHOW"
+        const val ACTION_PAUSE = "ACTION_PAUSE"
         val timerDismissedObservable = Observable<Unit>()
 
-        fun showTimer(ctx: Context, taskName: String, formattedTime: String) {
+        fun showTimer(ctx: Context, taskName: String, formattedTime: String, isPaused: Boolean) {
             val i = Intent(ctx, TimerService::class.java)
             i.action = ACTION_SHOW
             i.putExtra("taskName", taskName)
             i.putExtra("formattedTime", formattedTime)
+            i.putExtra("isPaused", isPaused)
             start(ctx, i)
         }
 
@@ -44,7 +46,8 @@ class TimerService : Service() {
                 ACTION_SHOW -> {
                     val taskName = intent.getStringExtra("taskName")!!
                     val formattedTime = intent.getStringExtra("formattedTime")!!
-                    startForeground(1, makeNotif(taskName, formattedTime))
+                    val isPaused = intent.getBooleanExtra("isPaused", false)
+                    startForeground(1, makeNotif(taskName, formattedTime, isPaused))
                 }
 
                 ACTION_STOP -> {
@@ -65,7 +68,7 @@ class TimerService : Service() {
     }
 
 
-    private fun makeNotif(taskName: String, formattedTime: String): Notification {
+    private fun makeNotif(taskName: String, formattedTime: String, isPaused:Boolean): Notification {
 
         val notifBuilder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
 
@@ -75,6 +78,7 @@ class TimerService : Service() {
             .setContentText(formattedTime)
             .setOnlyAlertOnce(true)
             .addAction(makeStopAction())
+            .addAction(makePauseAction(isPaused))
             .build()
     }
 
@@ -86,6 +90,16 @@ class TimerService : Service() {
 
         return NotificationCompat
             .Action(R.drawable.baseline_stop_24, "Stop", stopPendingIntent)
+    }
+
+    private fun makePauseAction(isPaused: Boolean): NotificationCompat.Action {
+        val intent = Intent(this, this::class.java)
+        intent.action = ACTION_PAUSE
+        val pendingIntent = PendingIntent
+            .getService(this, 1, intent, PendingIntent.FLAG_IMMUTABLE)
+
+        return NotificationCompat
+            .Action(R.drawable.baseline_stop_24, if (isPaused) "Resume" else "Pause", pendingIntent)
     }
 
     override fun onBind(intent: Intent?): IBinder? = null

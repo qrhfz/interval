@@ -46,11 +46,11 @@ class MainActivity : FlutterActivity() {
                 }
             }
 
-        val _onTimerDismissed = {_:Unit->
+        val onTimerDismissed = {_:Unit->
             channel.invokeMethod("onTimerDismissed", null)
         }
-        TimerService.timerDismissedObservable.addSubscriber(_onTimerDismissed)
-        onTimerDismissed = _onTimerDismissed
+        TimerService.timerDismissedObservable.addSubscriber(onTimerDismissed)
+        this.onTimerDismissed = onTimerDismissed
 
         requestNotificationPermission()
     }
@@ -66,8 +66,9 @@ class MainActivity : FlutterActivity() {
     private fun handleShowTimer(call: MethodCall) {
         val taskName = call.argument<String>("taskName")!!
         val formattedDuration = call.argument<String>("formattedDuration")!!
+        val isPaused = call.argument<Boolean>("isPaused")!!
 
-        TimerService.showTimer(this, taskName, formattedDuration)
+        TimerService.showTimer(this, taskName, formattedDuration, isPaused)
     }
 
     private fun handleDismissTimer(call: MethodCall) {
