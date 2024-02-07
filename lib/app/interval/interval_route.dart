@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:interval/app/interval/interval_controller.dart';
+import 'package:interval/app/interval/timer_auido_controller.dart';
 import 'package:interval/di.dart';
 import 'package:interval/utils/duration_extension.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -80,16 +81,7 @@ class _RunningPageState extends State<RunningPage> {
       // backgroundColor: currentTask.color,
       appBar: AppBar(
         actions: const [
-          // IconButton(
-          //   onPressed: () {
-          //     setState(() {
-          //       mute = !mute;
-          //     });
-
-          //     getIt.get<AudioService>().setVolume(mute ? 0 : 100);
-          //   },
-          //   icon: Icon(mute ? Icons.volume_off : Icons.volume_up),
-          // ),
+          MuteButton(),
         ],
       ),
 
@@ -105,6 +97,33 @@ class _RunningPageState extends State<RunningPage> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class MuteButton extends StatefulWidget {
+  const MuteButton({
+    super.key,
+  });
+
+  @override
+  State<MuteButton> createState() => _MuteButtonState();
+}
+
+class _MuteButtonState extends State<MuteButton> {
+  final TimerAudioController audio = getIt();
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder(
+      valueListenable: audio.mute,
+      builder: (context, mute, _) {
+        return IconButton(
+          onPressed: () {
+            audio.muteVolume();
+          },
+          icon: Icon(mute ? Icons.volume_off : Icons.volume_up),
+        );
+      },
     );
   }
 }

@@ -1,8 +1,12 @@
+import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
 
 class TimerAudioController {
   final bell = AudioPlayer();
   final bell2 = AudioPlayer();
+
+  final _mute = ValueNotifier(false);
+  ValueListenable<bool> get mute => _mute;
 
   bool _isReady = false;
 
@@ -12,6 +16,10 @@ class TimerAudioController {
       bell2.setAsset("assets/sounds/bell2.ogg")
     ]).then((value) {
       _isReady = true;
+    });
+
+    mute.addListener(() {
+      setVolume(mute.value ? 0 : 100);
     });
   }
 
@@ -34,5 +42,9 @@ class TimerAudioController {
 
     bell2.seek(Duration.zero);
     bell2.play();
+  }
+
+  void muteVolume() {
+    _mute.value = !_mute.value;
   }
 }
