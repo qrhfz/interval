@@ -42,12 +42,6 @@ class IntervalController {
     final oldState = _state.value;
     oldState.next();
     oldState.dispose();
-
-    // if (state.value is Finished) {
-    //   audio.finish();
-    // } else {
-    //   audio.setDone();
-    // }
   }
 
   void dispose() {
@@ -56,24 +50,9 @@ class IntervalController {
 
   ValueListenable<IntervalState> get state => _state;
   void setState(IntervalState state) {
+    dispose();
     _state.value = state;
   }
-
-  // void _updateNotification() {
-  //   final state = _state.value;
-  //   switch (state) {
-  //     case Running():
-  //       _showTimer(state.currentTask.name, state.timeRemaning);
-  //     case Paused():
-  //       _showTimer(state.currentTask.name, state.durationRemaning);
-  //     case Finished():
-  //       _notification.dismissTimer();
-  //   }
-  // }
-
-  // void _showTimer(String taskName, Duration remaining) {
-  //   _notification.showTimer(taskName, remaining.toHHMMSS());
-  // }
 }
 
 sealed class IntervalState {
@@ -129,7 +108,6 @@ class Running extends IntervalState with _Active {
   @override
   void next() {
     _next();
-    dispose();
   }
 
   @override
@@ -141,13 +119,11 @@ class Running extends IntervalState with _Active {
       taskPos: taskPos,
       durationRemaning: _durationRemaning.value,
     ));
-    dispose();
   }
 
   @override
   void stop() {
     _controller.setState(Finished(controller: _controller));
-    dispose();
   }
 
   @override
