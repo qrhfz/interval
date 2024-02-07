@@ -54,7 +54,6 @@ class IntervalController {
     _audio.playSetDoneSound();
     final oldState = _state.value;
     oldState.next();
-    oldState.dispose();
   }
 
   void dispose() {
