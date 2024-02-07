@@ -48,6 +48,10 @@ class NotificationManager {
     });
   }
 
+  void stopTimer() {
+    _channel.invokeMethod("stopTimer");
+  }
+
   void dismissTimer() {
     _channel.invokeMethod("dismissTimer");
   }

@@ -44,6 +44,7 @@ class MainActivity : FlutterActivity() {
         channel.setMethodCallHandler { call, result ->
                 when (call.method) {
                     "showTimer" -> handleShowTimer(call)
+                    "stopTimer" -> handleStopTimer(call)
                     "dismissTimer" -> handleDismissTimer(call)
                     else -> result.notImplemented()
                 }
@@ -53,8 +54,8 @@ class MainActivity : FlutterActivity() {
             timerServiceHandler.paused.collect{
                 channel.invokeMethod("onTimerPaused", null)
             }
-
         }
+
         lifecycleScope.launch {
             timerServiceHandler.stopped.collect{
                 channel.invokeMethod("onTimerDismissed", null)
@@ -74,6 +75,10 @@ class MainActivity : FlutterActivity() {
 
     private fun handleDismissTimer(call: MethodCall) {
         TimerService.dismissTimer(this)
+    }
+
+    private fun handleStopTimer(call: MethodCall) {
+        TimerService.stopTimer(this)
     }
 
     private fun requestNotificationPermission(){

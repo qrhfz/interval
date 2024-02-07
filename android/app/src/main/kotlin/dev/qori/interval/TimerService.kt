@@ -43,12 +43,7 @@ class TimerService : Service() {
                 }
 
                 ACTION_STOP -> {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        stopForeground(STOP_FOREGROUND_REMOVE)
-                    } else {
-                        @Suppress("DEPRECATION")
-                        stopForeground(true)
-                    }
+
                     scope.launch {
                         handler.stopped.emit(Unit)
                     }
@@ -56,6 +51,14 @@ class TimerService : Service() {
                 ACTION_PAUSE ->{
                     scope.launch {
                         handler.paused.emit(Unit)
+                    }
+                }
+                ACTION_DISMISS->{
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        stopForeground(STOP_FOREGROUND_REMOVE)
+                    } else {
+                        @Suppress("DEPRECATION")
+                        stopForeground(true)
                     }
                 }
 
@@ -112,6 +115,7 @@ class TimerService : Service() {
         const val ACTION_STOP = "ACTION_STOP"
         const val ACTION_SHOW = "ACTION_SHOW"
         const val ACTION_PAUSE = "ACTION_PAUSE"
+        const val ACTION_DISMISS = "ACTION_DISMISS"
 
         private var _instance: TimerService? = null
         val instance:TimerService
@@ -127,6 +131,12 @@ class TimerService : Service() {
         }
 
         fun dismissTimer(ctx: Context) {
+            val i = Intent(ctx, TimerService::class.java)
+            i.action = ACTION_DISMISS
+            start(ctx, i)
+        }
+
+        fun stopTimer(ctx: Context) {
             val i = Intent(ctx, TimerService::class.java)
             i.action = ACTION_STOP
             start(ctx, i)

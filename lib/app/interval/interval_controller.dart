@@ -63,7 +63,7 @@ class IntervalController {
   }
 
   void setState(IntervalState state) {
-    dispose();
+    _state.value.dispose();
     _state.value = state;
     updateNotification();
   }
