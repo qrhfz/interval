@@ -138,6 +138,7 @@ class Running extends IntervalState with _Active {
       taskPos: taskPos,
       durationRemaning: _durationRemaning.value,
     ));
+    dispose();
   }
 
   @override
