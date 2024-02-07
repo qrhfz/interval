@@ -7,7 +7,7 @@ import 'package:percent_indicator/percent_indicator.dart';
 
 import '../../domain/entitites/preset.dart';
 import '../app.dart';
-import '../notification_manager.dart';
+import 'notification_manager.dart';
 
 class IntervalRoute extends StatefulWidget {
   static const routeName = 'interval';

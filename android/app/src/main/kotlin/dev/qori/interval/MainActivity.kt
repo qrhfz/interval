@@ -6,18 +6,21 @@ import android.app.NotificationManager
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
+import androidx.lifecycle.lifecycleScope
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import org.koin.androidx.scope.scope
 
 class MainActivity : FlutterActivity() {
+    private val timerServiceHandler: TimerService.Handler by inject()
 
     companion object {
         const val FLUTTER_CHANNEL_ID = "interval.qori.dev/notification"
     }
-
-    private var onTimerDismissed:((Unit)->Unit)? = null
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -46,21 +49,19 @@ class MainActivity : FlutterActivity() {
                 }
             }
 
-        val onTimerDismissed = {_:Unit->
-            channel.invokeMethod("onTimerDismissed", null)
+        lifecycleScope.launch {
+            timerServiceHandler.paused.collect{
+                channel.invokeMethod("onTimerPaused", null)
+            }
+
         }
-        TimerService.timerDismissedObservable.addSubscriber(onTimerDismissed)
-        this.onTimerDismissed = onTimerDismissed
+        lifecycleScope.launch {
+            timerServiceHandler.stopped.collect{
+                channel.invokeMethod("onTimerDismissed", null)
+            }
+        }
 
         requestNotificationPermission()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        val cb = onTimerDismissed
-        if (cb!==null){
-            TimerService.timerDismissedObservable.removeSubscriber(cb)
-        }
     }
 
     private fun handleShowTimer(call: MethodCall) {

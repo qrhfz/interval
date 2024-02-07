@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:interval/utils/duration_extension.dart';
 
-import 'interval/interval_controller.dart';
+import 'interval_controller.dart';
 
 class NotificationManager {
   final IntervalController controller;
@@ -11,6 +11,9 @@ class NotificationManager {
       switch (call.method) {
         case "onTimerDismissed":
           controller.stop();
+          break;
+        case "onTimerPaused":
+          controller.pause();
           break;
       }
     });
