@@ -22,7 +22,11 @@ class NotificationManager {
           _subscribeToTimerUpdate(state);
           break;
         case Paused():
-          showTimer(state.currentTask.name, state.durationRemaning.toHHMMSS());
+          showTimer(
+            state.currentTask.name,
+            state.durationRemaning.toHHMMSS(),
+            true,
+          );
           break;
         case Finished():
           break;
@@ -35,10 +39,11 @@ class NotificationManager {
 
   final channel = const MethodChannel('interval.qori.dev/notification');
 
-  void showTimer(String taskName, String formattedDuration) {
+  void showTimer(String taskName, String formattedDuration, bool isPaused) {
     channel.invokeMethod("showTimer", {
       "taskName": taskName,
       "formattedDuration": formattedDuration,
+      "isPaused": isPaused,
     });
   }
 
@@ -51,6 +56,7 @@ class NotificationManager {
       showTimer(
         state.currentTask.name,
         state.durationRemaning.value.toHHMMSS(),
+        false,
       );
     }
 
