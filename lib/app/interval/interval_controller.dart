@@ -2,6 +2,10 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
+import 'package:interval/app/interval/notification_manager.dart';
+import 'package:interval/app/interval/timer_auido_controller.dart';
+import 'package:interval/di.dart';
+import 'package:interval/utils/duration_extension.dart';
 
 import '../../domain/entitites/loop.dart';
 import '../../domain/entitites/preset.dart';
@@ -9,6 +13,8 @@ import '../../domain/entitites/task.dart';
 
 class IntervalController {
   final Preset preset;
+  final TimerAudioController _audio = getIt();
+  late final NotificationManager _notification;
 
   late final _state = ValueNotifier<IntervalState>(
     Running(
@@ -19,7 +25,13 @@ class IntervalController {
     ),
   );
 
-  IntervalController(this.preset);
+  IntervalController(this.preset) {
+    _notification = NotificationManager(
+      onPaused: () => pause(),
+      onStopped: () => stop(),
+    );
+    updateNotification();
+  }
 
   void restart() {
     _state.value = Running(
@@ -39,6 +51,7 @@ class IntervalController {
   }
 
   void next() {
+    _audio.playSetDoneSound();
     final oldState = _state.value;
     oldState.next();
     oldState.dispose();
@@ -46,13 +59,34 @@ class IntervalController {
 
   void dispose() {
     _state.value.dispose();
+    _notification.dismissTimer();
   }
 
-  ValueListenable<IntervalState> get state => _state;
   void setState(IntervalState state) {
     dispose();
     _state.value = state;
+    updateNotification();
   }
+
+  void updateNotification() {
+    final state = _state.value;
+    switch (state) {
+      case Running():
+        state.durationRemaning.addListener(() {
+          final taskName = state.currentTask.name;
+          final duration = state.timeRemaning.toHHMMSS();
+          _notification.showTimer(taskName, duration, false);
+        });
+        break;
+      case Paused():
+        final taskName = state.currentTask.name;
+        final duration = state.durationRemaning.toHHMMSS();
+        _notification.showTimer(taskName, duration, true);
+      default:
+    }
+  }
+
+  ValueListenable<IntervalState> get state => _state;
 }
 
 sealed class IntervalState {
