@@ -77,9 +77,11 @@ class IntervalController {
 }
 
 sealed class IntervalState {
-  final IntervalController controller;
+  // ignore: unused_field
+  final IntervalController _controller;
 
-  IntervalState({required this.controller});
+  IntervalState({required IntervalController controller})
+      : _controller = controller;
 
   void next();
 
@@ -118,7 +120,7 @@ class Running extends IntervalState with _Active {
         _durationRemaning.value -= const Duration(seconds: 1);
         log("${_durationRemaning.value}");
         if (_durationRemaning.value == Duration.zero) {
-          controller.next();
+          _controller.next();
         }
       },
     );
@@ -127,12 +129,13 @@ class Running extends IntervalState with _Active {
   @override
   void next() {
     _next();
+    dispose();
   }
 
   @override
   void pause() {
-    controller.setState(Paused(
-      controller: controller,
+    _controller.setState(Paused(
+      controller: _controller,
       loopPos: loopPos,
       set: set,
       taskPos: taskPos,
@@ -143,7 +146,8 @@ class Running extends IntervalState with _Active {
 
   @override
   void stop() {
-    controller.setState(Finished(controller: controller));
+    _controller.setState(Finished(controller: _controller));
+    dispose();
   }
 
   @override
@@ -157,38 +161,38 @@ class Running extends IntervalState with _Active {
 }
 
 mixin _Active {
-  IntervalController get controller;
+  IntervalController get _controller;
   int get loopPos;
   int get taskPos;
   int get set;
 
-  Loop get currentLoop => controller.preset.loops[loopPos];
+  Loop get currentLoop => _controller.preset.loops[loopPos];
   Task get currentTask => currentLoop.tasks[taskPos];
 
   void _next() {
-    final isLastLoop = loopPos == controller.preset.loops.length - 1;
+    final isLastLoop = loopPos == _controller.preset.loops.length - 1;
     final isLastSet = set == currentLoop.sets;
     final isLastTask = taskPos == currentLoop.tasks.length - 1;
 
     if (isLastTask && isLastSet && isLastLoop) {
-      controller.setState(Finished(controller: controller));
+      _controller.setState(Finished(controller: _controller));
     } else if (isLastTask && isLastSet) {
-      controller.setState(Running(
-        controller: controller,
+      _controller.setState(Running(
+        controller: _controller,
         loopPos: loopPos + 1,
         set: 0,
         taskPos: 0,
       ));
     } else if (isLastTask) {
-      controller.setState(Running(
-        controller: controller,
+      _controller.setState(Running(
+        controller: _controller,
         loopPos: loopPos,
         set: set + 1,
         taskPos: 0,
       ));
     } else {
-      controller.setState(Running(
-        controller: controller,
+      _controller.setState(Running(
+        controller: _controller,
         loopPos: loopPos,
         set: set,
         taskPos: taskPos + 1,
@@ -221,8 +225,8 @@ class Paused extends IntervalState with _Active {
 
   @override
   void pause() {
-    controller.setState(Running(
-      controller: controller,
+    _controller.setState(Running(
+      controller: _controller,
       loopPos: loopPos,
       set: set,
       taskPos: taskPos,
@@ -232,7 +236,7 @@ class Paused extends IntervalState with _Active {
 
   @override
   void stop() {
-    controller.setState(Finished(controller: controller));
+    _controller.setState(Finished(controller: _controller));
   }
 
   @override
