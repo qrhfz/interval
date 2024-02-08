@@ -54,12 +54,14 @@ class TimerService : Service() {
                     }
                 }
                 ACTION_DISMISS->{
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        stopForeground(STOP_FOREGROUND_REMOVE)
-                    } else {
-                        @Suppress("DEPRECATION")
-                        stopForeground(true)
-                    }
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                        stopForeground(STOP_FOREGROUND_REMOVE)
+//                    } else {
+//                        @Suppress("DEPRECATION")
+//                        stopForeground(true)
+//                    }
+
+                    stopSelf()
                 }
 
                 else -> Unit
