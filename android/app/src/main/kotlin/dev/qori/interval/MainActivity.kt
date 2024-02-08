@@ -3,7 +3,6 @@ package dev.qori.interval
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.lifecycle.lifecycleScope
@@ -13,7 +12,6 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
-import org.koin.androidx.scope.scope
 
 class MainActivity : FlutterActivity() {
     private val timerServiceHandler: TimerService.Handler by inject()
@@ -44,8 +42,8 @@ class MainActivity : FlutterActivity() {
         channel.setMethodCallHandler { call, result ->
                 when (call.method) {
                     "showTimer" -> handleShowTimer(call)
-                    "stopTimer" -> handleStopTimer(call)
-                    "dismissTimer" -> handleDismissTimer(call)
+                    "stopTimer" -> handleStopTimer()
+                    "dismissTimer" -> handleDismissTimer()
                     else -> result.notImplemented()
                 }
             }
@@ -73,11 +71,11 @@ class MainActivity : FlutterActivity() {
         TimerService.showTimer(this, taskName, formattedDuration, isPaused)
     }
 
-    private fun handleDismissTimer(call: MethodCall) {
+    private fun handleDismissTimer() {
         TimerService.dismissTimer(this)
     }
 
-    private fun handleStopTimer(call: MethodCall) {
+    private fun handleStopTimer() {
         TimerService.stopTimer(this)
     }
 
