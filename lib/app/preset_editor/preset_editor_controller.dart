@@ -36,8 +36,15 @@ class PresetEditorController {
     ]),
   );
 
-  PresetEditorController({int? key, Preset? preset}) {
+  PresetEditorController({int? key}) {
+    Preset? preset;
+    if (key != null) {
+      preset = repo.getPreset(key);
+    }
     _state = ValueNotifier((key: key, preset: preset ?? _samplePreset));
+    _state.addListener(() {
+      save();
+    });
   }
 
   void save() async {

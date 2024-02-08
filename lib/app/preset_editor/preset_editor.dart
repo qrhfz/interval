@@ -1,22 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinbox/flutter_spinbox.dart';
+import 'package:go_router/go_router.dart';
 import 'package:interval/app/preset_editor/preset_editor_controller.dart';
 import 'package:interval/di.dart';
 import 'package:interval/domain/entitites/task.dart';
 import 'package:interval/utils/duration_extension.dart';
 import 'package:wheel_chooser/wheel_chooser.dart';
 
-import '../../domain/entitites/preset.dart';
-
 class PresetEditor extends StatefulWidget {
   static const String routeName = "editor";
-  final Preset? preset;
   final int? presetKey;
 
-  const PresetEditor({this.presetKey, this.preset, super.key});
+  const PresetEditor({this.presetKey, super.key});
 
   @override
   State<PresetEditor> createState() => _PresetEditorState();
+
+  static void go(BuildContext context, int presetId) {
+    GoRouter.of(context).pushNamed(routeName, extra: presetId);
+  }
+
+  static GoRoute get route => GoRoute(
+        name: PresetEditor.routeName,
+        path: 'editor',
+        builder: (context, state) {
+          final extra = state.extra;
+          if (extra is int) {
+            return PresetEditor(
+              presetKey: extra,
+            );
+          }
+          return const PresetEditor();
+        },
+      );
 }
 
 class _PresetEditorState extends State<PresetEditor> {
@@ -26,8 +42,7 @@ class _PresetEditorState extends State<PresetEditor> {
   void initState() {
     super.initState();
 
-    controller =
-        PresetEditorController(preset: widget.preset, key: widget.presetKey);
+    controller = PresetEditorController(key: widget.presetKey);
 
     getIt.registerSingleton(controller);
   }
@@ -42,31 +57,22 @@ class _PresetEditorState extends State<PresetEditor> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: ValueListenableBuilder(
-          valueListenable: controller.state,
-          builder: (context, state, _) {
-            return Text(state.preset.name);
+        title: InkWell(
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return const PresetNameDialog();
+              },
+            );
           },
+          child: ValueListenableBuilder(
+            valueListenable: controller.state,
+            builder: (context, state, _) {
+              return Text(state.preset.name);
+            },
+          ),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.edit),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return const PresetNameDialog();
-                },
-              );
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.save),
-            onPressed: () {
-              controller.save();
-            },
-          ),
-        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -38,21 +36,7 @@ class MyApp extends StatelessWidget {
               return const BackupPage();
             },
           ),
-          GoRoute(
-            name: PresetEditor.routeName,
-            path: 'editor',
-            builder: (context, state) {
-              log(state.extra.runtimeType.toString());
-              final extra = state.extra as List<Object>?;
-              if (extra != null) {
-                return PresetEditor(
-                  presetKey: extra[0] as int,
-                  preset: extra[1] as Preset,
-                );
-              }
-              return const PresetEditor();
-            },
-          ),
+          PresetEditor.route,
         ],
       ),
     ],

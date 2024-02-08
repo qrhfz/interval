@@ -164,13 +164,7 @@ class _PresetListState extends State<PresetList> {
                         return [
                           PopupMenuItem(
                             onTap: () async {
-                              await Future.delayed(
-                                  const Duration(microseconds: 17), () {
-                                GoRouter.of(context).goNamed(
-                                  PresetEditor.routeName,
-                                  extra: [key, preset],
-                                );
-                              });
+                              PresetEditor.go(context, key);
                             },
                             child: const Text('Edit'),
                           ),
