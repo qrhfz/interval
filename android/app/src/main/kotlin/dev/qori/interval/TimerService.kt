@@ -127,26 +127,26 @@ class TimerService : Service() {
             i.putExtra("taskName", taskName)
             i.putExtra("formattedTime", formattedTime)
             i.putExtra("isPaused", isPaused)
-            start(ctx, i)
+            ctx.startService(i)
         }
 
         fun dismissTimer(ctx: Context) {
             val i = Intent(ctx, TimerService::class.java)
             i.action = ACTION_DISMISS
-            start(ctx, i)
+            ctx.startService(i)
         }
 
         fun stopTimer(ctx: Context) {
             val i = Intent(ctx, TimerService::class.java)
             i.action = ACTION_STOP
-            start(ctx, i)
-        }
-
-        private fun start(ctx: Context, i: Intent) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                ctx.startForegroundService(i)
-            }
             ctx.startService(i)
         }
+
+//        private fun start(ctx: Context, i: Intent) {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                ctx.startForegroundService(i)
+//            }
+//            ctx.startService(i)
+//        }
     }
 }
