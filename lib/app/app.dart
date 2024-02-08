@@ -6,13 +6,10 @@ import 'package:go_router/go_router.dart';
 import 'package:interval/app/backup/backup_page.dart';
 import 'package:interval/app/backup/cubit/backup_cubit.dart';
 import 'package:interval/app/home/cubit/preset_cubit.dart';
-import 'package:interval/app/interval/cubit/timer_cubit.dart';
 import 'package:interval/app/interval/interval_route.dart';
 
 import '../domain/entitites/preset.dart';
 import 'home/home_route.dart';
-import 'home/cubit/quick_start_cubit.dart';
-import 'interval/cubit/interval_cubit.dart';
 import 'preset_editor/cubit/editor_cubit.dart';
 import 'preset_editor/preset_editor.dart';
 
@@ -67,9 +64,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => QuickStartCubit()),
-        BlocProvider(create: (context) => IntervalCubit()),
-        BlocProvider(create: (context) => TimerCubit()),
         BlocProvider(create: (context) => PresetCubit()),
         BlocProvider(create: (context) => EditorCubit()),
         BlocProvider(create: (context) => BackupCubit()),
