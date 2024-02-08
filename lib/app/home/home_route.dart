@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:interval/app/home/cubit/preset_cubit.dart';
 import 'package:interval/app/home/quick_start_controller.dart';
 import 'package:interval/app/interval/interval_route.dart';
-import 'package:interval/app/preset_editor/cubit/editor_cubit.dart';
 import 'package:interval/domain/entitites/loop.dart';
 import 'package:interval/domain/entitites/preset.dart';
 import 'package:interval/domain/entitites/task.dart';
@@ -35,29 +34,19 @@ class _HomeRouteState extends State<HomeRoute> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<EditorCubit, EditorState>(
-      listener: (context, state) {
-        state.maybeWhen(
-          save: () {
-            context.read<PresetCubit>().fetchData();
-          },
-          orElse: () {},
-        );
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text("Interval"),
-          actions: const [HomeMenu()],
-        ),
-        body: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: QuickStartWidget(),
-            ),
-            const PresetListHeader(),
-            const PresetList(),
-          ],
-        ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Interval"),
+        actions: const [HomeMenu()],
+      ),
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: QuickStartWidget(),
+          ),
+          const PresetListHeader(),
+          const PresetList(),
+        ],
       ),
     );
   }

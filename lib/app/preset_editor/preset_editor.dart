@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinbox/flutter_spinbox.dart';
-import 'package:interval/app/preset_editor/cubit/editor_cubit.dart';
-import 'package:interval/domain/entitites/loop.dart';
+import 'package:interval/app/preset_editor/preset_editor_controller.dart';
+import 'package:interval/di.dart';
 import 'package:interval/domain/entitites/task.dart';
 import 'package:interval/utils/duration_extension.dart';
 import 'package:wheel_chooser/wheel_chooser.dart';
@@ -21,126 +20,169 @@ class PresetEditor extends StatefulWidget {
 }
 
 class _PresetEditorState extends State<PresetEditor> {
+  late final PresetEditorController controller;
+
   @override
   void initState() {
     super.initState();
-    final preset = widget.preset;
-    context.read<EditorCubit>().init(widget.presetKey, preset);
+
+    controller =
+        PresetEditorController(preset: widget.preset, key: widget.presetKey);
+
+    getIt.registerSingleton(controller);
+  }
+
+  @override
+  void dispose() {
+    getIt.unregister(instance: controller);
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<EditorCubit, EditorState>(
-      buildWhen: (previous, current) {
-        return current.maybeMap(
-          data: (_) => true,
-          orElse: () => false,
-        );
-      },
-      builder: (context, state) {
-        return Scaffold(
-          appBar: AppBar(
-            title: state.maybeWhen(
-              orElse: () => const Text(""),
-              data: (key, preset) => Text(preset.name),
-            ),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.edit),
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return const PresetNameDialog();
-                    },
-                  );
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.save),
-                onPressed: () {
-                  context.read<EditorCubit>().save();
-                },
-              ),
-            ],
-          ),
-          floatingActionButton: FloatingActionButton(
+    return Scaffold(
+      appBar: AppBar(
+        title: ValueListenableBuilder(
+          valueListenable: controller.state,
+          builder: (context, state, _) {
+            return Text(state.preset.name);
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.edit),
             onPressed: () {
-              context.read<EditorCubit>().addLoop();
-            },
-            child: const Icon(Icons.add),
-          ),
-          body: state.maybeWhen(
-            orElse: () => const Center(child: Text("empty")),
-            data: (key, preset) {
-              return CustomScrollView(slivers: [
-                for (final loop in preset.loops.asMap().entries)
-                  SliverToBoxAdapter(
-                    child: Card(
-                      child: Row(
-                        children: [
-                          Column(
-                            children: [
-                              MoveUpButton(loopIndex: loop.key),
-                              MoveDownButton(loopIndex: loop.key),
-                            ],
-                          ),
-                          Expanded(
-                            child: ReorderableListView(
-                              onReorder: (oldIndex, newIndex) {
-                                context
-                                    .read<EditorCubit>()
-                                    .moveTask(loop.key, oldIndex, newIndex);
-                              },
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              footer: PresetFooter(
-                                loop: loop.value,
-                                loopIndex: loop.key,
-                              ),
-                              children: [
-                                for (final task
-                                    in loop.value.tasks.asMap().entries)
-                                  TaskListTile(
-                                    task: task.value,
-                                    taskIndex: task.key,
-                                    loopIndex: loop.key,
-                                    key: Key(
-                                        "${loop.key}:${task.key}:${task.value.hashCode}"),
-                                  ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 8),
-                    child: Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text("Total duration"),
-                            Text(
-                              preset.totelDuration.toHHMMSS(),
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ]);
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return const PresetNameDialog();
+                },
+              );
             },
           ),
+          IconButton(
+            icon: const Icon(Icons.save),
+            onPressed: () {
+              controller.save();
+            },
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          controller.addLoop();
+        },
+        child: const Icon(Icons.add),
+      ),
+      body: PresetEditorBody(),
+    );
+  }
+}
+
+class PresetEditorBody extends StatelessWidget {
+  PresetEditorBody({
+    super.key,
+  });
+
+  final PresetEditorController controller = getIt();
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder(
+      valueListenable: controller.state,
+      builder: (context, state, _) {
+        final preset = state.preset;
+        return CustomScrollView(
+          slivers: [
+            for (final (i, _) in preset.loops.indexed) LoopItem(i),
+            TotalDuration(),
+          ],
         );
       },
+    );
+  }
+}
+
+class LoopItem extends StatelessWidget {
+  LoopItem(
+    this.index, {
+    super.key,
+  });
+  final int index;
+
+  final PresetEditorController controller = getIt();
+
+  @override
+  Widget build(BuildContext context) {
+    final loop = controller.state.value.preset.loops[index];
+
+    return SliverToBoxAdapter(
+      child: Card(
+        child: Row(
+          children: [
+            Column(
+              children: [
+                MoveUpButton(loopIndex: index),
+                MoveDownButton(loopIndex: index),
+              ],
+            ),
+            Expanded(
+              child: ReorderableListView(
+                onReorder: (oldIndex, newIndex) {
+                  controller.moveTask(index, oldIndex, newIndex);
+                },
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                footer: PresetFooter(
+                  loopIndex: index,
+                ),
+                children: [
+                  for (final (i, task) in loop.tasks.indexed)
+                    TaskListTile(
+                      taskIndex: i,
+                      loopIndex: index,
+                      key: Key("$index:$i:${task.hashCode}"),
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class TotalDuration extends StatelessWidget {
+  final PresetEditorController controller = getIt();
+
+  TotalDuration({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final preset = controller.state.value.preset;
+
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 8),
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text("Total duration"),
+                Text(
+                  preset.totelDuration.toHHMMSS(),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -155,16 +197,14 @@ class PresetNameDialog extends StatefulWidget {
 }
 
 class _PresetNameDialogState extends State<PresetNameDialog> {
-  final controller = TextEditingController();
+  final PresetEditorController controller = getIt();
+  final txtCtrl = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    final state = context.read<EditorCubit>().state;
-    controller.text = state.maybeWhen(
-      orElse: () => "",
-      data: (key, preset) => preset.name,
-    );
+    final preset = controller.state.value.preset;
+    txtCtrl.text = preset.name;
   }
 
   @override
@@ -172,18 +212,18 @@ class _PresetNameDialogState extends State<PresetNameDialog> {
     return ValueDialog(
       title: "Change Preset Name",
       onSaved: (context) {
-        context.read<EditorCubit>().updatePresetName(controller.text);
+        controller.updatePresetName(txtCtrl.text);
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: TextField(controller: controller),
+        child: TextField(controller: txtCtrl),
       ),
     );
   }
 
   @override
   void dispose() {
-    controller.dispose();
+    txtCtrl.dispose();
     super.dispose();
   }
 }
@@ -244,17 +284,18 @@ class ValueDialog extends StatelessWidget {
 }
 
 class PresetFooter extends StatelessWidget {
-  const PresetFooter({
+  PresetFooter({
     Key? key,
-    required this.loop,
     required this.loopIndex,
   }) : super(key: key);
 
-  final Loop loop;
   final int loopIndex;
+  final PresetEditorController controller = getIt();
 
   @override
   Widget build(BuildContext context) {
+    final loop = controller.state.value.preset.loops[loopIndex];
+
     return Row(
       children: [
         TextButton(
@@ -273,7 +314,7 @@ class PresetFooter extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: () {
-                        context.read<EditorCubit>().removeLoop(loop);
+                        controller.removeLoop(loop);
                         Navigator.of(context).pop();
                       },
                       child: const Text('Confirm'),
@@ -292,7 +333,6 @@ class PresetFooter extends StatelessWidget {
               context: context,
               builder: (context) {
                 return SetDialog(
-                  loop: loop,
                   loopIndex: loopIndex,
                 );
               },
@@ -307,7 +347,7 @@ class PresetFooter extends StatelessWidget {
               builder: (context) {
                 return TaskEditor(
                   onSaved: (task) {
-                    context.read<EditorCubit>().addTaskToLoop(loopIndex, task);
+                    controller.addTaskToLoop(loopIndex, task);
                   },
                 );
               },
@@ -497,10 +537,8 @@ class ColorSelectable extends StatelessWidget {
 }
 
 class SetDialog extends StatefulWidget {
-  final Loop loop;
   final int loopIndex;
   const SetDialog({
-    required this.loop,
     required this.loopIndex,
     super.key,
   });
@@ -510,12 +548,17 @@ class SetDialog extends StatefulWidget {
 }
 
 class _SetDialogState extends State<SetDialog> {
+  final PresetEditorController controller = getIt();
+
   int count = 1;
   @override
   void initState() {
     super.initState();
+
+    final loop = controller.state.value.preset.loops[widget.loopIndex];
+
     setState(() {
-      count = widget.loop.sets;
+      count = loop.sets;
     });
   }
 
@@ -524,7 +567,7 @@ class _SetDialogState extends State<SetDialog> {
     return ValueDialog(
       title: "Change Sets Count",
       onSaved: (context) {
-        context.read<EditorCubit>().updateSetCount(widget.loopIndex, count);
+        controller.updateSetCount(widget.loopIndex, count);
       },
       child: SpinBox(
         min: 1,
@@ -540,7 +583,9 @@ class _SetDialogState extends State<SetDialog> {
 }
 
 class MoveDownButton extends StatelessWidget {
-  const MoveDownButton({
+  final PresetEditorController controller = getIt();
+
+  MoveDownButton({
     Key? key,
     required this.loopIndex,
   }) : super(key: key);
@@ -551,7 +596,7 @@ class MoveDownButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: () {
-        context.read<EditorCubit>().moveLoopDown(loopIndex);
+        controller.moveLoopDown(loopIndex);
       },
       icon: const Icon(
         Icons.arrow_downward,
@@ -561,7 +606,9 @@ class MoveDownButton extends StatelessWidget {
 }
 
 class MoveUpButton extends StatelessWidget {
-  const MoveUpButton({
+  final PresetEditorController controller = getIt();
+
+  MoveUpButton({
     Key? key,
     required this.loopIndex,
   }) : super(key: key);
@@ -572,7 +619,7 @@ class MoveUpButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: () {
-        context.read<EditorCubit>().moveLoopUp(loopIndex);
+        controller.moveLoopUp(loopIndex);
       },
       icon: const Icon(
         Icons.arrow_upward,
@@ -582,19 +629,22 @@ class MoveUpButton extends StatelessWidget {
 }
 
 class TaskListTile extends StatelessWidget {
-  const TaskListTile({
+  final PresetEditorController controller = getIt();
+
+  TaskListTile({
     Key? key,
-    required this.task,
     required this.loopIndex,
     required this.taskIndex,
   }) : super(key: key);
 
-  final Task task;
   final int loopIndex;
   final int taskIndex;
 
   @override
   Widget build(BuildContext context) {
+    final task =
+        controller.state.value.preset.loops[loopIndex].tasks[taskIndex];
+
     return Container(
       color: Colors.white,
       child: ListTile(
@@ -618,9 +668,7 @@ class TaskListTile extends StatelessWidget {
                       return TaskEditor(
                         task: task,
                         onSaved: (task) {
-                          context
-                              .read<EditorCubit>()
-                              .updateTask(loopIndex, taskIndex, task);
+                          controller.updateTask(loopIndex, taskIndex, task);
                         },
                       );
                     },
@@ -644,9 +692,7 @@ class TaskListTile extends StatelessWidget {
                           ),
                           TextButton(
                             onPressed: () {
-                              context
-                                  .read<EditorCubit>()
-                                  .removeTask(loopIndex, taskIndex);
+                              controller.removeTask(loopIndex, taskIndex);
                               Navigator.of(context).pop();
                             },
                             child: const Text('Delete'),
