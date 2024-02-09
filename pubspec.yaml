@@ -44,7 +44,7 @@ dependencies:
   hive_flutter: ^1.1.0
   isolate_handler: ^1.0.2
   json_annotation: ^4.6.0
-  just_audio: ^0.9.31
+  # just_audio: ^0.9.31
   path_provider: ^2.0.11
   percent_indicator: ^4.2.2
   wheel_chooser: ^1.0.0
