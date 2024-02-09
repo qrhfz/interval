@@ -128,20 +128,14 @@ class MainActivity : FlutterActivity() {
     private fun audioPlayer(asset:String):MediaPlayer{
         val assetFd = assets.openFd(asset)
         return MediaPlayer().apply {
-            if (Build.VERSION.SDK_INT >= 21) {
-                setAudioAttributes(
-                    AudioAttributes.Builder()
-                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                        .setUsage(AudioAttributes.USAGE_MEDIA)
-                        .build()
-                )
-            }
+            setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .build()
+            )
 
-            if (Build.VERSION.SDK_INT >= 24){
-                setDataSource(assetFd)
-            }else{
-                setDataSource(assetFd.fileDescriptor, assetFd.startOffset, assetFd.length)
-            }
+            setDataSource(assetFd)
             prepare()
         }
     }
