@@ -144,12 +144,13 @@ class _PresetListState extends State<PresetList> {
                         return [
                           PopupMenuItem(
                             onTap: () async {
-                              context.push(PresetEditor(presetKey: key));
+                              await context.push(PresetEditor(presetKey: key));
+                              load();
                             },
                             child: const Text('Edit'),
                           ),
                           PopupMenuItem(
-                            onTap: () async {
+                            onTap: () {
                               context.read<PresetCubit>().remove(key);
                             },
                             child: const Text('Remove'),
