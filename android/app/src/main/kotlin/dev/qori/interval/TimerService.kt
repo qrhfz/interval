@@ -6,22 +6,16 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
 import androidx.core.app.NotificationCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
-import org.koin.android.scope.serviceScope
-import org.koin.core.context.GlobalContext.get
-import org.koin.core.qualifier.named
-import java.util.concurrent.Flow
+
 
 class TimerService : Service() {
     private val handler: Handler by inject()
@@ -131,10 +125,6 @@ class TimerService : Service() {
         const val ACTION_SHOW = "ACTION_SHOW"
         const val ACTION_PAUSE = "ACTION_PAUSE"
         const val ACTION_DISMISS = "ACTION_DISMISS"
-
-        private var _instance: TimerService? = null
-        val instance:TimerService
-            get() = _instance!!
 
         fun showTimer(ctx: Context, taskName: String, formattedTime: String, isPaused: Boolean) {
             val i = Intent(ctx, TimerService::class.java)
