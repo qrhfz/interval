@@ -142,7 +142,7 @@ class _PresetListState extends State<PresetList> {
                       },
                     ),
                     trailing: PopupMenuButton(
-                      itemBuilder: (_) {
+                      itemBuilder: (context) {
                         return [
                           PopupMenuItem(
                             onTap: () async {
