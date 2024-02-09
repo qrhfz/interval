@@ -9,7 +9,6 @@ import 'package:interval/domain/entitites/loop.dart';
 import 'package:interval/domain/entitites/preset.dart';
 import 'package:interval/domain/entitites/task.dart';
 import 'package:interval/utils/duration_extension.dart';
-import '../../route_notifier.dart';
 import '../preset_editor/preset_editor.dart';
 import '../widgets/duration_field.dart';
 
@@ -24,13 +23,7 @@ class _HomeRouteState extends State<HomeRoute> {
   @override
   void initState() {
     super.initState();
-    initializeNotification();
-    routeListenable.addListener(() {
-      GoRouter.of(context).goNamed("interval");
-    });
   }
-
-  void initializeNotification() {}
 
   @override
   Widget build(BuildContext context) {
@@ -129,6 +122,10 @@ class _PresetListState extends State<PresetList> {
   @override
   void initState() {
     super.initState();
+    load();
+  }
+
+  void load() {
     context.read<PresetCubit>().fetchData();
   }
 
