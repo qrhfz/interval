@@ -42,7 +42,13 @@ class PresetEditorController {
       preset = repo.getPreset(key);
     }
     _state = ValueNotifier((key: key, preset: preset ?? _samplePreset));
+
+    // for autosave
     _state.addListener(() {
+      // don't save if new preset hasn't been saved
+      if (_state.value.key == null) {
+        return;
+      }
       save();
     });
   }

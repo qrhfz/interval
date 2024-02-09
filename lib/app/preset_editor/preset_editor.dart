@@ -53,6 +53,14 @@ class _PresetEditorState extends State<PresetEditor> {
             },
           ),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              controller.save();
+            },
+            icon: const Icon(Icons.check),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

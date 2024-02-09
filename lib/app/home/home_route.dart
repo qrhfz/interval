@@ -65,6 +65,8 @@ class PresetListHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cubit = context.read<PresetCubit>();
+
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -82,8 +84,9 @@ class PresetListHeader extends StatelessWidget {
               icon: const Icon(Icons.refresh),
             ),
             TextButton.icon(
-              onPressed: () {
-                context.push(const PresetEditor());
+              onPressed: () async {
+                await context.push(const PresetEditor());
+                cubit.fetchData();
               },
               icon: const Icon(Icons.add),
               label: const Text("New"),
