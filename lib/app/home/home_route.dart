@@ -12,18 +12,8 @@ import 'package:interval/utils/duration_extension.dart';
 import '../preset_editor/preset_editor.dart';
 import '../widgets/duration_field.dart';
 
-class HomeRoute extends StatefulWidget {
+class HomeRoute extends StatelessWidget {
   const HomeRoute({Key? key}) : super(key: key);
-
-  @override
-  State<HomeRoute> createState() => _HomeRouteState();
-}
-
-class _HomeRouteState extends State<HomeRoute> {
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,18 +42,13 @@ class HomeMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void goToBackupPage() {
-      GoRouter.of(context).goNamed('backup');
-    }
-
     return PopupMenuButton(
       itemBuilder: (context) {
         return [
           PopupMenuItem(
             child: const Text('Backup'),
-            onTap: () async {
-              await Future.delayed(const Duration(microseconds: 17));
-              goToBackupPage();
+            onTap: () {
+              GoRouter.of(context).goNamed('backup');
             },
           ),
         ];
