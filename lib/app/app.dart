@@ -1,47 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:interval/app/backup/backup_page.dart';
 import 'package:interval/app/backup/cubit/backup_cubit.dart';
 import 'package:interval/app/home/cubit/preset_cubit.dart';
-import 'package:interval/app/interval/interval_route.dart';
-
-import '../domain/entitites/preset.dart';
-import 'home/home_route.dart';
-import 'preset_editor/preset_editor.dart';
+import 'package:interval/app/home/home_route.dart';
 
 final routeObserver = RouteObserver<ModalRoute<void>>();
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});
-
-  final _router = GoRouter(
-    routes: [
-      GoRoute(
-        path: '/',
-        builder: (context, state) => const HomeRoute(),
-        routes: [
-          GoRoute(
-            name: IntervalRoute.routeName,
-            path: 'interval',
-            builder: (context, state) {
-              final preset = state.extra as Preset?;
-              return IntervalRoute(preset);
-            },
-          ),
-          GoRoute(
-            name: 'backup',
-            path: 'backup',
-            builder: (context, state) {
-              return const BackupPage();
-            },
-          ),
-          PresetEditor.route,
-        ],
-      ),
-    ],
-    observers: [routeObserver],
-  );
 
   @override
   Widget build(BuildContext context) {
@@ -50,12 +16,10 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => PresetCubit()),
         BlocProvider(create: (context) => BackupCubit()),
       ],
-      child: MaterialApp.router(
+      child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        routerDelegate: _router.routerDelegate,
-        routeInformationParser: _router.routeInformationParser,
-        routeInformationProvider: _router.routeInformationProvider,
         title: 'Interval',
+        home: const HomeRoute(),
         theme: ThemeData(
           useMaterial3: false,
           primarySwatch: Colors.red,

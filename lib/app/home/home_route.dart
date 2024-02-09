@@ -1,7 +1,7 @@
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
+import 'package:interval/app/backup/backup_page.dart';
 import 'package:interval/app/home/cubit/preset_cubit.dart';
 import 'package:interval/app/home/quick_start_controller.dart';
 import 'package:interval/app/interval/interval_route.dart';
@@ -9,6 +9,7 @@ import 'package:interval/domain/entitites/loop.dart';
 import 'package:interval/domain/entitites/preset.dart';
 import 'package:interval/domain/entitites/task.dart';
 import 'package:interval/utils/duration_extension.dart';
+import 'package:interval/utils/push.dart';
 import '../preset_editor/preset_editor.dart';
 import '../widgets/duration_field.dart';
 
@@ -48,7 +49,7 @@ class HomeMenu extends StatelessWidget {
           PopupMenuItem(
             child: const Text('Backup'),
             onTap: () {
-              GoRouter.of(context).goNamed('backup');
+              context.push(const BackupPage());
             },
           ),
         ];
@@ -82,7 +83,7 @@ class PresetListHeader extends StatelessWidget {
             ),
             TextButton.icon(
               onPressed: () {
-                GoRouter.of(context).goNamed(PresetEditor.routeName);
+                context.push(const PresetEditor());
               },
               icon: const Icon(Icons.add),
               label: const Text("New"),
@@ -135,10 +136,7 @@ class _PresetListState extends State<PresetList> {
                     leading: IconButton(
                       icon: const Icon(Icons.play_arrow),
                       onPressed: () {
-                        GoRouter.of(context).goNamed(
-                          IntervalRoute.routeName,
-                          extra: preset,
-                        );
+                        context.push(IntervalRoute(preset));
                       },
                     ),
                     trailing: PopupMenuButton(
@@ -146,7 +144,7 @@ class _PresetListState extends State<PresetList> {
                         return [
                           PopupMenuItem(
                             onTap: () async {
-                              PresetEditor.go(context, key);
+                              context.push(PresetEditor(presetKey: key));
                             },
                             child: const Text('Edit'),
                           ),
@@ -259,10 +257,7 @@ class QuickStartWidget extends StatelessWidget {
                       )
                     ]),
                   );
-                  GoRouter.of(context).goNamed(
-                    IntervalRoute.routeName,
-                    extra: preset,
-                  );
+                  context.push(IntervalRoute(preset));
                 },
                 icon: const Icon(Icons.play_arrow),
                 label: const Text('Play'),

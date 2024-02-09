@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinbox/flutter_spinbox.dart';
-import 'package:go_router/go_router.dart';
 import 'package:interval/app/preset_editor/preset_editor_controller.dart';
 import 'package:interval/di.dart';
 import 'package:interval/utils/duration_extension.dart';
@@ -8,31 +7,12 @@ import 'package:interval/utils/duration_extension.dart';
 import 'task_editor.dart';
 
 class PresetEditor extends StatefulWidget {
-  static const String routeName = "editor";
   final int? presetKey;
 
   const PresetEditor({this.presetKey, super.key});
 
   @override
   State<PresetEditor> createState() => _PresetEditorState();
-
-  static void go(BuildContext context, int presetId) {
-    GoRouter.of(context).pushNamed(routeName, extra: presetId);
-  }
-
-  static GoRoute get route => GoRoute(
-        name: PresetEditor.routeName,
-        path: 'editor',
-        builder: (context, state) {
-          final extra = state.extra;
-          if (extra is int) {
-            return PresetEditor(
-              presetKey: extra,
-            );
-          }
-          return const PresetEditor();
-        },
-      );
 }
 
 class _PresetEditorState extends State<PresetEditor> {
