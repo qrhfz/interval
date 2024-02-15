@@ -11,11 +11,12 @@ class NumberInput extends StatefulWidget {
 }
 
 class _NumberInputState extends State<NumberInput> {
-  late final x = TextEditingController(text: "${widget.value}".padLeft(2, "0"));
+  late final textCtrl =
+      TextEditingController(text: "${widget.value}".padLeft(2, "0"));
 
   @override
   void didUpdateWidget(covariant NumberInput oldWidget) {
-    x.text = "${widget.value}".padLeft(2, "0");
+    textCtrl.text = "${widget.value}".padLeft(2, "0");
     super.didUpdateWidget(oldWidget);
   }
 
@@ -56,7 +57,7 @@ class _NumberInputState extends State<NumberInput> {
               ),
               textAlign: TextAlign.center,
               keyboardType: TextInputType.number,
-              controller: x,
+              controller: textCtrl,
               onSubmitted: (value) {
                 widget.onChange(int.parse(value));
               },
