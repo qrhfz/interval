@@ -6,5 +6,5 @@ import 'app/app.dart';
 void main() async {
   await initializeHive();
   setup();
-  runApp(MyApp());
+  runApp(const MyApp());
 }

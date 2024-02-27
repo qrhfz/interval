@@ -7,7 +7,7 @@ import 'package:interval/app/home/home_route.dart';
 final routeObserver = RouteObserver<ModalRoute<void>>();
 
 class MyApp extends StatelessWidget {
-  MyApp({super.key});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
