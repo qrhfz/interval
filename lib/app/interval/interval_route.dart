@@ -86,14 +86,31 @@ class _RunningPageState extends State<RunningPage> {
       ),
 
       floatingActionButton: const PauseButton(),
-      body: const SizedBox(
+      body: SizedBox(
         width: double.infinity,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            TaskName(),
-            TaskTimer(),
+            const TaskName(),
+            ValueListenableBuilder(
+              valueListenable: controller.state,
+              builder: (context, value, _) {
+                return switch (value) {
+                  Running() => Text(
+                      "${value.set}/${value.currentLoop.sets}",
+                      style: const TextStyle(fontSize: 36),
+                    ),
+                  Paused() => Text(
+                      "${value.set}/${value.currentLoop.sets}",
+                      style: const TextStyle(fontSize: 36),
+                    ),
+                  Finished() => const SizedBox()
+                };
+              },
+            ),
+            const SizedBox(height: 32),
+            const TaskTimer(),
           ],
         ),
       ),
